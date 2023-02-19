@@ -8,7 +8,7 @@ class homescreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Register/Login"),
+        title: Text("Register/Login haha Hacked"),
       ),
     );
   }
