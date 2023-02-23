@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:littlebuddy/screen/home.dart';
+import 'package:get/get.dart';
+import 'package:responsive_login_ui/views/signUp_view.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-  // This widget is the root of your application.
+  const MyApp({Key? key}) : super(key: key);
+
+  //? CodeWithFlexz on Instagram
+
+//* AmirBayat0 on Github
+//! Programming with Flexz on Youtube
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: homescreen());
+    return const GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: SignUpView(),
+    );
   }
 }
