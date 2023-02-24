@@ -16,6 +16,8 @@ dependencies:
   get: ^4.6.5
   google_fonts: ^3.0.1
   lottie: ^1.4.2
+  firebase_core: ^2.7.0
+  firebase_auth: ^4.2.9
 
 dev_dependencies:
   flutter_test:

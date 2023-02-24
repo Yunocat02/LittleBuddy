@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +9,8 @@ import 'package:lottie/lottie.dart';
 import '../views/login_view.dart';
 import '../constants.dart';
 import '../controller/simple_ui_controller.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({Key? key}) : super(key: key);
@@ -88,6 +92,7 @@ class _SignUpViewState extends State<SignUpView> {
     );
   }
 
+ int nub=0;
   /// Main Body
   Widget _buildMainBody(
       Size size, SimpleUIController simpleUIController, ThemeData theme) {
@@ -153,9 +158,9 @@ class _SignUpViewState extends State<SignUpView> {
                       return 'at least enter 4 characters';
                     } else if (value.length > 13) {
                       return 'maximum character is 13';
-                      //} else onSaved: (String username){
-                      //  profile.username = username
-                    }
+                      } 
+                       
+                    //}else{createAccountAndInsertInformation();}
                     return null;
                   },
                 ),
@@ -220,6 +225,7 @@ class _SignUpViewState extends State<SignUpView> {
                       } else if (value.length > 13) {
                         return 'maximum character is 13';
                       }
+                      
                       return null;
                     },
                   ),
@@ -275,7 +281,8 @@ class _SignUpViewState extends State<SignUpView> {
       ],
     );
   }
-
+  
+  
   // SignUp Button
   Widget signUpButton(ThemeData theme) {
     return SizedBox(
@@ -291,13 +298,25 @@ class _SignUpViewState extends State<SignUpView> {
           ),
         ),
         onPressed: () {
+          
           // Validate returns true if the form is valid, or false otherwise.
           if (_formKey.currentState!.validate()) {
             // ... Navigate To your Home Page
           }
+          createAccountAndInsertInformation();
         },
         child: const Text('Sign up'),
       ),
     );
   }
+  Future<Null> createAccountAndInsertInformation()async{
+    String email = emailController.text;
+    String password = passwordController.text;
+    await Firebase.initializeApp().then((value)async {
+      print('Firebase Initialize Success');
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email , password: password)
+      .then((value) =>"Create Account Success");
+    });
+  }
 }
+

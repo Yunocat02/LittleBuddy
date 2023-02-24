@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "10443747936",
+    "firebase_url": "https://databasesoften-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "databasesoften",
+    "storage_bucket": "databasesoften.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:10443747936:android:11041245f9d08227a38905",
+        "android_client_info": {
+          "package_name": "com.example.responsive_login_ui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "10443747936-garb3rq1bs649ohc2lhjmhlmgukqfj0f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCT8Xwxs5ROAirfI13bPk8_BMS7U77XPcA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "10443747936-garb3rq1bs649ohc2lhjmhlmgukqfj0f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
