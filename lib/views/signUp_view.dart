@@ -160,13 +160,16 @@ class _SignUpViewState extends State<SignUpView> {
                   // The validator receives the text that the user has entered.
                   validator: (value) {
                     if (value == null || value.isEmpty) {
+                      nameController.clear();
                       return 'Please enter username';
                     } else if (value.length < 4) {
+                      nameController.clear();
                       return 'at least enter 4 characters';
                     } else if (value.length > 13) {
+                      nameController.clear();
                       return 'maximum character is 13';
-                      } 
-                       
+                      }
+                    //แก้เรื่องmaximun มันไม่break แล้วมันส่งเข้าdatabaseไปเลย เกิน13มันส่งได้  
                     //}else{createAccountAndInsertInformation();}
                     return null;
                   },
@@ -189,8 +192,10 @@ class _SignUpViewState extends State<SignUpView> {
                   // The validator receives the text that the user has entered.
                   validator: (value) {
                     if (value == null || value.isEmpty) {
+                      emailController.clear();
                       return 'Please enter gmail';
                     } else if (!value.endsWith('@gmail.com')) {
+                      emailController.clear();
                       return 'please enter valid gmail';
                     }
                     return null;
@@ -226,10 +231,13 @@ class _SignUpViewState extends State<SignUpView> {
                     // The validator receives the text that the user has entered.
                     validator: (value) {
                       if (value == null || value.isEmpty) {
+                        passwordController.clear();
                         return 'Please enter some text';
                       } else if (value.length < 7) {
+                        passwordController.clear();
                         return 'at least enter 6 characters';
                       } else if (value.length > 13) {
+                        passwordController.clear();
                         return 'maximum character is 13';
                       }
                       
@@ -310,7 +318,9 @@ class _SignUpViewState extends State<SignUpView> {
           if (_formKey.currentState!.validate()) {
             // ... Navigate To your Home Page
           }
-          createAccountAndInsertInformation();
+          if (!nameController.text.isEmpty && !emailController.text.isEmpty && !passwordController.text.isEmpty){
+            createAccountAndInsertInformation();}
+          
         },
         child: const Text('Sign up'),
       ),
