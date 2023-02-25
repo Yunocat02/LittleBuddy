@@ -27,6 +27,7 @@ class _SignUpViewState extends State<SignUpView> {
   TextEditingController passwordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+  final Future<FirebaseApp>firebase= Firebase.initializeApp();
 
   @override
   void dispose() {
@@ -266,10 +267,7 @@ class _SignUpViewState extends State<SignUpView> {
                 /// Navigate To Login Screen
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                            builder: (ctx) => const LoginView()));
+                    Navigator.pop(context);
                     nameController.clear();
                     emailController.clear();
                     passwordController.clear();

@@ -1,10 +1,17 @@
+// ignore_for_file: avoid_print
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:responsive_login_ui/views/signUp_view.dart';
+import 'package:responsive_login_ui/views/wellcomescreen.dart';
 
 import '../constants.dart';
 import '../controller/simple_ui_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -19,6 +26,7 @@ class _LoginViewState extends State<LoginView> {
   TextEditingController passwordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+  final Future<FirebaseApp>firebase= Firebase.initializeApp();
 
   @override
   void dispose() {
@@ -27,7 +35,7 @@ class _LoginViewState extends State<LoginView> {
     passwordController.dispose();
     super.dispose();
   }
-
+  SimpleUIController simpleUIController = Get.put(SimpleUIController());
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -156,10 +164,6 @@ class _LoginViewState extends State<LoginView> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter username';
-                    } else if (value.length < 4) {
-                      return 'at least enter 4 characters';
-                    } else if (value.length > 13) {
-                      return 'maximum character is 13';
                     }
                     return null;
                   },
@@ -247,7 +251,10 @@ class _LoginViewState extends State<LoginView> {
                 /// Navigate To Login Screen
                 GestureDetector(
                   onTap: () {
-                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                            builder: (ctx) => const SignUpView()));
                     nameController.clear();
                     emailController.clear();
                     passwordController.clear();
@@ -291,10 +298,29 @@ class _LoginViewState extends State<LoginView> {
             ),
           ),
         ),
-        onPressed: () {
+        onPressed: ()async {
           // Validate returns true if the form is valid, or false otherwise.
           if (_formKey.currentState!.validate()) {
             // ... Navigate To your Home Page
+             try {
+                      await FirebaseAuth.instance.signInWithEmailAndPassword(
+                        email: emailController.text.trim(),
+                        password: passwordController.text.trim(),
+                        
+                      );
+                      
+                    } on FirebaseAuthException catch (e) {
+                      if (e.code == 'user-not-found') {
+                        print('No user found for that email.');
+                      } else if (e.code == 'wrong-password') {
+                        print('Wrong password provided for that user.');
+                      }
+                      else {
+                        print('Firebase login success');
+                        Navigator.pushReplacement(context, 
+                      MaterialPageRoute(builder: (context){
+                      return wellcomescreen();}));}
+                    }
           }
         },
         child: const Text('Login'),
