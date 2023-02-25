@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:responsive_login_ui/views/signUp_view.dart';
 
 import '../constants.dart';
 import '../controller/simple_ui_controller.dart';
@@ -28,6 +30,7 @@ class _LoginViewState extends State<LoginView> {
     super.dispose();
   }
 
+  SimpleUIController simpleUIController = Get.put(SimpleUIController());
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -247,7 +250,10 @@ class _LoginViewState extends State<LoginView> {
                 /// Navigate To Login Screen
                 GestureDetector(
                   onTap: () {
-                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                            builder: (ctx) => const SignUpView()));
                     nameController.clear();
                     emailController.clear();
                     passwordController.clear();
