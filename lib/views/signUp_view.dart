@@ -1,16 +1,18 @@
 
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:responsive_login_ui/model/usermodel.dart';
 
 import '../views/login_view.dart';
 import '../constants.dart';
 import '../controller/simple_ui_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:quickalert/quickalert.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({Key? key}) : super(key: key);
@@ -35,6 +37,11 @@ class _SignUpViewState extends State<SignUpView> {
   }
 
   SimpleUIController simpleUIController = Get.put(SimpleUIController());
+
+  void showAlert(){
+    QuickAlert.show(context: context,
+    title: "Register success", type: QuickAlertType.success);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -312,11 +319,21 @@ class _SignUpViewState extends State<SignUpView> {
   Future<Null> createAccountAndInsertInformation()async{
     String email = emailController.text;
     String password = passwordController.text;
+    String username =nameController.text;
+    String role ='M';
+     String uid;
     await Firebase.initializeApp().then((value)async {
       print('Firebase Initialize Success');
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email , password: password)
-      .then((value) =>"Create Account Success");
+      UserCredential userCredential =  await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email , password: password);
+      uid = userCredential.user!.uid;
+      print(uid);
+      usermodel model=usermodel(username: username, role: role);
+      Map<String,dynamic>userdatabase =model.toMap();
+      await FirebaseFirestore.instance.collection('userdatabase').doc(uid).set(userdatabase);
+      showAlert();
     });
+     
+    
   }
 }
 
