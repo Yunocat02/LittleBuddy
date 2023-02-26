@@ -21,6 +21,7 @@ dependencies:
   fluttertoast: ^8.2.1
   cloud_firestore: ^4.4.3
   quickalert: ^1.0.1
+  provider: ^6.0.5
 
 dev_dependencies:
   flutter_test:

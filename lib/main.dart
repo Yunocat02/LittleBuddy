@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:responsive_login_ui/views/login_view.dart';
 import 'package:responsive_login_ui/views/signUp_view.dart';
 
+import 'views/Main_menu.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginView(),
+      home: MainMenu(),
     );
   }
 }

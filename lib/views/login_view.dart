@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:responsive_login_ui/model/profile.dart';
+import 'package:responsive_login_ui/views/Mainmenu_member.dart';
 import 'package:responsive_login_ui/views/signUp_view.dart';
 import 'package:responsive_login_ui/views/wellcomescreen.dart';
 
@@ -331,7 +332,7 @@ class _LoginViewState extends State<LoginView> {
                           print('Sign in successful');
                           Navigator.pushReplacement(context, 
                           MaterialPageRoute(builder: (context){
-                          return wellcomescreen();}));
+                          return MainMenuMember();}));
                         });
                       
                     } on FirebaseAuthException catch (e) {
