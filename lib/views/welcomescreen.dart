@@ -4,18 +4,18 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_login_ui/views/login_view.dart';
 
-class wellcomescreen extends StatefulWidget {
+class welcomescreen extends StatefulWidget {
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<wellcomescreen> {
-  final Future<FirebaseApp>firebase= Firebase.initializeApp();
+class _WelcomeScreenState extends State<welcomescreen> {
+  final Future<FirebaseApp> firebase = Firebase.initializeApp();
   final auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
-  late String _username="";
-  late String _role="";
-  late String _userId="";
+  late String _username = "";
+  late String _role = "";
+  late String _userId = "";
 
   @override
   void initState() {
@@ -88,13 +88,14 @@ class _WelcomeScreenState extends State<wellcomescreen> {
     final userId = auth.currentUser?.uid;
 
     if (userId != null) {
-    final userDoc = await firestore.collection('userdatabase').doc(userId).get();
-    final userData = userDoc.data() as Map<String, dynamic>?;
-    setState(() {
-      _username = userData?['username'] ?? 'N/A';
-      _role = userData?['role'] ?? 'N/A';
-      _userId = userId.toString();
-    });
-      }
-      }
+      final userDoc =
+          await firestore.collection('userdatabase').doc(userId).get();
+      final userData = userDoc.data() as Map<String, dynamic>?;
+      setState(() {
+        _username = userData?['username'] ?? 'N/A';
+        _role = userData?['role'] ?? 'N/A';
+        _userId = userId.toString();
+      });
+    }
+  }
 }
