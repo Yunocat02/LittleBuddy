@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:responsive_login_ui/views/login_view.dart';
+import 'package:LittleBuddy/views/login_view.dart';
 
 class MainMenuMember extends StatefulWidget {
   @override
@@ -10,12 +10,12 @@ class MainMenuMember extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<MainMenuMember> {
-  final Future<FirebaseApp>firebase= Firebase.initializeApp();
+  final Future<FirebaseApp> firebase = Firebase.initializeApp();
   final auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
-  late String _username="";
-  late String _role="";
-  late String _userId="";
+  late String _username = "";
+  late String _role = "";
+  late String _userId = "";
 
   @override
   void initState() {
@@ -26,14 +26,17 @@ class _WelcomeScreenState extends State<MainMenuMember> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Littlebuddy"),centerTitle: true,actions: [
-            IconButton(
-                onPressed: () {
-                 print("Hi profile");
-                  }
-                ,
-                icon: Icon(Icons.person))
-          ],),
+      appBar: AppBar(
+        title: Text("Littlebuddy"),
+        centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {
+                print("Hi profile");
+              },
+              icon: Icon(Icons.person))
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
@@ -95,13 +98,14 @@ class _WelcomeScreenState extends State<MainMenuMember> {
     final userId = auth.currentUser?.uid;
 
     if (userId != null) {
-    final userDoc = await firestore.collection('userdatabase').doc(userId).get();
-    final userData = userDoc.data() as Map<String, dynamic>?;
-    setState(() {
-      _username = userData?['username'] ?? 'N/A';
-      _role = userData?['role'] ?? 'N/A';
-      _userId = userId.toString();
-    });
-      }
-      }
+      final userDoc =
+          await firestore.collection('userdatabase').doc(userId).get();
+      final userData = userDoc.data() as Map<String, dynamic>?;
+      setState(() {
+        _username = userData?['username'] ?? 'N/A';
+        _role = userData?['role'] ?? 'N/A';
+        _userId = userId.toString();
+      });
+    }
+  }
 }

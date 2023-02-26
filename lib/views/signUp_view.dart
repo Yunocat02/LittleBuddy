@@ -1,10 +1,9 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:responsive_login_ui/model/usermodel.dart';
+import 'package:LittleBuddy/model/usermodel.dart';
 
 import '../views/login_view.dart';
 import '../constants.dart';
@@ -27,7 +26,7 @@ class _SignUpViewState extends State<SignUpView> {
   TextEditingController passwordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
-  final Future<FirebaseApp>firebase= Firebase.initializeApp();
+  final Future<FirebaseApp> firebase = Firebase.initializeApp();
 
   @override
   void dispose() {
@@ -39,9 +38,11 @@ class _SignUpViewState extends State<SignUpView> {
 
   SimpleUIController simpleUIController = Get.put(SimpleUIController());
 
-  void showAlert(){
-    QuickAlert.show(context: context,
-    title: "Register success", type: QuickAlertType.success);
+  void showAlert() {
+    QuickAlert.show(
+        context: context,
+        title: "Register success",
+        type: QuickAlertType.success);
   }
 
   @override
@@ -100,7 +101,8 @@ class _SignUpViewState extends State<SignUpView> {
     );
   }
 
- int nub=0;
+  int nub = 0;
+
   /// Main Body
   Widget _buildMainBody(
       Size size, SimpleUIController simpleUIController, ThemeData theme) {
@@ -169,8 +171,8 @@ class _SignUpViewState extends State<SignUpView> {
                     } else if (value.length > 13) {
                       nameController.clear();
                       return 'maximum character is 13';
-                      }
-                    //แก้เรื่องmaximun มันไม่break แล้วมันส่งเข้าdatabaseไปเลย เกิน13มันส่งได้  
+                    }
+                    //แก้เรื่องmaximun มันไม่break แล้วมันส่งเข้าdatabaseไปเลย เกิน13มันส่งได้
                     //}else{createAccountAndInsertInformation();}
                     return null;
                   },
@@ -189,13 +191,14 @@ class _SignUpViewState extends State<SignUpView> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(15)),
                     ),
-                  ), keyboardType: TextInputType.emailAddress,
+                  ),
+                  keyboardType: TextInputType.emailAddress,
                   // The validator receives the text that the user has entered.
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       emailController.clear();
                       return 'Please enter email';
-                    } 
+                    }
                     return null;
                   },
                 ),
@@ -238,7 +241,7 @@ class _SignUpViewState extends State<SignUpView> {
                         passwordController.clear();
                         return 'maximum character is 13';
                       }
-                      
+
                       return null;
                     },
                   ),
@@ -291,8 +294,7 @@ class _SignUpViewState extends State<SignUpView> {
       ],
     );
   }
-  
-  
+
   // SignUp Button
   Widget signUpButton(ThemeData theme) {
     return SizedBox(
@@ -308,37 +310,40 @@ class _SignUpViewState extends State<SignUpView> {
           ),
         ),
         onPressed: () {
-          
           // Validate returns true if the form is valid, or false otherwise.
           if (_formKey.currentState!.validate()) {
             // ... Navigate To your Home Page
           }
-          if (!nameController.text.isEmpty && !emailController.text.isEmpty && !passwordController.text.isEmpty){
-            createAccountAndInsertInformation();}
-          
+          if (!nameController.text.isEmpty &&
+              !emailController.text.isEmpty &&
+              !passwordController.text.isEmpty) {
+            createAccountAndInsertInformation();
+          }
         },
         child: const Text('Sign up'),
       ),
     );
   }
-  Future<Null> createAccountAndInsertInformation()async{
+
+  Future<Null> createAccountAndInsertInformation() async {
     String email = emailController.text;
     String password = passwordController.text;
-    String username =nameController.text;
-    String role ='M';
-     String uid;
-    await Firebase.initializeApp().then((value)async {
+    String username = nameController.text;
+    String role = 'M';
+    String uid;
+    await Firebase.initializeApp().then((value) async {
       print('Firebase Initialize Success');
-      UserCredential userCredential =  await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email , password: password);
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
       uid = userCredential.user!.uid;
       print(uid);
-      usermodel model=usermodel(username: username, role: role);
-      Map<String,dynamic>userdatabase =model.toMap();
-      await FirebaseFirestore.instance.collection('userdatabase').doc(uid).set(userdatabase);
+      usermodel model = usermodel(username: username, role: role);
+      Map<String, dynamic> userdatabase = model.toMap();
+      await FirebaseFirestore.instance
+          .collection('userdatabase')
+          .doc(uid)
+          .set(userdatabase);
       showAlert();
     });
-     
-    
   }
 }
-
