@@ -148,7 +148,7 @@ class _LoginViewState extends State<LoginView> {
         Padding(
           padding: const EdgeInsets.only(left: 20.0),
           child: Text(
-            'Welcome Back Catchy',
+            'Welcome Back',
             style: kLoginSubtitleStyle(size),
           ),
         ),

@@ -1,5 +1,4 @@
 import 'package:LittleBuddy/widgets/pet_card2.dart';
-
 import '../utils/layouts.dart';
 import '../utils/styles.dart';
 import '../widgets/animated_title.dart';
@@ -9,8 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'Chatbot_view.dart';
+import 'addpet_view.dart';
+import 'help_view.dart';
 import 'login_view.dart';
 import 'map_view.dart';
+import 'mypets_view.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -20,21 +22,22 @@ class Home extends StatelessWidget {
     List navItems = [
       {
         'text': 'Adopt',
-        'icon': 'assets/nav_icons/dog_icon.svg',
+        'icon': 'assets/nav_icons/pill_icon.svg',
       },
       {
-        'text': 'Grooming',
-        'icon': 'assets/nav_icons/cut_icon.svg',
+        'text': 'Clinix',
+        'icon': 'assets/nav_icons/heart_icon.svg',
         'page': const Chatbot()
       },
       {
-        'text': 'Vet',
+        'text': 'Pets',
         'icon': 'assets/nav_icons/vet_icon.svg',
-        'page': const Mapnaja()
+        'page': const Mypets()
       },
       {
         'text': 'Help',
         'icon': 'assets/nav_icons/help_icon.svg',
+        'page': const Helpview()
       },
     ];
     final size = Layouts.getSize(context);
@@ -42,15 +45,25 @@ class Home extends StatelessWidget {
       appBar: AppBar(
         title: Text('Menu'),
         centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => addpet()),
+            );
+          },
+          icon: Icon(Icons.pets),
+        ),
         actions: [
           IconButton(
-              onPressed: () {
-                // การเอาหน้าอื่นมาทับ context คือ ?? | route คือ ตำแหน่งหน้าที่จะทับ
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return LoginView();
-                }));
-              },
-              icon: Icon(Icons.person))
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LoginView()),
+              );
+            },
+            icon: Icon(Icons.person),
+          ),
         ],
       ),
       body: ListView(
@@ -61,13 +74,13 @@ class Home extends StatelessWidget {
           Row(
             children: const [
               PetCard(
-                petPath: 'assets/svg/cat1.svg',
+                petPath: 'assets/svg/robot.svg',
                 petName: 'ChatBot',
                 height: 68,
               ),
               Gap(28),
               PetCard2(
-                petPath: 'assets/svg/dog1.svg',
+                petPath: 'assets/svg/hospital.svg',
                 petName: 'Clinic finder',
                 height: 68,
               ),
@@ -188,7 +201,9 @@ class Home extends StatelessWidget {
                 ],
               ),
               onTap: () {
-                if (navItems.indexOf(e) == 1 || navItems.indexOf(e) == 2) {
+                if (navItems.indexOf(e) == 1 ||
+                    navItems.indexOf(e) == 2 ||
+                    navItems.indexOf(e) == 3) {
                   Navigator.push(
                       context, MaterialPageRoute(builder: (_) => e['page']));
                 }

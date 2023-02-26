@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 
-import '../views/Chatbot_view.dart';
 import '../views/map_view.dart';
 
 class PetCard2 extends StatefulWidget {
@@ -67,7 +66,7 @@ class _PetCard2State extends State<PetCard2> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Chatbot(),
+                              builder: (context) => Mapnaja(),
                             ),
                           );
                         },
