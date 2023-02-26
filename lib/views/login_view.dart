@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'package:LittleBuddy/views/datareportviewsmember.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -333,22 +334,22 @@ class _LoginViewState extends State<LoginView> {
                   print('Sign in successful');
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) {
-                    return MainMenuMember();
+                    return datareportviewsmember();
                   }));
                 });
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'user-not-found') {
                   QuickAlert.show(
                       context: context,
-                      title: "User not found",
+                      title: "Wrong email or password.",
                       type: QuickAlertType.error);
                   nameController.clear();
                   passwordController.clear();
-                  print('No user found for that email.');
+                  print('Wrong email or password.');
                 } else if (e.code == 'wrong-password') {
                   QuickAlert.show(
                       context: context,
-                      title: "Wrong password",
+                      title: "Wrong email or password.",
                       type: QuickAlertType.error);
                   passwordController.clear();
                   print('Wrong password provided for that user.');
