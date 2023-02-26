@@ -6,12 +6,14 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:responsive_login_ui/model/profile.dart';
 import 'package:responsive_login_ui/views/signUp_view.dart';
 import 'package:responsive_login_ui/views/wellcomescreen.dart';
 
 import '../constants.dart';
 import '../controller/simple_ui_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:quickalert/quickalert.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -26,8 +28,15 @@ class _LoginViewState extends State<LoginView> {
   TextEditingController passwordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
-  final Future<FirebaseApp>firebase= Firebase.initializeApp();
+  Profile profile = Profile(email: '', password: '');
+  final Future<FirebaseApp> firebase = Firebase.initializeApp();
 
+  void showAlert(){
+    QuickAlert.show(context: context,
+    title: "Wrong email or password", type: QuickAlertType.error);
+  }
+
+  
   @override
   void dispose() {
     nameController.dispose();
@@ -157,14 +166,18 @@ class _LoginViewState extends State<LoginView> {
                     hintText: 'Username or Gmail',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(15)),
+                      
                     ),
                   ),
                   controller: nameController,
+                  keyboardType: TextInputType.emailAddress,
                   // The validator receives the text that the user has entered.
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter username';
+                    if (value == null || value.isEmpty|| !value.isEmail) {
+                      nameController.clear();
+                      return 'Please enter email';
                     }
+                     profile.email=value;
                     return null;
                   },
                 ),
@@ -220,12 +233,16 @@ class _LoginViewState extends State<LoginView> {
                     // The validator receives the text that the user has entered.
                     validator: (value) {
                       if (value == null || value.isEmpty) {
+                        passwordController.clear();
                         return 'Please enter some text';
                       } else if (value.length < 7) {
+                        passwordController.clear();
                         return 'at least enter 6 characters';
                       } else if (value.length > 13) {
+                        passwordController.clear();
                         return 'maximum character is 13';
                       }
+                        profile.password=value;
                       return null;
                     },
                   ),
@@ -302,28 +319,42 @@ class _LoginViewState extends State<LoginView> {
           // Validate returns true if the form is valid, or false otherwise.
           if (_formKey.currentState!.validate()) {
             // ... Navigate To your Home Page
+             
              try {
+                print('Signing in with email ${profile.email} and password ${profile.password}...');
+              
                       await FirebaseAuth.instance.signInWithEmailAndPassword(
-                        email: emailController.text.trim(),
-                        password: passwordController.text.trim(),
-                        
-                      );
+                        email: profile.email,
+                        password: profile.password
+                        ).then((value){
+                          showAlert();
+                          print('Sign in successful');
+                          Navigator.pushReplacement(context, 
+                          MaterialPageRoute(builder: (context){
+                          return wellcomescreen();}));
+                        });
                       
                     } on FirebaseAuthException catch (e) {
                       if (e.code == 'user-not-found') {
+                        QuickAlert.show(context: context,
+                        title: "User not found", type: QuickAlertType.error);
+                        nameController.clear();
+                        passwordController.clear();
                         print('No user found for that email.');
                       } else if (e.code == 'wrong-password') {
+                        QuickAlert.show(context: context,
+                        title: "Wrong password", type: QuickAlertType.error);
+                        passwordController.clear();
                         print('Wrong password provided for that user.');
                       }
-                      else {
-                        print('Firebase login success');
-                        Navigator.pushReplacement(context, 
-                      MaterialPageRoute(builder: (context){
-                      return wellcomescreen();}));}
                     }
           }
         },
-        child: const Text('Login'),
+        child: const Text('Login',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),)
       ),
     );
   }

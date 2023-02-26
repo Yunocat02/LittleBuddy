@@ -189,16 +189,13 @@ class _SignUpViewState extends State<SignUpView> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(15)),
                     ),
-                  ),
+                  ), keyboardType: TextInputType.emailAddress,
                   // The validator receives the text that the user has entered.
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       emailController.clear();
-                      return 'Please enter gmail';
-                    } else if (!value.endsWith('@gmail.com')) {
-                      emailController.clear();
-                      return 'please enter valid gmail';
-                    }
+                      return 'Please enter email';
+                    } 
                     return null;
                   },
                 ),
