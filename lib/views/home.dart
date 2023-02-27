@@ -49,7 +49,7 @@ class Home extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => addpet()),
+              MaterialPageRoute(builder: (context) => AddPet()),
             );
           },
           icon: Icon(Icons.pets),
