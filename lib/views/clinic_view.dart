@@ -1,3 +1,4 @@
+import 'package:LittleBuddy/views/cam_view.dart';
 import 'package:flutter/material.dart';
 
 class Clinic extends StatefulWidget {
@@ -22,7 +23,7 @@ class _ClinicState extends State<Clinic> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(),
                 onPressed: () {},
-                child: Text('Button 1', style: TextStyle(fontSize: 24)),
+                child: Text('Weboard คลินิก', style: TextStyle(fontSize: 24)),
               ),
             ),
             SizedBox(height: 16),
@@ -30,7 +31,7 @@ class _ClinicState extends State<Clinic> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {},
-                child: Text('Button 2', style: TextStyle(fontSize: 24)),
+                child: Text('Chat คลินิก', style: TextStyle(fontSize: 24)),
               ),
             ),
             SizedBox(height: 16),
@@ -38,7 +39,7 @@ class _ClinicState extends State<Clinic> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {},
-                child: Text('Button 3', style: TextStyle(fontSize: 24)),
+                child: Text('Chatbot', style: TextStyle(fontSize: 24)),
               ),
             ),
             SizedBox(height: 16),
@@ -46,7 +47,8 @@ class _ClinicState extends State<Clinic> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {},
-                child: Text('Button 4', style: TextStyle(fontSize: 24)),
+                child:
+                    Text('ลายละเอียดการรักษา', style: TextStyle(fontSize: 24)),
               ),
             ),
             SizedBox(height: 16),
@@ -54,15 +56,20 @@ class _ClinicState extends State<Clinic> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {},
-                child: Text('Button 5', style: TextStyle(fontSize: 24)),
+                child: Text('เช็ควันนัดหมาย', style: TextStyle(fontSize: 24)),
               ),
             ),
             SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
-                child: Text('Button 6', style: TextStyle(fontSize: 24)),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => cam()),
+                  );
+                },
+                child: Text('กล้อง', style: TextStyle(fontSize: 24)),
               ),
             ),
           ],
