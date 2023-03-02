@@ -18,9 +18,7 @@ class _ChatbotState extends State<Chatbot> {
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                
-              ],
+              children: [],
             ),
           ),
         ),

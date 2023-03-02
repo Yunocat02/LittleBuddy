@@ -9,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'Chatbot_view.dart';
 import 'addpet_view.dart';
+import 'clinic_view.dart';
 import 'help_view.dart';
 import 'login_view.dart';
 import 'map_view.dart';
@@ -27,7 +28,7 @@ class Home extends StatelessWidget {
       {
         'text': 'Clinix',
         'icon': 'assets/nav_icons/heart_icon.svg',
-        'page': const Chatbot()
+        'page': const Clinic()
       },
       {
         'text': 'Pets',
