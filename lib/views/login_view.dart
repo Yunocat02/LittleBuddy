@@ -339,7 +339,7 @@ class _LoginViewState extends State<LoginView> {
                   print('Sign in successful');
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) {
-                    return datareportviewsmember();
+                    return Home();
                   }));
                 });
               } on FirebaseAuthException catch (e) {
