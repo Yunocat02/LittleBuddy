@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:LittleBuddy/views/datareportviewsmember.dart';
+import 'package:LittleBuddy/views/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -295,6 +296,10 @@ class _LoginViewState extends State<LoginView> {
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: size.height * 0.03,
+                ),
+                gobackButton(),
               ],
             ),
           ),
@@ -359,6 +364,33 @@ class _LoginViewState extends State<LoginView> {
           },
           child: const Text(
             'Login',
+            style: TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+          )),
+    );
+  }
+
+  Widget gobackButton() {
+    return SizedBox(
+      width: double.infinity,
+      height: 55,
+      child: ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.deepPurpleAccent),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Home()),
+            );
+          },
+          child: const Text(
+            'Go back to menu',
             style: TextStyle(
                 fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
           )),

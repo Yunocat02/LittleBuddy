@@ -13,6 +13,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quickalert/quickalert.dart';
 
+import 'home.dart';
+
 class SignUpView extends StatefulWidget {
   const SignUpView({Key? key}) : super(key: key);
 
@@ -287,6 +289,10 @@ class _SignUpViewState extends State<SignUpView> {
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: size.height * 0.03,
+                ),
+                gobackButton(),
               ],
             ),
           ),
@@ -301,27 +307,30 @@ class _SignUpViewState extends State<SignUpView> {
       width: double.infinity,
       height: 55,
       child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.deepPurpleAccent),
-          shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.deepPurpleAccent),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
             ),
           ),
-        ),
-        onPressed: () {
-          // Validate returns true if the form is valid, or false otherwise.
-          if (_formKey.currentState!.validate()) {
-            // ... Navigate To your Home Page
-          }
-          if (!nameController.text.isEmpty &&
-              !emailController.text.isEmpty &&
-              !passwordController.text.isEmpty) {
-            createAccountAndInsertInformation();
-          }
-        },
-        child: const Text('Sign up'),
-      ),
+          onPressed: () {
+            // Validate returns true if the form is valid, or false otherwise.
+            if (_formKey.currentState!.validate()) {
+              // ... Navigate To your Home Page
+            }
+            if (!nameController.text.isEmpty &&
+                !emailController.text.isEmpty &&
+                !passwordController.text.isEmpty) {
+              createAccountAndInsertInformation();
+            }
+          },
+          child: const Text(
+            'Sign up',
+            style: TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+          )),
     );
   }
 
@@ -345,5 +354,32 @@ class _SignUpViewState extends State<SignUpView> {
           .set(userdatabase);
       showAlert();
     });
+  }
+
+  Widget gobackButton() {
+    return SizedBox(
+      width: double.infinity,
+      height: 55,
+      child: ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.deepPurpleAccent),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Home()),
+            );
+          },
+          child: const Text(
+            'Go back to menu',
+            style: TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+          )),
+    );
   }
 }
