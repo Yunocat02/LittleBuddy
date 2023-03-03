@@ -1,7 +1,10 @@
 // ignore_for_file: avoid_print
 
+import 'package:LittleBuddy/views/addpet_view.dart';
 import 'package:LittleBuddy/views/datareportviewsmember.dart';
 import 'package:LittleBuddy/views/home.dart';
+import 'package:LittleBuddy/views/mypets_view.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +26,7 @@ class LoginView extends StatefulWidget {
   @override
   State<LoginView> createState() => _LoginViewState();
 }
+
 
 class _LoginViewState extends State<LoginView> {
   TextEditingController nameController = TextEditingController();
@@ -326,6 +330,17 @@ class _LoginViewState extends State<LoginView> {
             // Validate returns true if the form is valid, or false otherwise.
             if (_formKey.currentState!.validate()) {
               // ... Navigate To your Home Page
+              
+                 final FirebaseAuth _auth = FirebaseAuth.instance;
+                 final FirebaseFirestore _db = FirebaseFirestore.instance;
+                 final User? user = _auth.currentUser;
+                 final uid = user?.uid;
+                 final DocumentSnapshot<Map<String, dynamic>> userSnapshot = await _db
+                  .collection('userdatabase')
+                  .doc(uid)
+                  .get();
+                late String role = userSnapshot.get('role');
+                    
 
               try {
                 print(
@@ -336,11 +351,22 @@ class _LoginViewState extends State<LoginView> {
                         email: profile.email, password: profile.password)
                     .then((value) {
                   showAlert();
+                 
                   print('Sign in successful');
+                  if (role=='A' ||role=='M' ||role=='D'){
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) {
-                    return Home();
-                  }));
+                        role="";
+                          return Home();
+                       }
+                  ));
+                  }
+                  else{Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) {
+                        role="";
+                          return AddPet();
+                       }
+                  ));}
                 });
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'user-not-found') {
@@ -348,15 +374,16 @@ class _LoginViewState extends State<LoginView> {
                       context: context,
                       title: "Wrong email or password.",
                       type: QuickAlertType.error);
-                  nameController.clear();
-                  passwordController.clear();
+                      nameController.clear();
+                      passwordController.clear();
                   print('Wrong email or password.');
                 } else if (e.code == 'wrong-password') {
                   QuickAlert.show(
                       context: context,
                       title: "Wrong email or password.",
                       type: QuickAlertType.error);
-                  passwordController.clear();
+                      nameController.clear();
+                      passwordController.clear();
                   print('Wrong password provided for that user.');
                 }
               }

@@ -1,4 +1,8 @@
 import 'package:LittleBuddy/widgets/pet_card2.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:get/get.dart';
 import '../utils/layouts.dart';
 import '../utils/styles.dart';
 import '../widgets/animated_title.dart';
@@ -15,11 +19,20 @@ import 'login_view.dart';
 import 'map_view.dart';
 import 'mypets_view.dart';
 
+
+
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
+  
+  
 
   @override
+  
   Widget build(BuildContext context) {
+    
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    
+    
     List navItems = [
       {
         'text': 'Adopt',
@@ -30,7 +43,7 @@ class Home extends StatelessWidget {
         'icon': 'assets/nav_icons/heart_icon.svg',
         'page': const Clinic()
       },
-      {
+      { 
         'text': 'Pets',
         'icon': 'assets/nav_icons/vet_icon.svg',
         'page': const Mypets()
@@ -47,11 +60,23 @@ class Home extends StatelessWidget {
         title: Text('Menu'),
         centerTitle: true,
         leading: IconButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AddPet()),
-            );
+          onPressed: () async{
+                final User? user = _auth.currentUser;
+                final uid = user?.uid;
+                final FirebaseFirestore _db = FirebaseFirestore.instance;
+                final DocumentSnapshot<Map<String, dynamic>> userSnapshot = await _db.collection('userdatabase').doc(uid).get();
+                String role = userSnapshot.get('role');
+            if(role!='A'||role!='D'||role!='M'){            
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Home()),
+              );}
+              else if(role=='A'||role=='D'||role=='M'){
+                  Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddPet()),
+              );
+              }          
           },
           icon: Icon(Icons.pets),
         ),
@@ -216,3 +241,4 @@ class Home extends StatelessWidget {
     );
   }
 }
+ 
