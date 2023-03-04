@@ -29,6 +29,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  dialog_flowtter:
 
   flutter_lints: ^2.0.0
 
@@ -41,6 +42,7 @@ flutter:
     - assets/png/
     - assets/nav_icons/
     - assets/stories/
+    - assets/dialog_flow_auth.json
   # fonts:
   #   - family: Schyler
   #     fonts:

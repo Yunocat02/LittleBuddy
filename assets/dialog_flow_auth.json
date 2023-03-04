@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "littlebuddy-fbmq",
+  "private_key_id": "d04f5ffeae97ade58e20ac90792e1c592add9372",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDFHQK41TqaWlox\nweCPuQs0ob5EWnJcpNNaRsAqIqaoI2KmcrKEtINjqpDSTFHs82dl31NfMLQGTdjr\nrae3ut6bgnSvvxeT9tLnLaOeoEIso3EmOGCqk5yTx0Z5YnTTf2BGAFOgMFNXpfXT\nAxuV3Pnwnin7y+R6ztaQcSeaOpNAc1oMNZ1/YKIwWX/8yvpfvJIAk/mczK7tusa8\n8bdV5Q7+kqldzxbDYRHExN8362gmsvnOjUOws/KqOcq4Is9IXDnypXKIvZ6hxbN4\naGXB3EaP3rQnjSpMKLIYb7d187A2v+fDl7d3KbPLQA1ivn6VJlZHgoSRjTPZ7lRw\nAze3t2CTAgMBAAECggEACcnDzz0UO+ktfjfY2H1uR2uaVyqZ1myyhVK3scZZ7RK7\nKcJoVJt7xGc9g2caA/o4sdMoZxtNog9OxkuvsgZfJ4aPsZ2u16bzsicob0Gy1FfW\nNpLchs8g51whIJLGQMc1sKqZ4uQdDC0uZKjmDC5Jx995L9fGil90qDEpfK8ljZdJ\ntSUNdoxUTKFFZzwqHaIJ4C32oBbsOKg2m4/dYGg17OKbX6CC1LMbZDQLRV9MTBRg\n1lWsYDWnHllTvptFyQYriVqXLAS4mlwiAT/UQekHeOfznCdda1MZTMO97tEqnfPM\neGKyCOR1QvA+LDU/J5gkfsJ5z6eAdG4M7LBG/FBHAQKBgQDiQBTC12dQGO9Kq93W\norhBZRurS+KTR/eikJ+Fkt8fhcsJWZNklGSRxGixxDXnWBXGQ1GyYCYLrmb67UvL\nlOWrc8Qkhl7+b+2a/+qC5pBNsjmq2u+zK8oeDqf/xDYMoqZzTEVfUUki2nvWYRfD\nZTGKvjM3MriCbM/PVnCleuhBeQKBgQDfCCKpqjlpTNhNUM2ReRphC+A8F/d82ELS\nUZHuh+7ITlKuMFs4MUnFZ5wn7bejJyqowhlfQ04k2AtIv9dslRJDxaKVu7UbG1H2\ncUyegOQHUDkSCc0K7Tq4zNg+qsNxDU0+pXPCN735U4LuidChQcIA3JWc/5O9k8AE\nofk8as5bawKBgAy7Xm+4f2/ad1zUXx98+LF1ZyE0nAN9wUm8qb1yjmvPs6VLDShT\n0XUCgIHAcOgb5N3LXAWVs45kuhbU07cZIfOMCDWl+iKHWe+nByNmpig5J1WeDG8g\nv7cBTCLwf7omTQef+ydqA5uaf+2IeTXds/QC0A8DI67zQJ6CVsR5LijBAoGBAIwC\nOmhR8Op2kA6xG+snn/SuFN0Emptn00LebALWmIJsEKFCv/DdmBbxPOkf5LjqHHCG\nMJFJ2iNs8GCB9cU3K5kZ1z+x7zYOB3zykQurk/o3VSxKtMoYNFXQWiu03S36ELSz\n/qA8h+idkUMXhr3EXvpVfyJomqFWwCLoX2KbFeHzAoGAG4kZ9SCko5V/gkEZE3Q3\nQpk8ypqHOg+RUdLiDo9kQJ9hdzJxTug6d3yQexDYHHCZxbziwggL0gV9N+02q09q\nnccVWMJur7xJDxxrTGfURcXDDBqayttCtmaJqLzHuRIgX4acQmI0gmebyxCz0Pkd\nTiJBqzkRso4i3ugm/cuWbxs=\n-----END PRIVATE KEY-----\n",
+  "client_email": "chatbotflutter@littlebuddy-fbmq.iam.gserviceaccount.com",
+  "client_id": "110825196394474313186",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/chatbotflutter%40littlebuddy-fbmq.iam.gserviceaccount.com"
+}
