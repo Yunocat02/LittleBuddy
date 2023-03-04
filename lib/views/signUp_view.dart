@@ -324,6 +324,7 @@ class _SignUpViewState extends State<SignUpView> {
                 !emailController.text.isEmpty &&
                 !passwordController.text.isEmpty) {
               createAccountAndInsertInformation();
+              
             }
           },
           child: const Text(
@@ -353,6 +354,7 @@ class _SignUpViewState extends State<SignUpView> {
           .doc(uid)
           .set(userdatabase);
       showAlert();
+      
     });
   }
 

@@ -32,6 +32,8 @@ class _LoginViewState extends State<LoginView> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  String role='G';
+  String name='';
 
   final _formKey = GlobalKey<FormState>();
   Profile profile = Profile(email: '', password: '');
@@ -330,8 +332,7 @@ class _LoginViewState extends State<LoginView> {
             // Validate returns true if the form is valid, or false otherwise.
             if (_formKey.currentState!.validate()) {
               // ... Navigate To your Home Page
-              
-                 final FirebaseAuth _auth = FirebaseAuth.instance;
+              final FirebaseAuth _auth = FirebaseAuth.instance;
                  final FirebaseFirestore _db = FirebaseFirestore.instance;
                  final User? user = _auth.currentUser;
                  final uid = user?.uid;
@@ -339,7 +340,7 @@ class _LoginViewState extends State<LoginView> {
                   .collection('userdatabase')
                   .doc(uid)
                   .get();
-                late String role = userSnapshot.get('role');
+                  role = userSnapshot.get('role');
                     
 
               try {
@@ -364,9 +365,10 @@ class _LoginViewState extends State<LoginView> {
                   else{Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) {
                         role="";
-                          return AddPet();
+                          return Mypets();
                        }
                   ));}
+                  role="";
                 });
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'user-not-found') {
@@ -396,7 +398,7 @@ class _LoginViewState extends State<LoginView> {
           )),
     );
   }
-
+  
   Widget gobackButton() {
     return SizedBox(
       width: double.infinity,
