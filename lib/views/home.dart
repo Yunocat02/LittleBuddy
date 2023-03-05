@@ -33,20 +33,13 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     
     final FirebaseAuth _auth = FirebaseAuth.instance;
-    String role="G";
-    String name="";
-    print(role);
-    Future<String> getRoleFromFirestore() async {
+   
     final User? user = _auth.currentUser;
     final uid = user?.uid;
     final FirebaseFirestore _db = FirebaseFirestore.instance;
-    final DocumentSnapshot<Map<String, dynamic>> userSnapshot = await _db.collection('userdatabase').doc(uid).get();
-    String role = userSnapshot.get('role');
-    String name= userSnapshot.get('username');
-    print(name);
-    print(role);
-    return role;
-}
+   
+    
+    
     
     List navItems = [
       {
@@ -75,26 +68,27 @@ class Home extends StatelessWidget {
         title: Text('Menu'),
         centerTitle: true,
         leading: IconButton(
-          onPressed: () async{
-              role = await getRoleFromFirestore();
-              if(role=='A'){
-                role="";
-                  Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AddPet()),
-              );
+          onPressed: () async {
+          if (user != null) {
+              final DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+              await _db.collection('userdatabase').doc(uid).get();
+              if (userSnapshot.exists) {
+                   String role = userSnapshot.get('role');
+                  if (role == 'A' || role == 'M' || role == 'D') {
+                      Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => AddPet()),
+                      );
+                  }
               }
-              else if(role=="M"){
-                role="";
-                  Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AddPet()),);
-              }
-              else{role="";Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Home()));}
-                role='';          
-          },
+          }
+          else{
+            Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Home()),
+                      );
+          }
+},
           icon: Icon(Icons.pets),
         ), 
         actions: [
