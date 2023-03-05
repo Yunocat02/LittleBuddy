@@ -12,10 +12,10 @@ class _camState extends State<cam> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("ยินดีต้อนรับ สู่หน้า Cam")),
+        appBar: AppBar(title: Text("Camera ของทางร้าน")),
         body: WebView(
           initialUrl:
-              'http://58.136.57.127/videostream.cgi?user=admin&pwd=1231232077&resolution=32&rate=0',
+              'http://58.136.56.36/videostream.cgi?user=admin&pwd=1231232077&resolution=32&rate=0',
         ));
   }
 }

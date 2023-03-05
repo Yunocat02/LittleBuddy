@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import '../utils/styles.dart';
 import 'clinic_view.dart';
 import 'datareportviewsmember.dart';
+import 'help_view.dart';
 import 'home.dart';
 
 class Mypets extends StatefulWidget {
@@ -32,7 +33,7 @@ class _Mypets extends State<Mypets> {
       'page': const Home()
     },
     {
-      'text': 'Clinix',
+      'text': 'Clinic',
       'icon': 'assets/nav_icons/heart_icon.svg',
       'page': const Clinic()
     },
@@ -44,7 +45,7 @@ class _Mypets extends State<Mypets> {
     {
       'text': 'Help',
       'icon': 'assets/nav_icons/help_icon.svg',
-      'page': datareportviewsmember()
+      'page': const Helpview()
     },
   ];
 
@@ -121,18 +122,18 @@ class _Mypets extends State<Mypets> {
                 children: [
                   SvgPicture.asset(e['icon'],
                       height: 20,
-                      color: navItems.indexOf(e) == 3
+                      color: navItems.indexOf(e) == 2
                           ? Styles.highlightColor
                           : null),
                   Text(
                     e['text'],
                     style: TextStyle(
                         fontSize: 12,
-                        color: navItems.indexOf(e) == 3
+                        color: navItems.indexOf(e) == 2
                             ? Styles.highlightColor
                             : Styles.blackColor,
                         fontWeight:
-                            navItems.indexOf(e) == 3 ? FontWeight.bold : null),
+                            navItems.indexOf(e) == 2 ? FontWeight.bold : null),
                   )
                 ],
               ),

@@ -45,7 +45,7 @@ class Home extends StatelessWidget {
         'icon': 'assets/nav_icons/pill_icon.svg',
       },
       {
-        'text': 'Clinix',
+        'text': 'Clinic',
         'icon': 'assets/nav_icons/heart_icon.svg',
         'page': const Clinic()
       },
@@ -57,7 +57,7 @@ class Home extends StatelessWidget {
       {
         'text': 'Help',
         'icon': 'assets/nav_icons/help_icon.svg',
-        'page': datareportviewsmember()
+        'page': const Helpview()
       },
     ];
     final size = Layouts.getSize(context);
@@ -87,11 +87,26 @@ class Home extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LoginView()),
-              );
+            onPressed: () async {
+              if (user != null) {
+                final DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+                    await _db.collection('userdatabase').doc(uid).get();
+                if (userSnapshot.exists) {
+                  String role = userSnapshot.get('role');
+                  if (role == 'A' || role == 'M' || role == 'D') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => datareportviewsmember()),
+                    );
+                  }
+                }
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginView()),
+                );
+              }
             },
             icon: Icon(Icons.person),
           ),

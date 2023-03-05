@@ -4,35 +4,34 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-
 class datareportviewsmember extends StatefulWidget {
   @override
-  _datareportviewsmember  createState() => _datareportviewsmember ();
+  _datareportviewsmember createState() => _datareportviewsmember();
 }
 
-class _datareportviewsmember  extends State<datareportviewsmember > {
+class _datareportviewsmember extends State<datareportviewsmember> {
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
   final auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
-  
+
   late String _content = "";
-  late Timestamp _appmtime= Timestamp.now();
-  late Timestamp _datetime= Timestamp.now();
+  late Timestamp _appmtime = Timestamp.now();
+  late Timestamp _datetime = Timestamp.now();
   late String _idpet = "";
   late String _namepet = "";
   late String _remedy = "";
-  late String _url="";
-
+  late String _url = "";
 
   @override
   void initState() {
     super.initState();
     _loadUserInfo();
   }
-   @override
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("ยินดีต้อนรับ")),
+      appBar: AppBar(title: Text("Profile")),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
@@ -48,12 +47,13 @@ class _datareportviewsmember  extends State<datareportviewsmember > {
                     } else {
                       return Column(
                         children: [
-                          
-                          Text('appmtime: ${_appmtime?.toDate().toString() ?? "N/A"}'),
+                          Text(
+                              'appmtime: ${_appmtime?.toDate().toString() ?? "N/A"}'),
                           SizedBox(height: 5),
                           Text('content: $_content'),
                           SizedBox(height: 5),
-                         Text('Timestamp: ${_datetime?.toDate().toString() ?? "N/A"}'),
+                          Text(
+                              'Timestamp: ${_datetime?.toDate().toString() ?? "N/A"}'),
                           SizedBox(height: 5),
                           Text('idpet: $_idpet'),
                           SizedBox(height: 5),
@@ -99,25 +99,21 @@ class _datareportviewsmember  extends State<datareportviewsmember > {
 
   Future<void> _loadUserInfo() async {
     final userId = auth.currentUser?.uid;
-    
+
     if (userId != null) {
       final userDoc =
           await firestore.collection('datareport').doc(userId).get();
       final userData = userDoc.data() as Map<String, dynamic>?;
       setState(() {
-        
         _appmtime = userData?['appm. time'] as Timestamp;
-        
+
         _content = userData?['content'] ?? 'N/A';
         _datetime = userData?['datetime'] as Timestamp;
         _idpet = userData?['idpet'] ?? 'N/A';
         _namepet = userData?['namepet'] ?? 'N/A';
         _remedy = userData?['remedy'] ?? 'N/A';
         _url = userData?['url'] ?? 'N/A';
-        
-        
       });
     }
   }
-  
 }

@@ -1,10 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
+
 import '../widgets/back_button.dart';
-import 'package:LittleBuddy/model/petmodel.dart';
 
 class AddPet extends StatefulWidget {
   const AddPet({Key? key}) : super(key: key);
@@ -13,82 +10,97 @@ class AddPet extends StatefulWidget {
   State<AddPet> createState() => _AddPetState();
 }
 
-
-
 class _AddPetState extends State<AddPet> {
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final FirebaseAuth auth = FirebaseAuth.instance;
-  TextEditingController nameController = TextEditingController();
-  TextEditingController typeController = TextEditingController();
-  TextEditingController ageyearController = TextEditingController();
-  TextEditingController agemonthController = TextEditingController();
-  TextEditingController speciesController = TextEditingController();
-  
+  final _formKey = GlobalKey<FormState>();
 
-  late String uid;
-
-  Future<void> addPetReport() async {
-    final user = auth.currentUser;
-    if (user != null) {
-      uid = user.uid;
-      final DocumentReference userDocRef = firestore.collection('petreport').doc(uid);
-      final CollectionReference petReportCollectionRef = userDocRef.collection('0001');
-
-final Map<String, dynamic> data = {
-  'name': nameController.text,
-  'age(year)': ageyearController.text,
-  'age(month)': agemonthController.text,
-  'type': typeController.text,
-  'species': speciesController.text,
-};
-
-petReportCollectionRef.add(data);
-    }
-  }
-  
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("ยินดีต้อนรับ สู่หน้า addpet")),
+      appBar: AppBar(title: const Text("เพิ่มสัตว์เลี้ยงของคุณ")),
       body: Form(
+        key: _formKey,
         child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
-                controller: nameController,
-                decoration: InputDecoration(labelText: "ชื่อสัตว์"),
-                
+                decoration: InputDecoration(
+                    labelText: "ชื่อสัตว์", hintText: "ตัวอย่าง : แจ้"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'โปรดใส่ชื่อสัตว์';
+                  }
+                  return null;
+                },
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                          labelText: "อายุ (ปี)", hintText: "ตัวอย่าง : 2"),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'โปรดใส่อายุ (ปี)';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                          labelText: "อายุ (เดือน)", hintText: "ตัวอย่าง : 3"),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'โปรดอายุ (เดือน)';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                decoration: InputDecoration(
+                    labelText: "ประเภท", hintText: "ตัวอย่าง : สุนัข"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'โปรดใส่ประเภท';
+                  }
+                  return null;
+                },
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
-                controller: ageyearController,
-                decoration: InputDecoration(labelText: "อายุปี"),
-              
-              ),
-            ),Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: agemonthController,
-                decoration: InputDecoration(labelText: "อายุเดือน"),
-               
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: typeController,
-                decoration: InputDecoration(labelText: "ประเภท"),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: speciesController,
-                decoration: InputDecoration(labelText: "พันธุ์"),
+                decoration: InputDecoration(
+                    labelText: "พันธุ์", hintText: "ตัวอย่าง : Corki"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'โปรดใส่พันธุ์';
+                  }
+                  return null;
+                },
               ),
             ),
             Stack(
@@ -104,10 +116,11 @@ petReportCollectionRef.add(data);
                         MaterialStateProperty.all<Color>(Colors.blue),
                   ),
                   onPressed: () {
-                    // Add your onPressed logic here
-                    addPetReport();
+                    if (_formKey.currentState!.validate()) {
+                      // Add your onPressed logic here
+                    }
                   },
-                  child: const Text('เพิ่ม'),
+                  child: const Text('submit'),
                 ),
               ],
             ),
@@ -116,6 +129,4 @@ petReportCollectionRef.add(data);
       ),
     );
   }
-  
-  
 }

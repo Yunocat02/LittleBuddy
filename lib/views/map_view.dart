@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 class Mapnaja extends StatefulWidget {
   const Mapnaja({super.key});
 
@@ -11,7 +12,7 @@ class _MapnajaState extends State<Mapnaja> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("ยินดีต้อนรับ สู่หน้า map")),
+      appBar: AppBar(title: Text("ค้นหา Clinic")),
       body: const MapScreen(),
     );
   }
@@ -41,7 +42,6 @@ class _MapScreenState extends State<MapScreen> {
   late Marker _Shop1;
   late Marker _Shop2;
   late Marker _Shop3;
-  
 
   @override
   void dispose() {
@@ -55,8 +55,10 @@ class _MapScreenState extends State<MapScreen> {
     List<Widget> DataMarker = [];
     DataMarker.add(Text("ร้านที่ 1"));
     DataMarker.add(Text("ร้านที่ 2"));
-    return Scaffold(                  // หน้าต่างสำเร็จรูป จัดแอพ
-      body: Column(                 // แบ่งส่วนเป็น 2 ส่วนด้วย Column 
+    return Scaffold(
+      // หน้าต่างสำเร็จรูป จัดแอพ
+      body: Column(
+        // แบ่งส่วนเป็น 2 ส่วนด้วย Column
         children: [
           // สร้างกล่องมา ส่วนของ map
           Padding(
@@ -82,7 +84,7 @@ class _MapScreenState extends State<MapScreen> {
                 color: Color.fromARGB(255, 167, 196, 219),
                 borderRadius: BorderRadius.circular(20)),
             height: 250,
-            child: ListView(),  // ทำเป็นรายการ
+            child: ListView(), // ทำเป็นรายการ
           ),
         ],
       ),

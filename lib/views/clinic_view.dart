@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../utils/styles.dart';
 import 'datareportviewsmember.dart';
+import 'help_view.dart';
 import 'mypets_view.dart';
 
 class Clinic extends StatefulWidget {
@@ -22,7 +23,7 @@ List navItems = [
     'page': const Home()
   },
   {
-    'text': 'Clinix',
+    'text': 'Clinic',
     'icon': 'assets/nav_icons/heart_icon.svg',
     'page': const Clinic()
   },
@@ -34,7 +35,7 @@ List navItems = [
   {
     'text': 'Help',
     'icon': 'assets/nav_icons/help_icon.svg',
-    'page': datareportviewsmember()
+    'page': const Helpview()
   },
 ];
 
@@ -43,7 +44,7 @@ class _ClinicState extends State<Clinic> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("ยินดีต้อนรับ สู่หน้า clinic"),
+        title: Text("Menu ในร้าน Clinic"),
         automaticallyImplyLeading: false,
       ),
       body: Padding(
@@ -56,7 +57,7 @@ class _ClinicState extends State<Clinic> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(),
                 onPressed: () {},
-                child: Text('Weboard คลินิก', style: TextStyle(fontSize: 24)),
+                child: Text('Webboard คลินิก', style: TextStyle(fontSize: 24)),
               ),
             ),
             SizedBox(height: 16),
