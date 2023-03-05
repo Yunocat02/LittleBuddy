@@ -1,5 +1,12 @@
+import 'package:LittleBuddy/views/Chatbot_view.dart';
 import 'package:LittleBuddy/views/cam_view.dart';
+import 'package:LittleBuddy/views/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+
+import '../utils/styles.dart';
+import 'datareportviewsmember.dart';
+import 'mypets_view.dart';
 
 class Clinic extends StatefulWidget {
   const Clinic({Key? key}) : super(key: key);
@@ -8,11 +15,37 @@ class Clinic extends StatefulWidget {
   State<Clinic> createState() => _ClinicState();
 }
 
+List navItems = [
+  {
+    'text': 'Adopt',
+    'icon': 'assets/nav_icons/pill_icon.svg',
+    'page': const Home()
+  },
+  {
+    'text': 'Clinix',
+    'icon': 'assets/nav_icons/heart_icon.svg',
+    'page': const Clinic()
+  },
+  {
+    'text': 'Pets',
+    'icon': 'assets/nav_icons/vet_icon.svg',
+    'page': const Mypets()
+  },
+  {
+    'text': 'Help',
+    'icon': 'assets/nav_icons/help_icon.svg',
+    'page': datareportviewsmember()
+  },
+];
+
 class _ClinicState extends State<Clinic> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("ยินดีต้อนรับ สู่หน้า clinic")),
+      appBar: AppBar(
+        title: Text("ยินดีต้อนรับ สู่หน้า clinic"),
+        automaticallyImplyLeading: false,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0), // add some padding
         child: Column(
@@ -38,7 +71,12 @@ class _ClinicState extends State<Clinic> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Chatbot()),
+                  );
+                },
                 child: Text('Chatbot', style: TextStyle(fontSize: 24)),
               ),
             ),
@@ -73,6 +111,49 @@ class _ClinicState extends State<Clinic> {
               ),
             ),
           ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        height: 85,
+        decoration: BoxDecoration(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
+            color: Styles.bgColor),
+        padding: const EdgeInsets.fromLTRB(25, 20, 25, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: navItems.map<Widget>((e) {
+            return InkWell(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(e['icon'],
+                      height: 20,
+                      color: navItems.indexOf(e) == 1
+                          ? Styles.highlightColor
+                          : null),
+                  Text(
+                    e['text'],
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: navItems.indexOf(e) == 1
+                            ? Styles.highlightColor
+                            : Styles.blackColor,
+                        fontWeight:
+                            navItems.indexOf(e) == 1 ? FontWeight.bold : null),
+                  )
+                ],
+              ),
+              onTap: () async {
+                if (navItems.indexOf(e) == 0 ||
+                    navItems.indexOf(e) == 1 ||
+                    navItems.indexOf(e) == 2 ||
+                    navItems.indexOf(e) == 3) {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (_) => e['page']));
+                }
+              },
+            );
+          }).toList(),
         ),
       ),
     );
