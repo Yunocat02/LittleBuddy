@@ -85,13 +85,26 @@ class _PetCard2State extends State<PetCard2> {
                       ),
                       const Gap(5),
                       MaterialButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Mapnaja(),
-                            ),
-                          );
+                        onPressed: () async {
+                          if (user != null) {
+                            final DocumentSnapshot<Map<String, dynamic>>
+                                userSnapshot = await _db
+                                    .collection('userdatabase')
+                                    .doc(uid)
+                                    .get();
+                            if (userSnapshot.exists) {
+                              String role = userSnapshot.get('role');
+                              if (role == 'A' || role == 'M' || role == 'D') {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Mapnaja()),
+                                );
+                              }
+                            }
+                          } else {
+                            showAlert();
+                          }
                         },
                         color: Styles.bgWithOpacityColor,
                         shape: const StadiumBorder(),
