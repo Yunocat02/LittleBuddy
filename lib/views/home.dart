@@ -5,6 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import '../utils/layouts.dart';
 import '../utils/styles.dart';
 import '../widgets/animated_title.dart';
@@ -33,12 +35,16 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     
     final FirebaseAuth _auth = FirebaseAuth.instance;
-   
     final User? user = _auth.currentUser;
     final uid = user?.uid;
     final FirebaseFirestore _db = FirebaseFirestore.instance;
    
-    
+    void showAlert() {
+    QuickAlert.show(
+        context: context,
+        title: "Please login",
+        type: QuickAlertType.error);
+  }
     
     
     List navItems = [
@@ -83,10 +89,7 @@ class Home extends StatelessWidget {
               }
           }
           else{
-            Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Home()),
-                      );
+              showAlert();
           }
 },
           icon: Icon(Icons.pets),
