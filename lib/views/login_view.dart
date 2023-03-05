@@ -332,28 +332,16 @@ class _LoginViewState extends State<LoginView> {
             // Validate returns true if the form is valid, or false otherwise.
             if (_formKey.currentState!.validate()) {
               // ... Navigate To your Home Page
-              final FirebaseAuth _auth = FirebaseAuth.instance;
+                  final FirebaseAuth _auth = FirebaseAuth.instance;
                  final FirebaseFirestore _db = FirebaseFirestore.instance;
                  final User? user = _auth.currentUser;
+                 if(user!=null){
                  final uid = user?.uid;
                  final DocumentSnapshot<Map<String, dynamic>> userSnapshot = await _db
                   .collection('userdatabase')
                   .doc(uid)
                   .get();
                   role = userSnapshot.get('role');
-                    
-
-              try {
-                print(
-                    'Signing in with email ${profile.email} and password ${profile.password}...');
-
-                await FirebaseAuth.instance
-                    .signInWithEmailAndPassword(
-                        email: profile.email, password: profile.password)
-                    .then((value) {
-                  showAlert();
-                 
-                  print('Sign in successful');
                   if (role=='A' ||role=='M' ||role=='D'){
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) {
@@ -368,28 +356,59 @@ class _LoginViewState extends State<LoginView> {
                           return Mypets();
                        }
                   ));}
-                  role="";
-                });
-              } on FirebaseAuthException catch (e) {
-                if (e.code == 'user-not-found') {
-                  QuickAlert.show(
-                      context: context,
-                      title: "Wrong email or password.",
-                      type: QuickAlertType.error);
-                      nameController.clear();
-                      passwordController.clear();
-                  print('Wrong email or password.');
-                } else if (e.code == 'wrong-password') {
-                  QuickAlert.show(
-                      context: context,
-                      title: "Wrong email or password.",
-                      type: QuickAlertType.error);
-                      nameController.clear();
-                      passwordController.clear();
-                  print('Wrong password provided for that user.');
-                }
-              }
-            }
+                 }
+                 else { 
+
+              try {
+                print('Signing in with email ${profile.email} and password ${profile.password}...');
+
+  UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: profile.email, password: profile.password);
+
+  final uid = userCredential.user?.uid; // Get uid from the UserCredential object
+
+  final DocumentSnapshot<Map<String, dynamic>> userSnapshot = await _db
+      .collection('userdatabase')
+      .doc(uid)
+      .get();
+
+  role = userSnapshot.get('role');
+
+  print('Sign in successful');
+  if (role == 'A' || role == 'M' || role == 'D') {
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) {
+      role = '';
+      return Home();
+    }));
+  } else {
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) {
+      role = '';
+      return Mypets();
+    }));
+  }
+} on FirebaseAuthException catch (e) {
+  if (e.code == 'user-not-found') {
+    QuickAlert.show(
+        context: context,
+        title: "Wrong email or password.",
+        type: QuickAlertType.error);
+    nameController.clear();
+    passwordController.clear();
+    print('1');
+  } else if (e.code == 'wrong-password') {
+    QuickAlert.show(
+        context: context,
+        title: "Wrong email or password.",
+        type: QuickAlertType.error);
+    nameController.clear();
+    passwordController.clear();
+    print('2');
+  }
+}
+                 
+            }}
           },
           child: const Text(
             'Login',

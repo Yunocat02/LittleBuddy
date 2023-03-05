@@ -1,3 +1,5 @@
+import 'package:LittleBuddy/model/datareportmodel.dart';
+import 'package:LittleBuddy/views/datareportviewsmember.dart';
 import 'package:LittleBuddy/widgets/pet_card2.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -64,7 +66,7 @@ class Home extends StatelessWidget {
       {
         'text': 'Help',
         'icon': 'assets/nav_icons/help_icon.svg',
-        'page': const Helpview()
+        'page': datareportviewsmember()
       },
     ];
     final size = Layouts.getSize(context);
