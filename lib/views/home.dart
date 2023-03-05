@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../utils/layouts.dart';
 import '../utils/styles.dart';
 import '../widgets/animated_title.dart';
@@ -23,30 +24,21 @@ import 'login_view.dart';
 import 'map_view.dart';
 import 'mypets_view.dart';
 
-
-
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
-  
-  
-  
+
   @override
-  
   Widget build(BuildContext context) {
-    
     final FirebaseAuth _auth = FirebaseAuth.instance;
     final User? user = _auth.currentUser;
     final uid = user?.uid;
     final FirebaseFirestore _db = FirebaseFirestore.instance;
-   
+
     void showAlert() {
-    QuickAlert.show(
-        context: context,
-        title: "Please login",
-        type: QuickAlertType.error);
-  }
-    
-    
+      QuickAlert.show(
+          context: context, title: "Please login", type: QuickAlertType.error);
+    }
+
     List navItems = [
       {
         'text': 'Adopt',
@@ -57,7 +49,7 @@ class Home extends StatelessWidget {
         'icon': 'assets/nav_icons/heart_icon.svg',
         'page': const Clinic()
       },
-      { 
+      {
         'text': 'Pets',
         'icon': 'assets/nav_icons/vet_icon.svg',
         'page': const Mypets()
@@ -75,25 +67,24 @@ class Home extends StatelessWidget {
         centerTitle: true,
         leading: IconButton(
           onPressed: () async {
-          if (user != null) {
+            if (user != null) {
               final DocumentSnapshot<Map<String, dynamic>> userSnapshot =
-              await _db.collection('userdatabase').doc(uid).get();
+                  await _db.collection('userdatabase').doc(uid).get();
               if (userSnapshot.exists) {
-                   String role = userSnapshot.get('role');
-                  if (role == 'A' || role == 'M' || role == 'D') {
-                      Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => AddPet()),
-                      );
-                  }
+                String role = userSnapshot.get('role');
+                if (role == 'A' || role == 'M' || role == 'D') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AddPet()),
+                  );
+                }
               }
-          }
-          else{
+            } else {
               showAlert();
-          }
-},
+            }
+          },
           icon: Icon(Icons.pets),
-        ), 
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -129,7 +120,9 @@ class Home extends StatelessWidget {
           const Gap(25),
           const AnimatedTitle(title: 'Community'),
           const Gap(10),
-          TweenAnimationBuilder<double>(
+          GestureDetector(
+            onTap: () => launch('https://www.facebook.com/NIRVXSH'),
+            child: TweenAnimationBuilder<double>(
               tween: Tween(begin: 0, end: 1),
               duration: const Duration(milliseconds: 500),
               builder: (context, value, _) {
@@ -203,7 +196,9 @@ class Home extends StatelessWidget {
                     ),
                   ],
                 );
-              }),
+              },
+            ),
+          ),
           const Gap(25),
           const AnimatedTitle(title: 'Stories'),
           const Gap(10),
@@ -240,12 +235,25 @@ class Home extends StatelessWidget {
                   )
                 ],
               ),
-              onTap: () {
-                if (navItems.indexOf(e) == 1 ||
-                    navItems.indexOf(e) == 2 ||
-                    navItems.indexOf(e) == 3) {
+              onTap: () async {
+                if (navItems.indexOf(e) == 3) {
                   Navigator.push(
                       context, MaterialPageRoute(builder: (_) => e['page']));
+                }
+                if (navItems.indexOf(e) == 1 || navItems.indexOf(e) == 2) {
+                  if (user != null) {
+                    final DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+                        await _db.collection('userdatabase').doc(uid).get();
+                    if (userSnapshot.exists) {
+                      String role = userSnapshot.get('role');
+                      if (role == 'A' || role == 'M' || role == 'D') {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => e['page']));
+                      }
+                    }
+                  } else {
+                    showAlert();
+                  }
                 }
               },
             );
@@ -255,4 +263,3 @@ class Home extends StatelessWidget {
     );
   }
 }
- 

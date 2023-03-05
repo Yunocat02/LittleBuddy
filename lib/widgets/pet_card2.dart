@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:quickalert/quickalert.dart';
 
 import '../utils/styles.dart';
 import 'package:flutter/material.dart';
@@ -27,12 +30,32 @@ class _PetCard2State extends State<PetCard2> {
 
   @override
   Widget build(BuildContext context) {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final User? user = _auth.currentUser;
+    final uid = user?.uid;
+    final FirebaseFirestore _db = FirebaseFirestore.instance;
+    void showAlert() {
+      QuickAlert.show(
+          context: context, title: "Please login", type: QuickAlertType.error);
+    }
+
     return Expanded(
       flex: 1,
       child: InkWell(
-        onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (_) => const Mapnaja()));
+        onTap: () async {
+          if (user != null) {
+            final DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+                await _db.collection('userdatabase').doc(uid).get();
+            if (userSnapshot.exists) {
+              String role = userSnapshot.get('role');
+              if (role == 'A' || role == 'M' || role == 'D') {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const Mapnaja()));
+              }
+            }
+          } else {
+            showAlert();
+          }
         },
         child: TweenAnimationBuilder<double>(
             tween: Tween(begin: 0, end: 1),
