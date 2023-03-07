@@ -1,6 +1,9 @@
+import 'package:LittleBuddy/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class Mapnaja extends StatefulWidget {
   const Mapnaja({super.key});
@@ -10,6 +13,14 @@ class Mapnaja extends StatefulWidget {
 }
 
 class _MapnajaState extends State<Mapnaja> {
+  // กล่องแจ้งเตือน
+  void showAlert() {
+    QuickAlert.show(
+        context: context,
+        title: "ไปหน้าต่อไป แต่ยังบ่ทำ😅",
+        type: QuickAlertType.error);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,13 +28,20 @@ class _MapnajaState extends State<Mapnaja> {
         title: Text("ค้นหา Clinic"),
         centerTitle: true,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Home()),
+              );
+          },
           icon: Icon(Icons.home),
         ),
         actions: [
           IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.person),
+            onPressed: () {
+              showAlert();
+            },
+            icon: Icon(Icons.check),
           ),
         ],
       ),
@@ -87,7 +105,8 @@ class _MapScreenState extends State<MapScreen> {
             child: Container(
               // บอกลักษณะกล่อง
               decoration: BoxDecoration(color: Colors.green),
-              height: 350,
+              height: MediaQuery.of(context).size.height *
+                  0.4, // ตั้งค่าความสูงของ Container เป็น 40% ของความสูงของหน้าจอ
               child: GoogleMap(
                 myLocationButtonEnabled: false,
                 zoomControlsEnabled: false,
@@ -104,11 +123,12 @@ class _MapScreenState extends State<MapScreen> {
             decoration: BoxDecoration(
                 color: Color.fromARGB(255, 167, 196, 219),
                 borderRadius: BorderRadius.circular(20)),
-            height: 250,
+            height: MediaQuery.of(context).size.height *
+                0.4, // ตั้งค่าความสูงของ Container เป็น 40% ของความสูงของหน้าจอ
             child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ListView.builder(
-                    itemCount: 5, // จำนวนร้านที่แสดง
+                    itemCount: 10, // จำนวนร้านที่แสดง
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
                         padding: const EdgeInsets.all(3.0),
@@ -138,10 +158,13 @@ class _MapScreenState extends State<MapScreen> {
           ),
         ],
       ),
+      // ส่วนของปุ่มลอย ขวาล่าง กดแล้วกลับไปตำแหน่งตัวเอง
       floatingActionButton: FloatingActionButton(
-          backgroundColor: Theme.of(context).primaryColor,
-          onPressed: () => _googleMapController.animateCamera(
-              CameraUpdate.newCameraPosition(_initialCameraPosition))),
+        backgroundColor: Theme.of(context).primaryColor,
+        onPressed: () => _googleMapController.animateCamera(
+            CameraUpdate.newCameraPosition(_initialCameraPosition)),
+        child: Icon(Icons.explore),   // สัญลักษณ์ Icon ลอยขวาล่าง
+      ),
     );
   }
 }

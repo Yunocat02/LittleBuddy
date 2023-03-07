@@ -1,5 +1,10 @@
+import 'package:LittleBuddy/views/mypets_view.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../widgets/back_button.dart';
 
@@ -12,6 +17,36 @@ class AddPet extends StatefulWidget {
 
 class _AddPetState extends State<AddPet> {
   final _formKey = GlobalKey<FormState>();
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController typeController = TextEditingController();
+  TextEditingController ageyearController = TextEditingController();
+  TextEditingController agemonthController = TextEditingController();
+  TextEditingController speciesController = TextEditingController();
+  late String uid;
+  void showAlert() {
+      QuickAlert.show(
+          context: context, title: "Add success", type: QuickAlertType.success);
+    }
+  Future<void> addPetReport() async {
+    final user = auth.currentUser;
+    if (user != null) {
+      uid = user.uid;
+      final DocumentReference userDocRef = firestore.collection('petreport').doc(uid);
+      final CollectionReference petReportCollectionRef = userDocRef.collection('0001');
+
+final Map<String, dynamic> data = {
+  'name': nameController.text,
+  'age(year)': ageyearController.text,
+  'age(month)': agemonthController.text,
+  'type': typeController.text,
+  'species': speciesController.text,
+};
+
+petReportCollectionRef.add(data);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +67,7 @@ class _AddPetState extends State<AddPet> {
                   }
                   return null;
                 },
+                controller: nameController,
               ),
             ),
             Row(
@@ -42,6 +78,7 @@ class _AddPetState extends State<AddPet> {
                     child: TextFormField(
                       decoration: InputDecoration(
                           labelText: "อายุ (ปี)", hintText: "ตัวอย่าง : 2"),
+                          controller: ageyearController,
                       keyboardType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.digitsOnly
@@ -62,6 +99,7 @@ class _AddPetState extends State<AddPet> {
                     child: TextFormField(
                       decoration: InputDecoration(
                           labelText: "อายุ (เดือน)", hintText: "ตัวอย่าง : 3"),
+                          controller: agemonthController,
                       keyboardType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.digitsOnly
@@ -82,6 +120,7 @@ class _AddPetState extends State<AddPet> {
               child: TextFormField(
                 decoration: InputDecoration(
                     labelText: "ประเภท", hintText: "ตัวอย่าง : สุนัข"),
+                     controller: typeController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'โปรดใส่ประเภท';
@@ -95,6 +134,7 @@ class _AddPetState extends State<AddPet> {
               child: TextFormField(
                 decoration: InputDecoration(
                     labelText: "พันธุ์", hintText: "ตัวอย่าง : Corki"),
+                    controller: speciesController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'โปรดใส่พันธุ์';
@@ -119,6 +159,12 @@ class _AddPetState extends State<AddPet> {
                     if (_formKey.currentState!.validate()) {
                       // Add your onPressed logic here
                     }
+                    addPetReport();
+                    showAlert();
+                    Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) {
+                        return Mypets();
+                      }));
                   },
                   child: const Text('submit'),
                 ),
