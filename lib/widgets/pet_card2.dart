@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 
+import '../views/login_view.dart';
 import '../views/map_view.dart';
 
 class PetCard2 extends StatefulWidget {
@@ -43,16 +44,11 @@ class _PetCard2State extends State<PetCard2> {
       flex: 1,
       child: InkWell(
         onTap: () async {
-          if (user != null) {
-            final DocumentSnapshot<Map<String, dynamic>> userSnapshot =
-                await _db.collection('userdatabase').doc(uid).get();
-            if (userSnapshot.exists) {
-              String role = userSnapshot.get('role');
-              if (role == 'A' || role == 'M' || role == 'D') {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const Mapnaja()));
-              }
-            }
+          if (globalRole?.role == 'A' ||
+              globalRole?.role == 'M' ||
+              globalRole?.role == 'D') {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (_) => const Mapnaja()));
           } else {
             showAlert();
           }
@@ -86,22 +82,14 @@ class _PetCard2State extends State<PetCard2> {
                       const Gap(5),
                       MaterialButton(
                         onPressed: () async {
-                          if (user != null) {
-                            final DocumentSnapshot<Map<String, dynamic>>
-                                userSnapshot = await _db
-                                    .collection('userdatabase')
-                                    .doc(uid)
-                                    .get();
-                            if (userSnapshot.exists) {
-                              String role = userSnapshot.get('role');
-                              if (role == 'A' || role == 'M' || role == 'D') {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Mapnaja()),
-                                );
-                              }
-                            }
+                          if (globalRole?.role == 'A' ||
+                              globalRole?.role == 'M' ||
+                              globalRole?.role == 'D') {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Mapnaja()),
+                            );
                           } else {
                             showAlert();
                           }

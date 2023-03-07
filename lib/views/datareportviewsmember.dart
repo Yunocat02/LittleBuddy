@@ -21,6 +21,8 @@ class _datareportviewsmember extends State<datareportviewsmember> {
   late String _namepet = "";
   late String _remedy = "";
   late String _url = "";
+  late String _role = "";
+  late String _username = "";
 
   @override
   void initState() {
@@ -47,37 +49,41 @@ class _datareportviewsmember extends State<datareportviewsmember> {
                     } else {
                       return Column(
                         children: [
-                          Text(
-                              'appmtime: ${_appmtime?.toDate().toString() ?? "N/A"}'),
+                          //Text(
+                          //    'appmtime: ${_appmtime?.toDate().toString() ?? "N/A"}'),
+                          //SizedBox(height: 5),
+                          //Text('content: $_content'),
+                          //SizedBox(height: 5),
+                          //Text(
+                          //    'Timestamp: ${_datetime?.toDate().toString() ?? "N/A"}'),
+                          //SizedBox(height: 5),
+                          //Text('idpet: $_idpet'),
+                          //SizedBox(height: 5),
+                          //Text('namepet: $_namepet'),
+                          //SizedBox(height: 5),
+                          //Text('remedy: $_remedy'),
+                          //SizedBox(height: 5),
+                          //Text('url: ${_url}'),
                           SizedBox(height: 5),
-                          Text('content: $_content'),
+                          Text('username: $_username'),
                           SizedBox(height: 5),
-                          Text(
-                              'Timestamp: ${_datetime?.toDate().toString() ?? "N/A"}'),
-                          SizedBox(height: 5),
-                          Text('idpet: $_idpet'),
-                          SizedBox(height: 5),
-                          Text('namepet: $_namepet'),
-                          SizedBox(height: 5),
-                          Text('remedy: $_remedy'),
-                          SizedBox(height: 5),
-                          Text('url: ${_url}'),
+                          Text('role: $_role'),
                         ],
                       );
                     }
                   },
                 ),
                 ElevatedButton(
-                  child: Text("ออกจากระบบ"),
-                  onPressed: () {
-                    auth.signOut().then((value) {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) {
-                        return LoginView();
-                      }));
-                    });
+                  onPressed: () async {
+                    await FirebaseAuth.instance.signOut();
+                    globalRole?.role = ''; // กำหนดค่า globalRole เป็น null
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginView()),
+                    ); // กลับไปที่หน้า Home
                   },
-                ),
+                  child: Text('Logout'),
+                )
               ],
             ),
           ),
@@ -102,17 +108,20 @@ class _datareportviewsmember extends State<datareportviewsmember> {
 
     if (userId != null) {
       final userDoc =
-          await firestore.collection('datareport').doc(userId).get();
+          await firestore.collection('userdatabase').doc(userId).get();
       final userData = userDoc.data() as Map<String, dynamic>?;
       setState(() {
-        _appmtime = userData?['appm. time'] as Timestamp;
+        //_appmtime = userData?['appm. time'] as Timestamp;
 
-        _content = userData?['content'] ?? 'N/A';
-        _datetime = userData?['datetime'] as Timestamp;
-        _idpet = userData?['idpet'] ?? 'N/A';
-        _namepet = userData?['namepet'] ?? 'N/A';
-        _remedy = userData?['remedy'] ?? 'N/A';
-        _url = userData?['url'] ?? 'N/A';
+        _username = userData?['username'] ?? 'N/A';
+        _role = userData?['role'] ?? 'N/A';
+
+        //_content = userData?['content'] ?? 'N/A';
+        //_datetime = userData?['datetime'] as Timestamp;
+        //_idpet = userData?['idpet'] ?? 'N/A';
+        //_namepet = userData?['namepet'] ?? 'N/A';
+        //_remedy = userData?['remedy'] ?? 'N/A';
+        //_url = userData?['url'] ?? 'N/A';
       });
     }
   }

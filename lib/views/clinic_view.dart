@@ -73,7 +73,7 @@ class _ClinicState extends State<Clinic> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => Chatbot()),
                   );
@@ -103,7 +103,7 @@ class _ClinicState extends State<Clinic> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => cam()),
                   );
@@ -146,10 +146,9 @@ class _ClinicState extends State<Clinic> {
               ),
               onTap: () async {
                 if (navItems.indexOf(e) == 0 ||
-                    navItems.indexOf(e) == 1 ||
                     navItems.indexOf(e) == 2 ||
                     navItems.indexOf(e) == 3) {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                       context, MaterialPageRoute(builder: (_) => e['page']));
                 }
               },

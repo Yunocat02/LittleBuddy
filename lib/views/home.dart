@@ -1,10 +1,7 @@
-import 'package:LittleBuddy/model/datareportmodel.dart';
 import 'package:LittleBuddy/views/datareportviewsmember.dart';
 import 'package:LittleBuddy/widgets/pet_card2.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:get/get.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -12,16 +9,13 @@ import '../utils/layouts.dart';
 import '../utils/styles.dart';
 import '../widgets/animated_title.dart';
 import '../widgets/pet_card.dart';
-import '../widgets/stories_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
-import 'Chatbot_view.dart';
 import 'addpet_view.dart';
 import 'clinic_view.dart';
 import 'help_view.dart';
 import 'login_view.dart';
-import 'map_view.dart';
 import 'mypets_view.dart';
 
 class Home extends StatelessWidget {
@@ -67,18 +61,13 @@ class Home extends StatelessWidget {
         centerTitle: true,
         leading: IconButton(
           onPressed: () async {
-            if (user != null) {
-              final DocumentSnapshot<Map<String, dynamic>> userSnapshot =
-                  await _db.collection('userdatabase').doc(uid).get();
-              if (userSnapshot.exists) {
-                String role = userSnapshot.get('role');
-                if (role == 'A' || role == 'M' || role == 'D') {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AddPet()),
-                  );
-                }
-              }
+            if (globalRole?.role == 'A' ||
+                globalRole?.role == 'M' ||
+                globalRole?.role == 'D') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddPet()),
+              );
             } else {
               showAlert();
             }
@@ -88,19 +77,14 @@ class Home extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () async {
-              if (user != null) {
-                final DocumentSnapshot<Map<String, dynamic>> userSnapshot =
-                    await _db.collection('userdatabase').doc(uid).get();
-                if (userSnapshot.exists) {
-                  String role = userSnapshot.get('role');
-                  if (role == 'A' || role == 'M' || role == 'D') {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => datareportviewsmember()),
-                    );
-                  }
-                }
+              if (globalRole?.role == 'A' ||
+                  globalRole?.role == 'M' ||
+                  globalRole?.role == 'D') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => datareportviewsmember()),
+                );
               } else {
                 Navigator.push(
                   context,
@@ -215,9 +199,6 @@ class Home extends StatelessWidget {
             ),
           ),
           const Gap(25),
-          const AnimatedTitle(title: 'Stories'),
-          const Gap(10),
-          const StoriesSection()
         ],
       ),
       bottomNavigationBar: Container(
@@ -256,16 +237,11 @@ class Home extends StatelessWidget {
                       context, MaterialPageRoute(builder: (_) => e['page']));
                 }
                 if (navItems.indexOf(e) == 1 || navItems.indexOf(e) == 2) {
-                  if (user != null) {
-                    final DocumentSnapshot<Map<String, dynamic>> userSnapshot =
-                        await _db.collection('userdatabase').doc(uid).get();
-                    if (userSnapshot.exists) {
-                      String role = userSnapshot.get('role');
-                      if (role == 'A' || role == 'M' || role == 'D') {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => e['page']));
-                      }
-                    }
+                  if (globalRole?.role == 'A' ||
+                      globalRole?.role == 'M' ||
+                      globalRole?.role == 'D') {
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (_) => e['page']));
                   } else {
                     showAlert();
                   }

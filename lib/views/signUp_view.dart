@@ -370,7 +370,7 @@ class _SignUpViewState extends State<SignUpView> {
             ),
           ),
           onPressed: () {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => Home()),
             );

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../utils/styles.dart';
 import 'clinic_view.dart';
 import 'home.dart';
+import 'login_view.dart';
 import 'mypets_view.dart';
 
 class Helpview extends StatefulWidget {
@@ -40,6 +43,11 @@ List navItems = [
 class _HelpviewState extends State<Helpview> {
   @override
   Widget build(BuildContext context) {
+    void showAlert() {
+      QuickAlert.show(
+          context: context, title: "Please login", type: QuickAlertType.error);
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Help"),
@@ -141,12 +149,19 @@ class _HelpviewState extends State<Helpview> {
                 ],
               ),
               onTap: () async {
-                if (navItems.indexOf(e) == 0 ||
-                    navItems.indexOf(e) == 1 ||
-                    navItems.indexOf(e) == 2 ||
-                    navItems.indexOf(e) == 3) {
-                  Navigator.push(
+                if (navItems.indexOf(e) == 0) {
+                  Navigator.pushReplacement(
                       context, MaterialPageRoute(builder: (_) => e['page']));
+                }
+                if (navItems.indexOf(e) == 1 || navItems.indexOf(e) == 2) {
+                  if (globalRole?.role == 'A' ||
+                      globalRole?.role == 'M' ||
+                      globalRole?.role == 'D') {
+                    Navigator.pushReplacement(
+                        context, MaterialPageRoute(builder: (_) => e['page']));
+                  } else {
+                    showAlert();
+                  }
                 }
               },
             );

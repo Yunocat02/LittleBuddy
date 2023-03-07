@@ -47,10 +47,8 @@ class _BotState extends State<Bot> {
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Home()),
-            );
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => Home()));
           },
           icon: Icon(Icons.arrow_back),
         ),

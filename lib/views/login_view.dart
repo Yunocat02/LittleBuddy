@@ -1,24 +1,46 @@
-// ignore_for_file: avoid_print
-
-import 'package:LittleBuddy/views/addpet_view.dart';
-import 'package:LittleBuddy/views/datareportviewsmember.dart';
 import 'package:LittleBuddy/views/home.dart';
-import 'package:LittleBuddy/views/mypets_view.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:LittleBuddy/views/signUp_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:LittleBuddy/model/profile.dart';
-import 'package:LittleBuddy/views/Mainmenu_member.dart';
-import 'package:LittleBuddy/views/signUp_view.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../constants.dart';
 import '../controller/simple_ui_controller.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:quickalert/quickalert.dart';
+import '../model/profile.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
+final User? user = _auth.currentUser;
+final uid = user?.uid;
+final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+class Role {
+  String role;
+
+  Role(this.role);
+
+  factory Role.fromUserSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> userSnapshot) {
+    final String role = userSnapshot.get('role');
+    return Role(role);
+  }
+}
+
+Role? globalRole;
+
+Future<void> getUserRole() async {
+  final DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+      await _db.collection('userdatabase').doc(uid).get();
+  if (userSnapshot.exists) {
+    final Role role = Role.fromUserSnapshot(userSnapshot);
+    globalRole = role; // กำหนดค่า globalRole
+  } else {
+    throw Exception("User not found");
+  }
+}
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -27,24 +49,15 @@ class LoginView extends StatefulWidget {
   State<LoginView> createState() => _LoginViewState();
 }
 
-
 class _LoginViewState extends State<LoginView> {
+  final SimpleUIController simpleUIController = Get.put(SimpleUIController());
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  String role='G';
-  String name='';
+
+  Profile profile = Profile(email: '', password: '');
 
   final _formKey = GlobalKey<FormState>();
-  Profile profile = Profile(email: '', password: '');
-  final Future<FirebaseApp> firebase = Firebase.initializeApp();
-
-  void showAlert() {
-    QuickAlert.show(
-        context: context,
-        title: "Wrong email or password",
-        type: QuickAlertType.error);
-  }
 
   @override
   void dispose() {
@@ -54,7 +67,6 @@ class _LoginViewState extends State<LoginView> {
     super.dispose();
   }
 
-  SimpleUIController simpleUIController = Get.put(SimpleUIController());
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -155,7 +167,7 @@ class _LoginViewState extends State<LoginView> {
         Padding(
           padding: const EdgeInsets.only(left: 20.0),
           child: Text(
-            'Welcome Back',
+            'Welcome Back Catchy',
             style: kLoginSubtitleStyle(size),
           ),
         ),
@@ -178,8 +190,8 @@ class _LoginViewState extends State<LoginView> {
                       borderRadius: BorderRadius.all(Radius.circular(15)),
                     ),
                   ),
-                  controller: nameController,
                   keyboardType: TextInputType.emailAddress,
+                  controller: nameController,
                   // The validator receives the text that the user has entered.
                   validator: (value) {
                     if (value == null || value.isEmpty || !value.isEmail) {
@@ -242,13 +254,10 @@ class _LoginViewState extends State<LoginView> {
                     // The validator receives the text that the user has entered.
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        passwordController.clear();
                         return 'Please enter some text';
                       } else if (value.length < 7) {
-                        passwordController.clear();
                         return 'at least enter 6 characters';
                       } else if (value.length > 13) {
-                        passwordController.clear();
                         return 'maximum character is 13';
                       }
                       profile.password = value;
@@ -277,10 +286,10 @@ class _LoginViewState extends State<LoginView> {
                 /// Navigate To Login Screen
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                            builder: (ctx) => const SignUpView()));
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignUpView()),
+                    );
                     nameController.clear();
                     emailController.clear();
                     passwordController.clear();
@@ -305,7 +314,7 @@ class _LoginViewState extends State<LoginView> {
                 SizedBox(
                   height: size.height * 0.03,
                 ),
-                gobackButton(),
+                gobackButton()
               ],
             ),
           ),
@@ -314,110 +323,60 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
+  void showAlert() {
+    QuickAlert.show(
+        context: context,
+        title: "Wrong email or password",
+        type: QuickAlertType.error);
+  }
+
   // Login Button
   Widget loginButton() {
     return SizedBox(
       width: double.infinity,
       height: 55,
       child: ElevatedButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.deepPurpleAccent),
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(Colors.deepPurpleAccent),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
             ),
           ),
-          onPressed: () async {
-            // Validate returns true if the form is valid, or false otherwise.
-            if (_formKey.currentState!.validate()) {
-              // ... Navigate To your Home Page
-                  final FirebaseAuth _auth = FirebaseAuth.instance;
-                 final FirebaseFirestore _db = FirebaseFirestore.instance;
-                 final User? user = _auth.currentUser;
-                 if(user!=null){
-                 final uid = user?.uid;
-                 final DocumentSnapshot<Map<String, dynamic>> userSnapshot = await _db
-                  .collection('userdatabase')
-                  .doc(uid)
-                  .get();
-                  role = userSnapshot.get('role');
-                  if (role=='A' ||role=='M' ||role=='D'){
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) {
-                        role="";
-                          return Home();
-                       }
-                  ));
-                  }
-                  else{Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) {
-                        role="";
-                          return Mypets();
-                       }
-                  ));}
-                 }
-                 else { 
+        ),
+        onPressed: () async {
+          // Validate returns true if the form is valid, or false otherwise.
+          if (_formKey.currentState!.validate()) {
+            try {
+              // Call Firebase Auth signInWithEmailAndPassword method
+              await FirebaseAuth.instance.signInWithEmailAndPassword(
+                email: profile.email,
+                password: profile.password,
+              );
 
-              try {
-                print('Signing in with email ${profile.email} and password ${profile.password}...');
-
-  UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: profile.email, password: profile.password);
-
-  final uid = userCredential.user?.uid; // Get uid from the UserCredential object
-
-  final DocumentSnapshot<Map<String, dynamic>> userSnapshot = await _db
-      .collection('userdatabase')
-      .doc(uid)
-      .get();
-
-  role = userSnapshot.get('role');
-
-  print('Sign in successful');
-  if (role == 'A' || role == 'M' || role == 'D') {
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (context) {
-      role = '';
-      return Home();
-    }));
-  } else {
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (context) {
-      role = '';
-      return Mypets();
-    }));
-  }
-} on FirebaseAuthException catch (e) {
-  if (e.code == 'user-not-found') {
-    QuickAlert.show(
-        context: context,
-        title: "Wrong email or password.",
-        type: QuickAlertType.error);
-    nameController.clear();
-    passwordController.clear();
-    print('1');
-  } else if (e.code == 'wrong-password') {
-    QuickAlert.show(
-        context: context,
-        title: "Wrong email or password.",
-        type: QuickAlertType.error);
-    nameController.clear();
-    passwordController.clear();
-    print('2');
-  }
-}
-                 
-            }}
-          },
-          child: const Text(
-            'Login',
-            style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-          )),
+              await getUserRole();
+              // Navigate to Home screen after login success
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Home()),
+              );
+            } on FirebaseAuthException catch (e) {
+              // Show error message if login failed
+              if (e.code == 'user-not-found') {
+                showAlert();
+              } else if (e.code == 'wrong-password') {
+                showAlert();
+              }
+            } catch (e) {
+              print(e);
+            }
+          }
+        },
+        child: const Text('Login'),
+      ),
     );
   }
-  
+
   Widget gobackButton() {
     return SizedBox(
       width: double.infinity,
@@ -432,7 +391,7 @@ class _LoginViewState extends State<LoginView> {
             ),
           ),
           onPressed: () {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => Home()),
             );
@@ -444,4 +403,8 @@ class _LoginViewState extends State<LoginView> {
           )),
     );
   }
+}
+
+void initializeApp() async {
+  await getUserRole();
 }

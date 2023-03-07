@@ -140,9 +140,8 @@ class _Mypets extends State<Mypets> {
               onTap: () async {
                 if (navItems.indexOf(e) == 0 ||
                     navItems.indexOf(e) == 1 ||
-                    navItems.indexOf(e) == 2 ||
                     navItems.indexOf(e) == 3) {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                       context, MaterialPageRoute(builder: (_) => e['page']));
                 }
               },

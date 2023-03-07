@@ -1,15 +1,14 @@
 import 'package:LittleBuddy/views/cam_view.dart';
+import 'package:LittleBuddy/views/login_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'views/home.dart';
 
 void main() async {
-  // Initialize Firebase
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  
+
   // Run the app
   runApp(MyApp());
 }
