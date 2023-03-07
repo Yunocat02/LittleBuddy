@@ -336,44 +336,47 @@ class _LoginViewState extends State<LoginView> {
       width: double.infinity,
       height: 55,
       child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.deepPurpleAccent),
-          shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.deepPurpleAccent),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
             ),
           ),
-        ),
-        onPressed: () async {
-          // Validate returns true if the form is valid, or false otherwise.
-          if (_formKey.currentState!.validate()) {
-            try {
-              // Call Firebase Auth signInWithEmailAndPassword method
-              await FirebaseAuth.instance.signInWithEmailAndPassword(
-                email: profile.email,
-                password: profile.password,
-              );
+          onPressed: () async {
+            // Validate returns true if the form is valid, or false otherwise.
+            if (_formKey.currentState!.validate()) {
+              try {
+                // Call Firebase Auth signInWithEmailAndPassword method
+                await FirebaseAuth.instance.signInWithEmailAndPassword(
+                  email: profile.email,
+                  password: profile.password,
+                );
 
-              await getUserRole();
-              // Navigate to Home screen after login success
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => Home()),
-              );
-            } on FirebaseAuthException catch (e) {
-              // Show error message if login failed
-              if (e.code == 'user-not-found') {
-                showAlert();
-              } else if (e.code == 'wrong-password') {
-                showAlert();
+                await getUserRole();
+                // Navigate to Home screen after login success
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => Home()),
+                );
+              } on FirebaseAuthException catch (e) {
+                // Show error message if login failed
+                if (e.code == 'user-not-found') {
+                  showAlert();
+                } else if (e.code == 'wrong-password') {
+                  showAlert();
+                }
+              } catch (e) {
+                print(e);
               }
-            } catch (e) {
-              print(e);
             }
-          }
-        },
-        child: const Text('Login'),
-      ),
+          },
+          child: const Text(
+            'Login',
+            style: TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+          )),
     );
   }
 
