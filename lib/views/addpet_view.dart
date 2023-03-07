@@ -26,25 +26,28 @@ class _AddPetState extends State<AddPet> {
   TextEditingController speciesController = TextEditingController();
   late String uid;
   void showAlert() {
-      QuickAlert.show(
-          context: context, title: "Add success", type: QuickAlertType.success);
-    }
+    QuickAlert.show(
+        context: context, title: "Add success", type: QuickAlertType.success);
+  }
+
   Future<void> addPetReport() async {
     final user = auth.currentUser;
     if (user != null) {
       uid = user.uid;
-      final DocumentReference userDocRef = firestore.collection('petreport').doc(uid);
-      final CollectionReference petReportCollectionRef = userDocRef.collection('0001');
+      final DocumentReference userDocRef =
+          firestore.collection('petreport').doc(uid);
+      final CollectionReference petReportCollectionRef =
+          userDocRef.collection('0001');
 
-final Map<String, dynamic> data = {
-  'name': nameController.text,
-  'age(year)': ageyearController.text,
-  'age(month)': agemonthController.text,
-  'type': typeController.text,
-  'species': speciesController.text,
-};
+      final Map<String, dynamic> data = {
+        'name': nameController.text,
+        'age(year)': ageyearController.text,
+        'age(month)': agemonthController.text,
+        'type': typeController.text,
+        'species': speciesController.text,
+      };
 
-petReportCollectionRef.add(data);
+      petReportCollectionRef.add(data);
     }
   }
 
@@ -78,7 +81,7 @@ petReportCollectionRef.add(data);
                     child: TextFormField(
                       decoration: InputDecoration(
                           labelText: "อายุ (ปี)", hintText: "ตัวอย่าง : 2"),
-                          controller: ageyearController,
+                      controller: ageyearController,
                       keyboardType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.digitsOnly
@@ -99,7 +102,7 @@ petReportCollectionRef.add(data);
                     child: TextFormField(
                       decoration: InputDecoration(
                           labelText: "อายุ (เดือน)", hintText: "ตัวอย่าง : 3"),
-                          controller: agemonthController,
+                      controller: agemonthController,
                       keyboardType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.digitsOnly
@@ -120,7 +123,7 @@ petReportCollectionRef.add(data);
               child: TextFormField(
                 decoration: InputDecoration(
                     labelText: "ประเภท", hintText: "ตัวอย่าง : สุนัข"),
-                     controller: typeController,
+                controller: typeController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'โปรดใส่ประเภท';
@@ -134,7 +137,7 @@ petReportCollectionRef.add(data);
               child: TextFormField(
                 decoration: InputDecoration(
                     labelText: "พันธุ์", hintText: "ตัวอย่าง : Corki"),
-                    controller: speciesController,
+                controller: speciesController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'โปรดใส่พันธุ์';
@@ -157,14 +160,13 @@ petReportCollectionRef.add(data);
                   ),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      // Add your onPressed logic here
-                    }
-                    addPetReport();
-                    showAlert();
-                    Navigator.pushReplacement(context,
+                      addPetReport();
+                      showAlert();
+                      Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (context) {
                         return Mypets();
                       }));
+                    }
                   },
                   child: const Text('submit'),
                 ),
