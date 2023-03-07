@@ -1,3 +1,4 @@
+import 'package:LittleBuddy/views/Chatbot2_view.dart';
 import 'package:get/get.dart';
 
 import '../utils/styles.dart';
@@ -31,8 +32,7 @@ class _PetCardState extends State<PetCard> {
       flex: 1,
       child: InkWell(
         onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (_) => const Chatbot()));
+          Navigator.push(context, MaterialPageRoute(builder: (_) => bot2()));
         },
         child: TweenAnimationBuilder<double>(
             tween: Tween(begin: 0, end: 1),
@@ -66,7 +66,7 @@ class _PetCardState extends State<PetCard> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Chatbot(),
+                              builder: (context) => bot2(),
                             ),
                           );
                         },

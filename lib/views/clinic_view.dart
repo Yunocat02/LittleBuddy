@@ -1,3 +1,4 @@
+import 'package:LittleBuddy/views/Chatbot2_view.dart';
 import 'package:LittleBuddy/views/Chatbot_view.dart';
 import 'package:LittleBuddy/views/cam_view.dart';
 import 'package:LittleBuddy/views/home.dart';
@@ -75,7 +76,7 @@ class _ClinicState extends State<Clinic> {
                 onPressed: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => Chatbot()),
+                    MaterialPageRoute(builder: (context) => bot2()),
                   );
                 },
                 child: Text('Chatbot', style: TextStyle(fontSize: 24)),
