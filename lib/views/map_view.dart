@@ -30,9 +30,9 @@ class _MapnajaState extends State<Mapnaja> {
         leading: IconButton(
           onPressed: () {
             Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => Home()),
-              );
+              context,
+              MaterialPageRoute(builder: (context) => Home()),
+            );
           },
           icon: Icon(Icons.home),
         ),
@@ -121,32 +121,36 @@ class _MapScreenState extends State<MapScreen> {
           Container(
             // บอกลักษณะกล่อง
             decoration: BoxDecoration(
-                color: Color.fromARGB(255, 167, 196, 219),
+                //color: Color.fromARGB(255, 167, 196, 219),
                 borderRadius: BorderRadius.circular(20)),
             height: MediaQuery.of(context).size.height *
                 0.4, // ตั้งค่าความสูงของ Container เป็น 40% ของความสูงของหน้าจอ
             child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ListView.builder(
-                    itemCount: 10, // จำนวนร้านที่แสดง
+                    itemCount: 15, // จำนวนร้านที่แสดง
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
-                        padding: const EdgeInsets.all(3.0),
+                        padding: const EdgeInsets.all(5.0),
                         child: Container(
                           // กรอบของแต่ละรายการ
                           decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Color.fromARGB(255, 118, 133, 145),
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(20),
+                            // border: Border.all(
+                            //   color: Color.fromARGB(255, 118, 133, 145),
+                            //   width: 1.0,
+                            // ),
+                            borderRadius: BorderRadius.circular(5),
+                            color: Color.fromARGB(255, 192,247,248) // เปลี่ยนสีพื้นหลังของ Container แต่ละรายการ
                           ),
                           // เนื้อใน
                           child: ListTile(
+
+                              // ข้อความ หลัก
                               title: Text(
                                 "ร้านที่ ${index + 1}",
                                 style: TextStyle(fontSize: 25),
                               ),
+                              // ข้อความ รอง
                               subtitle: Text("ร้านนี้ดีนะ"),
                               // ในส่วนของการเลือกร้าน
                               onTap: () {
@@ -163,7 +167,7 @@ class _MapScreenState extends State<MapScreen> {
         backgroundColor: Theme.of(context).primaryColor,
         onPressed: () => _googleMapController.animateCamera(
             CameraUpdate.newCameraPosition(_initialCameraPosition)),
-        child: Icon(Icons.explore),   // สัญลักษณ์ Icon ลอยขวาล่าง
+        child: Icon(Icons.explore), // สัญลักษณ์ Icon ลอยขวาล่าง
       ),
     );
   }

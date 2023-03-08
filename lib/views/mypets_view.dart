@@ -77,31 +77,88 @@ class _Mypets extends State<Mypets> {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: firestore
-            .collection('petreport')
-            .doc(getuser()?.uid)
-            .collection("0001")
-            .snapshots(),
+            .collection('petreport')  // ชื่อตาราง
+            .doc(getuser()?.uid)      // เอา id เก็บแบบ doc
+            .collection("0001")       // id sub field ที่แต่ย่อยมาตอน addpet
+            .snapshots(),             // ตัวกลางในการ อ่าน/เขียน ข้อมูล
         builder: (context, subCollectionSnapshot) {
           if (subCollectionSnapshot.hasData) {
-            return ListView.builder(
-              itemCount: subCollectionSnapshot.data!.docs.length,
-              itemBuilder: (context, index) {
-                final data = subCollectionSnapshot.data!.docs[index].data()
-                    as Map<String, dynamic>;
-                return ListTile(
-                  title: Text(data['name'] ?? "N/A"),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(data['type'] ?? "N/A"),
-                      Text(data['age(year)'] ?? "N/A"),
-                      Text(data['age(month)'] ?? "N/A"),
-                      Text(data['species'] ?? "N/A"),
-                    ],
-                  ),
-                );
-              },
+            return Container(
+              // บอกลักษณะกล่อง
+              decoration: BoxDecoration(
+                  //color: Color.fromARGB(255, 167, 196, 219),
+                  borderRadius: BorderRadius.circular(20)),
+              height: MediaQuery.of(context).size.height *
+                  1, // ตั้งค่าความสูงของ Container เป็น 40% ของความสูงของหน้าจอ
+              child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView.builder(
+                      // จำนวนสัตว์ที่แสดง
+                      itemCount: subCollectionSnapshot
+                          .data!.docs.length, 
+                      itemBuilder: (BuildContext context, int index) {
+                        // ดึงข้อมูล
+                        final data = subCollectionSnapshot.data!.docs[index]
+                            .data() as Map<String, dynamic>;
+                        return Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Container(
+                            // กรอบของแต่ละรายการ
+                            decoration: BoxDecoration(
+                              // border: Border.all(
+                              //   color: Color.fromARGB(255, 118, 133, 145),
+                              //   width: 1.0,
+                              // ),
+                              borderRadius: BorderRadius.circular(5),
+                              color: Color.fromARGB(255, 192,247,248) // เปลี่ยนสีพื้นหลังของ Container แต่ละรายการ
+                            ),
+                            // เนื้อใน
+                            child: ListTile(
+                                title: Text(
+                                  "ชื่อ: " + data['name'] ?? "N/A",
+                                  style: TextStyle(fontSize: 25),
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("ประเภท: " + data['type'] ?? "N/A"),
+                                    Text("อายุ: " +
+                                            data['age(year)'] +
+                                            " ปี " +
+                                            data['age(month)'] +
+                                            " เดือน " ??
+                                        "N/A"),
+                                    //Text(data['age(month)'] ?? "N/A"),
+                                    Text("พันธ์: " + data['species'] ?? "N/A"),
+                                  ],
+                                ),
+                                // ในส่วนของการเลือกร้าน
+                                onTap: () {
+                                  print("คุณเลือกร้านที่ ${index + 1}");
+                                }),
+                          ),
+                        );
+                      })),
             );
+            // ListView.builder(
+            //   itemCount: subCollectionSnapshot.data!.docs.length,
+            //   itemBuilder: (context, index) {
+            //     final data = subCollectionSnapshot.data!.docs[index].data()
+            //         as Map<String, dynamic>;
+            //     return ListTile(
+            //       title: Text(data['name'] ?? "N/A"),
+            //       subtitle: Column(
+            //         crossAxisAlignment: CrossAxisAlignment.start,
+            //         children: [
+            //           Text(data['type'] ?? "N/A"),
+            //           Text(data['age(year)'] ?? "N/A"),
+            //           Text(data['age(month)'] ?? "N/A"),
+            //           Text(data['species'] ?? "N/A"),
+            //         ],
+            //       ),
+            //     );
+            //   },
+            // );
           } else {
             return const Center(child: CircularProgressIndicator());
           }

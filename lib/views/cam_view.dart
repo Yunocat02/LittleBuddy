@@ -15,7 +15,7 @@ class _camState extends State<cam> {
         appBar: AppBar(title: Text("Camera ของทางร้าน")),
         body: WebView(
           initialUrl:
-              'http://58.136.58.86/videostream.cgi?user=admin&pwd=1231232077&resolution=32&rate=0',
+              'http://yunocat.thddns.net//videostream.cgi?user=admin&pwd=1231232077&resolution=32&rate=0',
         ));
   }
 }
