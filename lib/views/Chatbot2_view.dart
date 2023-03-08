@@ -44,7 +44,11 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
       });
     }
   }
-
+  @override
+  void initState() {
+    super.initState();
+    response("นารูโตะ");
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +62,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
           },
           icon: Icon(Icons.arrow_back),
         ),
-        backgroundColor: Color.fromARGB(255, 225, 189, 255),
+        backgroundColor: Color.fromARGB(255, 130, 199, 255),
       ),
       body: Container(
         child: Column(
@@ -119,35 +123,46 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   }
 
   Widget chat(String message, int data) {
+    final double halfScreenWidth = MediaQuery.of(context).size.width * 0.5;
     return Padding(
       padding: EdgeInsets.all(10.0),
       child: Bubble(
-          radius: Radius.circular(15.0),
-          color: data == 0 ? Colors.blue : Colors.orangeAccent,
-          elevation: 0.0,
-          alignment: data == 0 ? Alignment.topLeft : Alignment.topRight,
-          nip: data == 0 ? BubbleNip.leftBottom : BubbleNip.rightTop,
-          child: Padding(
-            padding: EdgeInsets.all(2.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                CircleAvatar(
-                  backgroundImage: AssetImage(
-                      data == 0 ? "assets/bot.png" : "assets/user.png"),
+        radius: Radius.circular(15.0),
+        color: data == 0
+            ? Color.fromARGB(255, 130, 199, 255)
+            : Color.fromARGB(255, 130, 199, 255),
+        elevation: 0.0,
+        alignment: data == 0 ? Alignment.topLeft : Alignment.topRight,
+        nip: data == 0 ? BubbleNip.leftBottom : BubbleNip.rightTop,
+        child: Padding(
+          padding: EdgeInsets.all(2.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              CircleAvatar(
+                backgroundImage: AssetImage(
+                    data == 0 ? "assets/bot.png" : "assets/user.png"),
+              ),
+              SizedBox(width: 10.0),
+              Flexible(
+                child: Container(
+                  constraints: BoxConstraints(
+                    maxWidth: halfScreenWidth,
+                  ),
+                  child: Text(
+                    message,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.0,
+                    ),
+                  ),
                 ),
-                SizedBox(
-                  width: 10.0,
-                ),
-                Flexible(
-                    child: Text(
-                  message,
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ))
-              ],
-            ),
-          )),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
