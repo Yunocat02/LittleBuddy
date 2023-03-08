@@ -53,7 +53,9 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('LittleBuddy ChatBot'),
+        title: Text('LITTLE BUDDY',
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 20,color:Color.fromARGB(255, 119, 114, 114), )),
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
@@ -62,7 +64,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
           },
           icon: Icon(Icons.arrow_back),
         ),
-        backgroundColor: Color.fromARGB(255, 130, 199, 255),
+        backgroundColor: Color.fromARGB(255, 192,247,248),
       ),
       body: Container(
         child: Column(
@@ -75,8 +77,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                         messsages[index]["message"].toString(),
                         messsages[index]["data"]))),
             Divider(
-              height: 6.0,
-            ),
+              height: 6.0,),
             Container(
               padding: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 20),
               margin: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -88,14 +89,15 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                     decoration: InputDecoration.collapsed(
                         hintText: "Send your message",
                         hintStyle: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18.0)),
+                        fontWeight: FontWeight.bold, fontSize: 18.0)),
+
                   )),
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 4.0),
                     child: IconButton(
                         icon: Icon(
                           Icons.send,
-                          size: 30.0,
+                          size: 25.0,
                         ),
                         onPressed: () {
                           if (messageInsert.text.isEmpty) {
@@ -129,8 +131,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
       child: Bubble(
         radius: Radius.circular(15.0),
         color: data == 0
-            ? Color.fromARGB(255, 130, 199, 255)
-            : Color.fromARGB(255, 130, 199, 255),
+            ? Color.fromARGB(255, 192,247,248)
+            : Color.fromARGB(255,192,247,248),
         elevation: 0.0,
         alignment: data == 0 ? Alignment.topLeft : Alignment.topRight,
         nip: data == 0 ? BubbleNip.leftBottom : BubbleNip.rightTop,
@@ -152,7 +154,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                   child: Text(
                     message,
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Color.fromARGB(255, 119, 114, 114),
                       fontWeight: FontWeight.bold,
                       fontSize: 14.0,
                     ),
