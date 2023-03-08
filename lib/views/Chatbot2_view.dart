@@ -62,7 +62,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (context) => Home()));
           },
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back,
+          color: Color.fromARGB(255, 119, 114, 114),),
         ),
         backgroundColor: Color.fromARGB(255, 192,247,248),
       ),
@@ -87,7 +88,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                       child: TextField(
                     controller: messageInsert,
                     decoration: InputDecoration.collapsed(
-                        hintText: "Send your message",
+                        hintText: "ข้อความ",
                         hintStyle: TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 18.0)),
 
