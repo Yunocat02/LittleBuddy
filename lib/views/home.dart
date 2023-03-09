@@ -13,6 +13,7 @@ import '../widgets/pet_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'addclinic_view.dart';
 import 'addpet_view.dart';
 import 'clinic_view.dart';
 import 'help_view.dart';
@@ -62,18 +63,24 @@ class Home extends StatelessWidget {
         centerTitle: true,
         leading: IconButton(
           onPressed: () async {
-            if (globalRole?.role == 'A' ||
-                globalRole?.role == 'M' ||
-                globalRole?.role == 'D') {
+            if (globalRole?.role == 'A' || globalRole?.role == 'M') {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => AddPet()),
+              );
+            }
+            if (globalRole?.role == 'D') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Addclinic()),
               );
             } else {
               showAlert();
             }
           },
-          icon: Icon(Icons.pets),
+          icon: globalRole?.role == 'M' || globalRole?.role == ''
+              ? Icon(Icons.pets) // กรณี role เป็น M
+              : Icon(Icons.add),
         ),
         actions: [
           IconButton(

@@ -167,7 +167,7 @@ class _LoginViewState extends State<LoginView> {
         Padding(
           padding: const EdgeInsets.only(left: 20.0),
           child: Text(
-            'Welcome Back Catchy',
+            'Welcome to littleBuddy',
             style: kLoginSubtitleStyle(size),
           ),
         ),
@@ -185,7 +185,7 @@ class _LoginViewState extends State<LoginView> {
                   style: kTextFormFieldStyle(),
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.person),
-                    hintText: 'Username or Gmail',
+                    hintText: 'Email',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(15)),
                     ),

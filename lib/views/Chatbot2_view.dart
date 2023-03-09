@@ -44,28 +44,35 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
       });
     }
   }
+
   @override
   void initState() {
     super.initState();
     response("นารูโตะ");
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('LITTLE BUDDY',
             style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 20,color:Color.fromARGB(255, 119, 114, 114), )),
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: Color.fromARGB(255, 119, 114, 114),
+            )),
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (context) => Home()));
           },
-          icon: Icon(Icons.arrow_back,
-          color: Color.fromARGB(255, 119, 114, 114),),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Color.fromARGB(255, 119, 114, 114),
+          ),
         ),
-        backgroundColor: Color.fromARGB(255, 192,247,248),
+        backgroundColor: Color.fromARGB(255, 192, 247, 248),
       ),
       body: Container(
         child: Column(
@@ -78,7 +85,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                         messsages[index]["message"].toString(),
                         messsages[index]["data"]))),
             Divider(
-              height: 6.0,),
+              height: 6.0,
+            ),
             Container(
               padding: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 20),
               margin: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -90,8 +98,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                     decoration: InputDecoration.collapsed(
                         hintText: "ข้อความ",
                         hintStyle: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 18.0)),
-
+                            fontWeight: FontWeight.bold, fontSize: 18.0)),
                   )),
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 4.0),
@@ -132,8 +139,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
       child: Bubble(
         radius: Radius.circular(15.0),
         color: data == 0
-            ? Color.fromARGB(255, 192,247,248)
-            : Color.fromARGB(255,192,247,248),
+            ? Color.fromARGB(255, 192, 247, 248)
+            : Color.fromARGB(255, 192, 247, 248),
         elevation: 0.0,
         alignment: data == 0 ? Alignment.topLeft : Alignment.topRight,
         nip: data == 0 ? BubbleNip.leftBottom : BubbleNip.rightTop,
