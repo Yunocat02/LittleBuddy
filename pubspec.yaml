@@ -44,7 +44,7 @@ dependencies:
 
   bubble: ^1.1.9+1
   chips_choice: ^2.0.2
-  
+  intl:
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +63,8 @@ flutter:
     - assets/nav_icons/
     - assets/stories/
     - assets/dialog_flow_auth.json
+    - assets/robot.jpg
+    - assets/default.jpg
   # fonts:
   #   - family: Schyler
   #     fonts:
