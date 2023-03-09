@@ -46,6 +46,7 @@ class _ClinicState extends State<Clinic> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Menu ในร้าน Clinic"),
+        centerTitle: true,
         automaticallyImplyLeading: false,
       ),
       body: Padding(

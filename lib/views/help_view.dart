@@ -51,6 +51,7 @@ class _HelpviewState extends State<Helpview> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Help"),
+        centerTitle: true,
         automaticallyImplyLeading: false,
       ),
       body: Padding(

@@ -1,6 +1,7 @@
 import 'package:LittleBuddy/views/Chatbot2_view.dart';
 import 'package:LittleBuddy/views/cam_view.dart';
 import 'package:LittleBuddy/views/login_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,19 +15,30 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  //? CodeWithFlexz on Instagram
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
 
-//* AmirBayat0 on Github
-//! Programming with Flexz on Youtube
+class _MyAppState extends State<MyApp> {
+  User? user;
+
+  @override
+  void initState() {
+    super.initState();
+    user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      getUserRole();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Home(),
+      home: user != null ? Home() : Home(),
     );
   }
 }

@@ -73,6 +73,7 @@ class _Mypets extends State<Mypets> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mypet'),
+        centerTitle: true,
         automaticallyImplyLeading: false,
       ),
       body: StreamBuilder<QuerySnapshot>(
