@@ -12,10 +12,12 @@ import 'package:path/path.dart' as path;
 import 'dart:io';
 import '../widgets/back_button.dart';
 import 'login_view.dart';
+
 final FirebaseFirestore firestore = FirebaseFirestore.instance;
 final FirebaseAuth auth = FirebaseAuth.instance;
 final User? user = auth.currentUser;
 final uid = user?.uid;
+
 class Addclinic extends StatefulWidget {
   const Addclinic({Key? key}) : super(key: key);
 
@@ -25,20 +27,18 @@ class Addclinic extends StatefulWidget {
 
 class _AddclinicState extends State<Addclinic> {
   final _formKey = GlobalKey<FormState>();
-  
-  
+
   TextEditingController nameController = TextEditingController();
   TextEditingController typeController = TextEditingController();
   TextEditingController timecloseController = TextEditingController();
   TextEditingController timeopenController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-   File? _pdf;
+  File? _pdf;
   String? _pdfUrl;
   bool isSubmit = false;
   late Reference? _storageRef;
   late File _file;
-  
-  
+
   // Function for selecting a PDF file
   Future<void> _selectPdf() async {
     final result = await FilePicker.platform.pickFiles(
@@ -54,7 +54,9 @@ class _AddclinicState extends State<Addclinic> {
   // Function for uploading the selected PDF file to Firebase Storage
   Future<void> _uploadPdf() async {
     if (_pdf == null) return;
-    final storageRef = FirebaseStorage.instance.ref().child('pdfs/${_pdf!.path.split('/').last}');
+    final storageRef = FirebaseStorage.instance
+        .ref()
+        .child('pdfs/${_pdf!.path.split('/').last}');
     final task = storageRef.putFile(_pdf!);
     await task.whenComplete(() => print('PDF uploaded'));
     final pdfUrl = await storageRef.getDownloadURL();
@@ -62,8 +64,8 @@ class _AddclinicState extends State<Addclinic> {
       _pdfUrl = pdfUrl;
     });
   }
+
   Future<void> addClinicreport() async {
-    
     if (user != null) {
       final DocumentReference<Map<String, dynamic>> userDocRef =
           firestore.collection('clinicreport').doc(uid);
@@ -72,17 +74,16 @@ class _AddclinicState extends State<Addclinic> {
 
       final Map<String, dynamic> data = {
         'name': nameController.text.trim(),
-      'openingTime': '${timeopenController.text.trim()}-${timecloseController.text.trim()}:00',
-      'petTypes': typeController.text.trim().split(','),
-      'description': descriptionController.text.trim(),
-      'pdfUrl': _pdfUrl!,
+        'openingTime':
+            '${timeopenController.text.trim()}-${timecloseController.text.trim()}',
+        'petTypes': typeController.text.trim().split(','),
+        'description': descriptionController.text.trim(),
+        'pdfUrl': _pdfUrl!,
       };
-       await userDocRef.set(data);
-      
+      await userDocRef.set(data);
     }
   }
   // Function for adding a new clinic to Firestore
-  
 
   // Function for showing a success dialog after the clinic is added
   void _showAlert() {
@@ -115,6 +116,7 @@ class _AddclinicState extends State<Addclinic> {
     descriptionController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -253,57 +255,58 @@ class _AddclinicState extends State<Addclinic> {
                 },
               ),
             ),
-            Padding(padding: const EdgeInsets.all(8.0),
-          child: TextButton.icon(
-            icon: Icon(Icons.attach_file),
-            label: Text('เลือกไฟล์ PDF'),
-            onPressed: () async {
-              // ใช้ package file_picker เพื่อเปิดหน้าจอเลือกไฟล์ PDF
-              FilePickerResult? result = await FilePicker.platform.pickFiles(
-                type: FileType.custom,
-                allowedExtensions: ['pdf'],
-              );
-
-              // ตรวจสอบว่า user เลือกไฟล์หรือไม่
-              if (result != null) {
-                
-                File file = File(result.files.single.path!);
-                String fileName = path.basename(file.path) + '.pdf';
-                _file=file;
-                // อัพโหลดไฟล์ PDF ไปยัง Firestore
-                try {
-                  
-                  // สร้าง reference ของไฟล์ใน Firestore
-                  Reference storageReference =
-                      FirebaseStorage.instance.ref('doctor/certificate').child('$uid/${fileName}');
-                  
-                  _storageRef=storageReference;
-                  // อัพโหลดไฟล์ PDF ไปยัง Firestore
-                  //await storageReference.putFile(file);
-
-                  // ดึง URL ของไฟล์ PDF จาก Firestore
-                  //_pdfUrl = await storageReference.getDownloadURL();
-
-                  // บันทึก URL ของไฟล์ PDF ใน Firestore database
-                   
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('อัพโหลดไฟล์ PDF เรียบร้อย'),
-                      
-                    ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextButton.icon(
+                icon: Icon(Icons.attach_file),
+                label: Text('เลือกไฟล์ PDF'),
+                onPressed: () async {
+                  // ใช้ package file_picker เพื่อเปิดหน้าจอเลือกไฟล์ PDF
+                  FilePickerResult? result =
+                      await FilePicker.platform.pickFiles(
+                    type: FileType.custom,
+                    allowedExtensions: ['pdf'],
                   );
-                } catch (error) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('เกิดข้อผิดพลาดขณะอัพโหลดไฟล์ PDF'),
-                    ),
-                  );
-                  print(error);
-                }
-             isSubmit = false; }
-            },
-          ),
-        ),
+
+                  // ตรวจสอบว่า user เลือกไฟล์หรือไม่
+                  if (result != null) {
+                    File file = File(result.files.single.path!);
+                    String fileName = path.basename(file.path) + '.pdf';
+                    _file = file;
+                    // อัพโหลดไฟล์ PDF ไปยัง Firestore
+                    try {
+                      // สร้าง reference ของไฟล์ใน Firestore
+                      Reference storageReference = FirebaseStorage.instance
+                          .ref('doctor/certificate')
+                          .child('$uid/${fileName}');
+
+                      _storageRef = storageReference;
+                      // อัพโหลดไฟล์ PDF ไปยัง Firestore
+                      //await storageReference.putFile(file);
+
+                      // ดึง URL ของไฟล์ PDF จาก Firestore
+                      //_pdfUrl = await storageReference.getDownloadURL();
+
+                      // บันทึก URL ของไฟล์ PDF ใน Firestore database
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('อัพโหลดไฟล์ PDF เรียบร้อย'),
+                        ),
+                      );
+                    } catch (error) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('เกิดข้อผิดพลาดขณะอัพโหลดไฟล์ PDF'),
+                        ),
+                      );
+                      print(error);
+                    }
+                    isSubmit = false;
+                  }
+                },
+              ),
+            ),
             Stack(
               children: [
                 Positioned(
@@ -316,13 +319,13 @@ class _AddclinicState extends State<Addclinic> {
                     foregroundColor:
                         MaterialStateProperty.all<Color>(Colors.blue),
                   ),
-                  onPressed: () async{
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       await _storageRef?.putFile(_file);
                       _pdfUrl = await _storageRef!.getDownloadURL();
                       addClinicreport();
-                      
-                      isSubmit=true;
+
+                      isSubmit = true;
                       //showAlert();
                       Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (context) {
