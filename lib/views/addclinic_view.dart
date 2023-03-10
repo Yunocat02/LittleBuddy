@@ -65,10 +65,10 @@ class _AddclinicState extends State<Addclinic> {
   Future<void> addClinicreport() async {
     
     if (user != null) {
-      final DocumentReference userDocRef =
+      final DocumentReference<Map<String, dynamic>> userDocRef =
           firestore.collection('clinicreport').doc(uid);
-      final CollectionReference petReportCollectionRef =
-          userDocRef.collection('0001');
+      /*final CollectionReference petReportCollectionRef =
+          userDocRef.collection('0001');*/
 
       final Map<String, dynamic> data = {
         'name': nameController.text.trim(),
@@ -77,8 +77,8 @@ class _AddclinicState extends State<Addclinic> {
       'description': descriptionController.text.trim(),
       'pdfUrl': _pdfUrl!,
       };
-
-      petReportCollectionRef.add(data);
+       await userDocRef.set(data);
+      
     }
   }
   // Function for adding a new clinic to Firestore

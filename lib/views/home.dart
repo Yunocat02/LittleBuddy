@@ -1,3 +1,4 @@
+import 'package:LittleBuddy/views/checkdoctorregis.dart';
 import 'package:LittleBuddy/views/datareport.dart';
 import 'package:LittleBuddy/views/datareportviewsmember.dart';
 import 'package:LittleBuddy/widgets/pet_card2.dart';
@@ -53,7 +54,7 @@ class Home extends StatelessWidget {
       {
         'text': 'Help',
         'icon': 'assets/nav_icons/help_icon.svg',
-        'page': const Helpview()
+        'page': const doctorregis()
       },
     ];
     final size = Layouts.getSize(context);
