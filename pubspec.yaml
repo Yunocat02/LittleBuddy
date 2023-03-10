@@ -39,12 +39,13 @@ dependencies:
   location: ^4.4.0
   permission_handler: ^10.2.0
   latlong: ^0.6.1
-
+  firebase_storage: ^11.0.1
 
 
   bubble: ^1.1.9+1
   chips_choice: ^2.0.2
   intl:
+  file_picker: ^5.2.5
 
 dev_dependencies:
   flutter_test:

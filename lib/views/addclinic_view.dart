@@ -1,13 +1,21 @@
+import 'package:LittleBuddy/views/login_view.dart';
 import 'package:LittleBuddy/views/mypets_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-
+import 'package:path/path.dart' as path;
+import 'dart:io';
 import '../widgets/back_button.dart';
-
+import 'login_view.dart';
+final FirebaseFirestore firestore = FirebaseFirestore.instance;
+final FirebaseAuth auth = FirebaseAuth.instance;
+final User? user = auth.currentUser;
+final uid = user?.uid;
 class Addclinic extends StatefulWidget {
   const Addclinic({Key? key}) : super(key: key);
 
@@ -17,40 +25,96 @@ class Addclinic extends StatefulWidget {
 
 class _AddclinicState extends State<Addclinic> {
   final _formKey = GlobalKey<FormState>();
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  
+  
   TextEditingController nameController = TextEditingController();
   TextEditingController typeController = TextEditingController();
-  TextEditingController ageyearController = TextEditingController();
-  TextEditingController agemonthController = TextEditingController();
-  TextEditingController speciesController = TextEditingController();
-  late String uid;
-  void showAlert() {
-    QuickAlert.show(
-        context: context, title: "Add success", type: QuickAlertType.success);
+  TextEditingController timecloseController = TextEditingController();
+  TextEditingController timeopenController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+   File? _pdf;
+  String? _pdfUrl;
+  bool isSubmit = false;
+  late Reference? _storageRef;
+  late File _file;
+  
+  
+  // Function for selecting a PDF file
+  Future<void> _selectPdf() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
+    if (result == null) return;
+    setState(() {
+      _pdf = File(result.files.single.path!);
+    });
   }
 
-  Future<void> addPetReport() async {
-    final user = auth.currentUser;
+  // Function for uploading the selected PDF file to Firebase Storage
+  Future<void> _uploadPdf() async {
+    if (_pdf == null) return;
+    final storageRef = FirebaseStorage.instance.ref().child('pdfs/${_pdf!.path.split('/').last}');
+    final task = storageRef.putFile(_pdf!);
+    await task.whenComplete(() => print('PDF uploaded'));
+    final pdfUrl = await storageRef.getDownloadURL();
+    setState(() {
+      _pdfUrl = pdfUrl;
+    });
+  }
+  Future<void> addClinicreport() async {
+    
     if (user != null) {
-      uid = user.uid;
       final DocumentReference userDocRef =
           firestore.collection('clinicreport').doc(uid);
       final CollectionReference petReportCollectionRef =
-          userDocRef.collection('0002');
+          userDocRef.collection('0001');
 
       final Map<String, dynamic> data = {
-        'name': nameController.text,
-        'age(year)': ageyearController.text,
-        'age(month)': agemonthController.text,
-        'type': typeController.text,
-        'species': speciesController.text,
+        'name': nameController.text.trim(),
+      'openingTime': '${timeopenController.text.trim()}-${timecloseController.text.trim()}:00',
+      'petTypes': typeController.text.trim().split(','),
+      'description': descriptionController.text.trim(),
+      'pdfUrl': _pdfUrl!,
       };
 
       petReportCollectionRef.add(data);
     }
   }
+  // Function for adding a new clinic to Firestore
+  
 
+  // Function for showing a success dialog after the clinic is added
+  void _showAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('ลงทะเบียนสำเร็จ'),
+          content: const Text('ขอบคุณสำหรับการลงทะเบียนร้านของคุณ'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('ตกลง'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controllers when the widget is disposed
+    nameController.dispose();
+    timeopenController.dispose();
+    timecloseController.dispose();
+    typeController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,17 +145,35 @@ class _AddclinicState extends State<Addclinic> {
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       decoration: InputDecoration(
-                          labelText: "เวลาเปิด", hintText: "ตัวอย่าง : 9:00"),
-                      controller: ageyearController,
+                        labelText: "เวลาเปิด",
+                        hintText: "ตัวอย่าง : 9:00",
+                        icon: Icon(Icons.schedule),
+                        suffixIcon: Icon(Icons.arrow_drop_down),
+                      ),
+                      controller: timeopenController,
                       keyboardType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
+                        FilteringTextInputFormatter.digitsOnly,
                       ],
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'โปรดใส่เวลาเปิด';
                         }
                         return null;
+                      },
+                      onTap: () async {
+                        // Show time picker dialog
+                        TimeOfDay? time = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        );
+                        // Update text field value
+                        if (time != null) {
+                          String hour = time.hour.toString().padLeft(2, '0');
+                          String minute =
+                              time.minute.toString().padLeft(2, '0');
+                          timeopenController.text = '$hour:$minute';
+                        }
                       },
                     ),
                   ),
@@ -102,17 +184,35 @@ class _AddclinicState extends State<Addclinic> {
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       decoration: InputDecoration(
-                          labelText: "เวลาปิด", hintText: "ตัวอย่าง : 22:00"),
-                      controller: agemonthController,
+                        labelText: "เวลาปิด",
+                        hintText: "ตัวอย่าง : 22:00",
+                        icon: Icon(Icons.schedule),
+                        suffixIcon: Icon(Icons.arrow_drop_down),
+                      ),
+                      controller: timecloseController,
                       keyboardType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
+                        FilteringTextInputFormatter.digitsOnly,
                       ],
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'โปรดใส่เวลาปิด';
                         }
                         return null;
+                      },
+                      onTap: () async {
+                        // Show time picker dialog
+                        TimeOfDay? time = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        );
+                        // Update text field value
+                        if (time != null) {
+                          String hour = time.hour.toString().padLeft(2, '0');
+                          String minute =
+                              time.minute.toString().padLeft(2, '0');
+                          timecloseController.text = '$hour:$minute';
+                        }
                       },
                     ),
                   ),
@@ -143,7 +243,7 @@ class _AddclinicState extends State<Addclinic> {
 รับทำหมัน 
 รับตรวจวินิจฉัยทางรังสีวิทยา'''),
 
-                controller: speciesController,
+                controller: descriptionController,
                 maxLines: 3, // กำหนดให้สามารถใส่ข้อความได้สูงสุด 3 บรรทัด
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -153,6 +253,57 @@ class _AddclinicState extends State<Addclinic> {
                 },
               ),
             ),
+            Padding(padding: const EdgeInsets.all(8.0),
+          child: TextButton.icon(
+            icon: Icon(Icons.attach_file),
+            label: Text('เลือกไฟล์ PDF'),
+            onPressed: () async {
+              // ใช้ package file_picker เพื่อเปิดหน้าจอเลือกไฟล์ PDF
+              FilePickerResult? result = await FilePicker.platform.pickFiles(
+                type: FileType.custom,
+                allowedExtensions: ['pdf'],
+              );
+
+              // ตรวจสอบว่า user เลือกไฟล์หรือไม่
+              if (result != null) {
+                
+                File file = File(result.files.single.path!);
+                String fileName = path.basename(file.path) + '.pdf';
+                _file=file;
+                // อัพโหลดไฟล์ PDF ไปยัง Firestore
+                try {
+                  
+                  // สร้าง reference ของไฟล์ใน Firestore
+                  Reference storageReference =
+                      FirebaseStorage.instance.ref('doctor/certificate').child('$uid/${fileName}');
+                  
+                  _storageRef=storageReference;
+                  // อัพโหลดไฟล์ PDF ไปยัง Firestore
+                  //await storageReference.putFile(file);
+
+                  // ดึง URL ของไฟล์ PDF จาก Firestore
+                  //_pdfUrl = await storageReference.getDownloadURL();
+
+                  // บันทึก URL ของไฟล์ PDF ใน Firestore database
+                   
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('อัพโหลดไฟล์ PDF เรียบร้อย'),
+                      
+                    ),
+                  );
+                } catch (error) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('เกิดข้อผิดพลาดขณะอัพโหลดไฟล์ PDF'),
+                    ),
+                  );
+                  print(error);
+                }
+             isSubmit = false; }
+            },
+          ),
+        ),
             Stack(
               children: [
                 Positioned(
@@ -165,10 +316,14 @@ class _AddclinicState extends State<Addclinic> {
                     foregroundColor:
                         MaterialStateProperty.all<Color>(Colors.blue),
                   ),
-                  onPressed: () {
+                  onPressed: () async{
                     if (_formKey.currentState!.validate()) {
-                      addPetReport();
-                      showAlert();
+                      await _storageRef?.putFile(_file);
+                      _pdfUrl = await _storageRef!.getDownloadURL();
+                      addClinicreport();
+                      
+                      isSubmit=true;
+                      //showAlert();
                       Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (context) {
                         return Mypets();
