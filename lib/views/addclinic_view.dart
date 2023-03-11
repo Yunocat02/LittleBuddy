@@ -1,4 +1,3 @@
-import 'package:LittleBuddy/views/login_view.dart';
 import 'package:LittleBuddy/views/mypets_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
@@ -6,17 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:path/path.dart' as path;
 import 'dart:io';
 import '../widgets/back_button.dart';
-import 'login_view.dart';
 
-final FirebaseFirestore firestore = FirebaseFirestore.instance;
-final FirebaseAuth auth = FirebaseAuth.instance;
-final User? user = auth.currentUser;
-final uid = user?.uid;
+
+
 
 class Addclinic extends StatefulWidget {
   const Addclinic({Key? key}) : super(key: key);
@@ -27,6 +21,10 @@ class Addclinic extends StatefulWidget {
 
 class _AddclinicState extends State<Addclinic> {
   final _formKey = GlobalKey<FormState>();
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  late User? user = auth.currentUser;
+  late String? uid = user!.uid;
 
   TextEditingController nameController = TextEditingController();
   TextEditingController typeController = TextEditingController();
@@ -38,7 +36,7 @@ class _AddclinicState extends State<Addclinic> {
   bool isSubmit = false;
   late Reference? _storageRef;
   late File _file;
-
+ 
   // Function for selecting a PDF file
   Future<void> _selectPdf() async {
     final result = await FilePicker.platform.pickFiles(
