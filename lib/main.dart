@@ -1,5 +1,3 @@
-import 'package:LittleBuddy/views/Chatbot2_view.dart';
-import 'package:LittleBuddy/views/cam_view.dart';
 import 'package:LittleBuddy/views/login_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';

@@ -26,7 +26,7 @@ dependencies:
   provider: ^6.0.5
   flutter_svg: ^1.0.3
   gap: ^2.0.0
-  flutter_full_pdf_viewer: ^1.0.6
+  syncfusion_flutter_pdfviewer: ^20.4.53
 
   # ลงตัวช่วย ของ google_maps
   google_maps_flutter: ^2.2.5
