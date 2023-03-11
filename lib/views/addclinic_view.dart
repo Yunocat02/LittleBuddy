@@ -77,6 +77,7 @@ class _AddclinicState extends State<Addclinic> {
         'petTypes': typeController.text.trim().split(','),
         'description': descriptionController.text.trim(),
         'pdfUrl': _pdfUrl!,
+        'status': 'waiting'
       };
       await userDocRef.set(data);
     }
