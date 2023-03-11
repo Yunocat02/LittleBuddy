@@ -270,7 +270,7 @@ class _AddclinicState extends State<Addclinic> {
                   // ตรวจสอบว่า user เลือกไฟล์หรือไม่
                   if (result != null) {
                     File file = File(result.files.single.path!);
-                    String fileName = path.basename(file.path) + '.pdf';
+                    String fileName = path.basename(file.path);
                     _file = file;
                     // อัพโหลดไฟล์ PDF ไปยัง Firestore
                     try {
