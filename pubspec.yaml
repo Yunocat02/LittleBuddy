@@ -35,8 +35,13 @@ dependencies:
   google_directions_api: ^0.9.1
   # สำหรับค้นหาตำแหน่งปัจจุบันของอุปกรณ์
   geolocator: ^9.0.2
+  # # กล่องกลางระหว่าง UI กับ Data
+  # flutter_bloc: ^8.1.2
+  # equatable: ^2.0.0
   # สำหรับใช้ GPS
   location: ^4.4.0
+  # ลากเส้นต้นทางไปปลายทาง
+  flutter_polyline_points: ^1.0.0
   permission_handler: ^10.2.0
   latlong: ^0.6.1
 
