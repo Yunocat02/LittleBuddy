@@ -59,8 +59,8 @@ class _SignUpViewState extends State<SignUpView> {
 
   SimpleUIController simpleUIController = Get.put(SimpleUIController());
 
-  void showAlert() {
-    QuickAlert.show(
+  Future<void> showAlert() async {
+    await QuickAlert.show(
         context: context,
         title: "Register success",
         type: QuickAlertType.success);
@@ -443,7 +443,11 @@ class _SignUpViewState extends State<SignUpView> {
           .collection('userdatabase')
           .doc(uid)
           .set(userdatabase);
-      showAlert();
+      await showAlert();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginView()),
+      );
     });
   }
 

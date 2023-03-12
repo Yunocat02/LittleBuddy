@@ -14,6 +14,7 @@ import 'clinic_view.dart';
 import 'datareportviewsmember.dart';
 import 'help_view.dart';
 import 'home.dart';
+import 'nextpage.dart';
 
 class doctorregis extends StatefulWidget {
   const doctorregis({super.key});
@@ -56,6 +57,12 @@ class _doctorregis extends State<doctorregis> {
         title: const Text('หมอที่ต้องการลงทะเบียนกับเรา'),
         centerTitle: true,
         automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: firestore
@@ -164,9 +171,14 @@ class _doctorregis extends State<doctorregis> {
                                       final ref = FirebaseFirestore.instance
                                           .collection('clinicreport')
                                           .doc(snapshot.data!.docs[index].id);
-                                      ref.update({
-                                        'status': 'confirm',
-                                      });
+
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              NextPage(ref: ref),
+                                        ),
+                                      );
                                     },
                                   ),
                                   IconButton(

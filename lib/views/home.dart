@@ -54,7 +54,7 @@ class Home extends StatelessWidget {
       {
         'text': 'Help',
         'icon': 'assets/nav_icons/help_icon.svg',
-        'page': const doctorregis()
+        'page': const Helpview()
       },
     ];
     final size = Layouts.getSize(context);
@@ -69,8 +69,7 @@ class Home extends StatelessWidget {
                 context,
                 MaterialPageRoute(builder: (context) => AddPet()),
               );
-            }
-            if (globalRole?.role == 'D') {
+            } else if (globalRole?.role == 'D') {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => Addclinic()),
@@ -125,6 +124,12 @@ class Home extends StatelessWidget {
                   height: 68,
                 )
               else if (globalRole?.role == 'M' || globalRole?.role == '')
+                PetCard2(
+                  petPath: 'assets/svg/hospital.svg',
+                  petName: 'Clinic finder',
+                  height: 68,
+                )
+              else
                 PetCard2(
                   petPath: 'assets/svg/hospital.svg',
                   petName: 'Clinic finder',

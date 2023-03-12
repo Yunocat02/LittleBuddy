@@ -1,3 +1,4 @@
+import 'package:LittleBuddy/views/clinicmail_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 
+import '../views/checkdoctorregis.dart';
 import '../views/login_view.dart';
 import '../views/map_view.dart';
 
@@ -44,11 +46,15 @@ class _PetCard2State extends State<PetCard2> {
       flex: 1,
       child: InkWell(
         onTap: () async {
-          if (globalRole?.role == 'A' ||
-              globalRole?.role == 'M' ||
-              globalRole?.role == 'D') {
+          if (globalRole?.role == 'M') {
             Navigator.push(
                 context, MaterialPageRoute(builder: (_) => const Mapnaja()));
+          } else if (globalRole?.role == 'D') {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (_) => const clinicmail()));
+          } else if (globalRole?.role == 'A') {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const doctorregis()));
           } else {
             showAlert();
           }
@@ -82,13 +88,23 @@ class _PetCard2State extends State<PetCard2> {
                       const Gap(5),
                       MaterialButton(
                         onPressed: () async {
-                          if (globalRole?.role == 'A' ||
-                              globalRole?.role == 'M' ||
-                              globalRole?.role == 'D') {
+                          if (globalRole?.role == 'M') {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => Mapnaja()),
+                            );
+                          } else if (globalRole?.role == 'D') {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => clinicmail()),
+                            );
+                          } else if (globalRole?.role == 'A') {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => doctorregis()),
                             );
                           } else {
                             showAlert();

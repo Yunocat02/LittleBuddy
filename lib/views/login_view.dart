@@ -12,11 +12,6 @@ import '../constants.dart';
 import '../controller/simple_ui_controller.dart';
 import '../model/profile.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
-final User? user = _auth.currentUser;
-final uid = user?.uid;
-final FirebaseFirestore _db = FirebaseFirestore.instance;
-
 class Role {
   String role;
 
@@ -32,6 +27,13 @@ class Role {
 Role? globalRole;
 
 Future<void> getUserRole() async {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? user = _auth.currentUser;
+  String? uid;
+  if (user != null) {
+    uid = user.uid;
+  }
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   final DocumentSnapshot<Map<String, dynamic>> userSnapshot =
       await _db.collection('userdatabase').doc(uid).get();
   if (userSnapshot.exists) {
@@ -340,51 +342,61 @@ class _LoginViewState extends State<LoginView> {
       width: double.infinity,
       height: 55,
       child: ElevatedButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.deepPurpleAccent),
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(Colors.deepPurpleAccent),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
             ),
           ),
-          onPressed: () async {
-            // Validate returns true if the form is valid, or false otherwise.
-            if (_formKey.currentState!.validate()) {
-              try {
-                // Call Firebase Auth signInWithEmailAndPassword method
-                await FirebaseAuth.instance.signInWithEmailAndPassword(
-                  email: profile.email,
-                  password: profile.password,
-                );
+        ),
+        onPressed: () async {
+          // Validate returns true if the form is valid, or false otherwise.
+          if (_formKey.currentState!.validate()) {
+            try {
+              // Call Firebase Auth signInWithEmailAndPassword method
+              await FirebaseAuth.instance.signInWithEmailAndPassword(
+                email: profile.email,
+                password: profile.password,
+              );
 
-                await getUserRole();
+              // Wait for authStateChanges stream to emit a non-null user
+              String? uid;
+              final user = await FirebaseAuth.instance
+                  .authStateChanges()
+                  .firstWhere((user) => user != null);
+              uid = user?.uid;
+              await getUserRole();
 
-                // Show alert if login success
-                await showAlert2(context);
+              // Show alert if login success
+              await showAlert2(context);
 
-                // Navigate to Home screen after login success
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => Home()),
-                );
-              } on FirebaseAuthException catch (e) {
-                // Show error message if login failed
-                if (e.code == 'user-not-found') {
-                  showAlert();
-                } else if (e.code == 'wrong-password') {
-                  showAlert();
-                }
-              } catch (e) {
-                print(e);
+              // Navigate to Home screen after login success
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Home()),
+              );
+            } on FirebaseAuthException catch (e) {
+              // Show error message if login failed
+              if (e.code == 'user-not-found') {
+                showAlert();
+              } else if (e.code == 'wrong-password') {
+                showAlert();
               }
+            } catch (e) {
+              print(e);
             }
-          },
-          child: const Text(
-            'Login',
-            style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-          )),
+          }
+        },
+        child: const Text(
+          'Login',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ),
     );
   }
 

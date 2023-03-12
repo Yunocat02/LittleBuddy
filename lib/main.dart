@@ -46,7 +46,7 @@ class _MyAppState extends State<MyApp> {
     return isGetUserRoleFinished // ตรวจสอบว่า getUserRole() เสร็จสิ้นหรือยัง
         ? GetMaterialApp(
             debugShowCheckedModeBanner: false,
-            home: user != null ? Home() : LoginView(),
+            home: user != null ? Home() : Home(),
           )
         : MaterialApp(
             debugShowCheckedModeBanner: false,

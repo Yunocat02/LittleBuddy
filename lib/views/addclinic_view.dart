@@ -9,9 +9,6 @@ import 'package:path/path.dart' as path;
 import 'dart:io';
 import '../widgets/back_button.dart';
 
-
-
-
 class Addclinic extends StatefulWidget {
   const Addclinic({Key? key}) : super(key: key);
 
@@ -36,7 +33,7 @@ class _AddclinicState extends State<Addclinic> {
   bool isSubmit = false;
   late Reference? _storageRef;
   late File _file;
- 
+
   // Function for selecting a PDF file
   Future<void> _selectPdf() async {
     final result = await FilePicker.platform.pickFiles(
@@ -77,7 +74,8 @@ class _AddclinicState extends State<Addclinic> {
         'petTypes': typeController.text.trim().split(','),
         'description': descriptionController.text.trim(),
         'pdfUrl': _pdfUrl!,
-        'status': 'waiting'
+        'status': 'waiting',
+        'Location': GeoPoint(0, 0)
       };
       await userDocRef.set(data);
     }

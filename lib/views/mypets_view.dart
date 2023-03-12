@@ -78,10 +78,10 @@ class _Mypets extends State<Mypets> {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: firestore
-            .collection('petreport')  // ชื่อตาราง
-            .doc(getuser()?.uid)      // เอา id เก็บแบบ doc
-            .collection("0001")       // id sub field ที่แต่ย่อยมาตอน addpet
-            .snapshots(),             // ตัวกลางในการ อ่าน/เขียน ข้อมูล
+            .collection('petreport') // ชื่อตาราง
+            .doc(getuser()?.uid) // เอา id เก็บแบบ doc
+            .collection("0001") // id sub field ที่แต่ย่อยมาตอน addpet
+            .snapshots(), // ตัวกลางในการ อ่าน/เขียน ข้อมูล
         builder: (context, subCollectionSnapshot) {
           if (subCollectionSnapshot.hasData) {
             return Container(
@@ -95,8 +95,7 @@ class _Mypets extends State<Mypets> {
                   padding: const EdgeInsets.all(8.0),
                   child: ListView.builder(
                       // จำนวนสัตว์ที่แสดง
-                      itemCount: subCollectionSnapshot
-                          .data!.docs.length, 
+                      itemCount: subCollectionSnapshot.data!.docs.length,
                       itemBuilder: (BuildContext context, int index) {
                         // ดึงข้อมูล
                         final data = subCollectionSnapshot.data!.docs[index]
@@ -106,13 +105,14 @@ class _Mypets extends State<Mypets> {
                           child: Container(
                             // กรอบของแต่ละรายการ
                             decoration: BoxDecoration(
-                              // border: Border.all(
-                              //   color: Color.fromARGB(255, 118, 133, 145),
-                              //   width: 1.0,
-                              // ),
-                              borderRadius: BorderRadius.circular(5),
-                              color: Color.fromARGB(255, 192,247,248) // เปลี่ยนสีพื้นหลังของ Container แต่ละรายการ
-                            ),
+                                // border: Border.all(
+                                //   color: Color.fromARGB(255, 118, 133, 145),
+                                //   width: 1.0,
+                                // ),
+                                borderRadius: BorderRadius.circular(5),
+                                color: Color.fromARGB(255, 192, 247,
+                                    248) // เปลี่ยนสีพื้นหลังของ Container แต่ละรายการ
+                                ),
                             // เนื้อใน
                             child: ListTile(
                                 title: Text(
@@ -133,10 +133,60 @@ class _Mypets extends State<Mypets> {
                                     Text("พันธ์: " + data['species'] ?? "N/A"),
                                   ],
                                 ),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.delete),
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text("ยืนยันการลบ"),
+                                              content: Text(
+                                                  "คุณต้องการลบรายการนี้หรือไม่?"),
+                                              actions: [
+                                                TextButton(
+                                                  child: Text("ยกเลิก"),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  child: Text("ยืนยัน"),
+                                                  onPressed: () {
+                                                    // สร้างตัวแปร ref เพื่อเข้าถึงเอกสารที่ต้องการลบ
+                                                    final ref =
+                                                        subCollectionSnapshot
+                                                            .data!
+                                                            .docs[index]
+                                                            .reference;
+
+                                                    // ลบเอกสารออกจาก Firestore
+                                                    ref.delete();
+
+                                                    // ลบรายการที่แสดงใน ListView
+                                                    setState(() {
+                                                      subCollectionSnapshot
+                                                          .data!.docs
+                                                          .removeAt(index);
+                                                    });
+
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+
                                 // ในส่วนของการเลือกร้าน
-                                onTap: () {
-                                  print("คุณเลือกร้านที่ ${index + 1}");
-                                }),
+                                onTap: () {}),
                           ),
                         );
                       })),
