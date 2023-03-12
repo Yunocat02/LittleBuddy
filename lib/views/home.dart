@@ -1,3 +1,4 @@
+import 'package:LittleBuddy/views/checkdoctorregis.dart';
 import 'package:LittleBuddy/views/datareport.dart';
 import 'package:LittleBuddy/views/datareportviewsmember.dart';
 import 'package:LittleBuddy/widgets/pet_card2.dart';
@@ -13,6 +14,7 @@ import '../widgets/pet_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'addclinic_view.dart';
 import 'addpet_view.dart';
 import 'clinic_view.dart';
 import 'help_view.dart';
@@ -52,7 +54,7 @@ class Home extends StatelessWidget {
       {
         'text': 'Help',
         'icon': 'assets/nav_icons/help_icon.svg',
-        'page': const Helpview()
+        'page': const doctorregis()
       },
     ];
     final size = Layouts.getSize(context);
@@ -62,18 +64,24 @@ class Home extends StatelessWidget {
         centerTitle: true,
         leading: IconButton(
           onPressed: () async {
-            if (globalRole?.role == 'A' ||
-                globalRole?.role == 'M' ||
-                globalRole?.role == 'D') {
+            if (globalRole?.role == 'A' || globalRole?.role == 'M') {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => AddPet()),
+              );
+            }
+            if (globalRole?.role == 'D') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Addclinic()),
               );
             } else {
               showAlert();
             }
           },
-          icon: Icon(Icons.pets),
+          icon: globalRole?.role == 'M' || globalRole?.role == ''
+              ? Icon(Icons.pets) // กรณี role เป็น M
+              : Icon(Icons.add),
         ),
         actions: [
           IconButton(
@@ -103,18 +111,25 @@ class Home extends StatelessWidget {
           const AnimatedTitle(title: 'What are you looking for?'),
           const Gap(10),
           Row(
-            children: const [
+            children: [
               PetCard(
                 petPath: 'assets/svg/robot.svg',
                 petName: 'ChatBot',
                 height: 68,
               ),
               Gap(28),
-              PetCard2(
-                petPath: 'assets/svg/hospital.svg',
-                petName: 'Clinic finder',
-                height: 68,
-              ),
+              if (globalRole?.role == 'D' || globalRole?.role == 'A')
+                PetCard2(
+                  petPath: 'assets/svg/mail2.svg',
+                  petName: 'Mail',
+                  height: 68,
+                )
+              else if (globalRole?.role == 'M' || globalRole?.role == '')
+                PetCard2(
+                  petPath: 'assets/svg/hospital.svg',
+                  petName: 'Clinic finder',
+                  height: 68,
+                )
             ],
           ),
           const Gap(25),

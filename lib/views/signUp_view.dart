@@ -23,12 +23,31 @@ class SignUpView extends StatefulWidget {
 }
 
 class _SignUpViewState extends State<SignUpView> {
+  bool isCustomerSelected = true; //เริ่มต้นให้ Customer เป็นปุ่มที่เลือกอยู่
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
+  bool isCustomerPressed = true;
+  bool isClinicPressed = false;
+  String role = "M";
+  void _onCustomerPressed() {
+    setState(() {
+      isCustomerPressed = true;
+      isClinicPressed = false;
+      role = "M";
+    });
+  }
+
+  void _onClinicPressed() {
+    setState(() {
+      isCustomerPressed = false;
+      isClinicPressed = true;
+      role = "D";
+    });
+  }
 
   @override
   void dispose() {
@@ -49,7 +68,7 @@ class _SignUpViewState extends State<SignUpView> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
     var theme = Theme.of(context);
 
     return GestureDetector(
@@ -248,13 +267,83 @@ class _SignUpViewState extends State<SignUpView> {
                     },
                   ),
                 ),
+
                 SizedBox(
-                  height: size.height * 0.01,
+                  height: size.height * 0.02,
                 ),
-                Text(
-                  'Creating an account means you\'re okay with our Terms of Services and our Privacy Policy',
-                  style: kLoginTermsAndPrivacyStyle(size),
-                  textAlign: TextAlign.center,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: size.width * 0.4,
+                      height: 30,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            isCustomerPressed
+                                ? Colors.deepPurpleAccent
+                                : Colors.white,
+                          ),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          side: MaterialStateProperty.all<BorderSide>(
+                            const BorderSide(
+                                color: Colors.deepPurpleAccent, width: 2),
+                          ),
+                        ),
+                        onPressed: _onCustomerPressed,
+                        child: Text(
+                          'Customer',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: isCustomerPressed
+                                ? Colors.white
+                                : Colors.deepPurpleAccent,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    SizedBox(
+                      width: size.width * 0.4,
+                      height: 30,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            isClinicPressed
+                                ? Colors.deepPurpleAccent
+                                : Colors.white,
+                          ),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          side: MaterialStateProperty.all<BorderSide>(
+                            const BorderSide(
+                                color: Colors.deepPurpleAccent, width: 2),
+                          ),
+                        ),
+                        onPressed: _onClinicPressed,
+                        child: Text(
+                          'Clinic',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: isClinicPressed
+                                ? Colors.white
+                                : Colors.deepPurpleAccent,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: size.height * 0.02,
@@ -341,7 +430,6 @@ class _SignUpViewState extends State<SignUpView> {
     String email = emailController.text;
     String password = passwordController.text;
     String username = nameController.text;
-    String role = 'M';
     String uid;
     await Firebase.initializeApp().then((value) async {
       print('Firebase Initialize Success');

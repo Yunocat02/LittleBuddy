@@ -167,7 +167,7 @@ class _LoginViewState extends State<LoginView> {
         Padding(
           padding: const EdgeInsets.only(left: 20.0),
           child: Text(
-            'Welcome Back Catchy',
+            'Welcome to littleBuddy',
             style: kLoginSubtitleStyle(size),
           ),
         ),
@@ -185,7 +185,7 @@ class _LoginViewState extends State<LoginView> {
                   style: kTextFormFieldStyle(),
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.person),
-                    hintText: 'Username or Gmail',
+                    hintText: 'Email',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(15)),
                     ),
@@ -330,7 +330,11 @@ class _LoginViewState extends State<LoginView> {
         type: QuickAlertType.error);
   }
 
-  // Login Button
+  Future<void> showAlert2(BuildContext context) async {
+    await QuickAlert.show(
+        context: context, title: "Login Success", type: QuickAlertType.success);
+  }
+
   Widget loginButton() {
     return SizedBox(
       width: double.infinity,
@@ -355,6 +359,10 @@ class _LoginViewState extends State<LoginView> {
                 );
 
                 await getUserRole();
+
+                // Show alert if login success
+                await showAlert2(context);
+
                 // Navigate to Home screen after login success
                 Navigator.pushReplacement(
                   context,
