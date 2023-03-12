@@ -46,7 +46,13 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   @override
   void initState() {
     super.initState();
-    response("นารูโตะ");
+    setState(() {
+      messsages.insert(0, {
+        "data": 0,
+        "message":
+            "สวัสดีครับมีอะไรให้รับใช้ครับ       1.หาคลินิคใกล้ฉัน                            2.อาการทั่วไปของสัตว์                 3.ข้อมูลของคลินิคที่ลงทะเบียน               4.แอพนี้คือไรหรอ                                                  พิมพ์หมายเลขมาได้เลยครับ"
+      });
+    });
   }
 
   @override
