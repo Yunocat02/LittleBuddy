@@ -22,21 +22,39 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   User? user;
+  bool isGetUserRoleFinished =
+      false; // เพิ่มตัวแปรสำหรับตรวจสอบการโหลด getUserRole() เสร็จสิ้นหรือยัง
 
   @override
   void initState() {
     super.initState();
     user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      getUserRole();
+      getUserRole().whenComplete(() {
+        setState(() {
+          isGetUserRoleFinished = true;
+        });
+      });
+    } else {
+      isGetUserRoleFinished =
+          true; // กรณีที่ user == null ให้เข้าสู่ home โดยตรง
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: user != null ? Home() : Home(),
-    );
+    return isGetUserRoleFinished // ตรวจสอบว่า getUserRole() เสร็จสิ้นหรือยัง
+        ? GetMaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: user != null ? Home() : LoginView(),
+          )
+        : MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          );
   }
 }
