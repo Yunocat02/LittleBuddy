@@ -111,18 +111,25 @@ class Home extends StatelessWidget {
           const AnimatedTitle(title: 'What are you looking for?'),
           const Gap(10),
           Row(
-            children: const [
+            children: [
               PetCard(
                 petPath: 'assets/svg/robot.svg',
                 petName: 'ChatBot',
                 height: 68,
               ),
               Gap(28),
-              PetCard2(
-                petPath: 'assets/svg/hospital.svg',
-                petName: 'Clinic finder',
-                height: 68,
-              ),
+              if (globalRole?.role == 'D' || globalRole?.role == 'A')
+                PetCard2(
+                  petPath: 'assets/svg/mail2.svg',
+                  petName: 'Mail',
+                  height: 68,
+                )
+              else if (globalRole?.role == 'M' || globalRole?.role == '')
+                PetCard2(
+                  petPath: 'assets/svg/hospital.svg',
+                  petName: 'Clinic finder',
+                  height: 68,
+                )
             ],
           ),
           const Gap(25),

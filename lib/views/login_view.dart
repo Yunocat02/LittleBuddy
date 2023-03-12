@@ -330,7 +330,11 @@ class _LoginViewState extends State<LoginView> {
         type: QuickAlertType.error);
   }
 
-  // Login Button
+  Future<void> showAlert2(BuildContext context) async {
+    await QuickAlert.show(
+        context: context, title: "Login Success", type: QuickAlertType.success);
+  }
+
   Widget loginButton() {
     return SizedBox(
       width: double.infinity,
@@ -355,6 +359,10 @@ class _LoginViewState extends State<LoginView> {
                 );
 
                 await getUserRole();
+
+                // Show alert if login success
+                await showAlert2(context);
+
                 // Navigate to Home screen after login success
                 Navigator.pushReplacement(
                   context,
