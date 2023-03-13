@@ -1,12 +1,19 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:LittleBuddy/views/map_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+
 import '../widgets/back_button.dart';
 
 class waitdoctor extends StatefulWidget {
-  const waitdoctor({Key? key}) : super(key: key);
+  final String uidpet;
+  final String useruid;
+
+  const waitdoctor({
+    Key? key, required this.uidpet, required this.useruid, }) : super(key: key);
 
   @override
   State<waitdoctor> createState() => _waitdoctorstate();
@@ -17,13 +24,13 @@ class _waitdoctorstate extends State<waitdoctor> {
   final _formKey = GlobalKey<FormState>();
  
 
-  TextEditingController nameController = TextEditingController();
-  TextEditingController typeController = TextEditingController();
-  TextEditingController ageyearController = TextEditingController();
+  TextEditingController symptomController = TextEditingController();
+  TextEditingController medicController = TextEditingController();
+  TextEditingController datetimeController = TextEditingController();
   TextEditingController agemonthController = TextEditingController();
   TextEditingController speciesController = TextEditingController();
   TextEditingController dateCtl = TextEditingController();
-
+  
   
   @override
   Widget _dateTimePicker() {
@@ -60,7 +67,7 @@ class _waitdoctorstate extends State<waitdoctor> {
 }
   
   Widget build(BuildContext context) { 
-    
+    String uidpet=widget.uidpet;
   String Docter='';
     return Scaffold(
       appBar: AppBar(title: const Text("ลงทะเบียนกับคลินิก")),
@@ -79,12 +86,24 @@ class _waitdoctorstate extends State<waitdoctor> {
                   }
                   return null;
                 },
-                controller: nameController,
+                controller: symptomController,
               ),
             ),          
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: _dateTimePicker(),
+              child: TextFormField(
+  controller: datetimeController,
+  decoration: InputDecoration(
+    labelText: 'Date and Time',
+    hintText: 'Ex. Insert your date and time',
+  ),
+  onTap: () async {
+    // call the _dateTimePicker() function here
+    _dateTimePicker();
+  },
+   
+)
+              
             ),Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
@@ -96,7 +115,7 @@ class _waitdoctorstate extends State<waitdoctor> {
                   }
                   return null;
                 },
-                controller: nameController,
+                controller: medicController,
               ),
             ),
             Stack(
@@ -114,6 +133,7 @@ class _waitdoctorstate extends State<waitdoctor> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       // Add your onPressed logic here
+                      
                     }
                   },
                   child: const Text('submit'),

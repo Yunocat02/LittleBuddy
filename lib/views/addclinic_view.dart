@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:path/path.dart' as path;
 import 'dart:io';
 import '../widgets/back_button.dart';
@@ -28,6 +29,8 @@ class _AddclinicState extends State<Addclinic> {
   TextEditingController timecloseController = TextEditingController();
   TextEditingController timeopenController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  TextEditingController _latitudeController = TextEditingController();
+  TextEditingController _longitudeController = TextEditingController();
   File? _pdf;
   String? _pdfUrl;
   bool isSubmit = false;
@@ -75,7 +78,7 @@ class _AddclinicState extends State<Addclinic> {
         'description': descriptionController.text.trim(),
         'pdfUrl': _pdfUrl!,
         'status': 'waiting',
-        'Location': GeoPoint(0, 0)
+        'Location': GeoPoint(double.parse(_latitudeController.text),double.parse(_longitudeController.text))
       };
       await userDocRef.set(data);
     }
@@ -103,6 +106,31 @@ class _AddclinicState extends State<Addclinic> {
     );
   }
 
+  // ตัวแปรเก็บพิกัด user
+  Position? _position;
+
+  // หาพิกัด latitude, longitude
+  void _getCurrentLocation() async {
+    Position position = await _determinePosition(); // ขออนุญาตหาตำแหน่ง
+    setState(() {
+      _position = position;
+    });
+  }
+
+  // ฟังก์ชั่น ขออนุญาตหาตำแหน่ง
+  Future<Position> _determinePosition() async {
+    LocationPermission permission;
+
+    permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location Permission are denied');
+      }
+    }
+    return await Geolocator.getCurrentPosition();
+  }
   @override
   void dispose() {
     // Clean up the controllers when the widget is disposed
@@ -111,11 +139,18 @@ class _AddclinicState extends State<Addclinic> {
     timecloseController.dispose();
     typeController.dispose();
     descriptionController.dispose();
+    _latitudeController.dispose();
+    _longitudeController.dispose();
+    
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_position != null) {
+      _latitudeController.text = _position!.latitude.toString();
+      _longitudeController.text = _position!.longitude.toString();
+    }
     return Scaffold(
       appBar: AppBar(title: const Text("ลงทะเบียนร้านของคุณ")),
       body: Form(
@@ -218,6 +253,44 @@ class _AddclinicState extends State<Addclinic> {
                 ),
               ],
             ),
+             Row(
+  children: [
+    Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextFormField(
+          controller: _latitudeController,
+          decoration: InputDecoration(labelText: 'Latitude'),
+        ),
+      ),
+    ),
+    const SizedBox(width: 8),
+    Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextFormField(
+          controller: _longitudeController,
+          decoration: InputDecoration(labelText: 'Longitude'),
+        ),
+      ),
+    ),
+    Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: IconButton(
+          icon: Icon(Icons.gps_fixed), 
+          onPressed: (){
+           
+            setState(() {
+            _getCurrentLocation();
+             
+            });
+          },
+        ),
+      ),
+    ),
+  ],
+),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
