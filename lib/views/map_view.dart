@@ -39,7 +39,7 @@ class _MapnajaState extends State<Mapnaja> {
               MaterialPageRoute(builder: (context) => Home()),
             );
           },
-          icon: Icon(Icons.home),
+          icon: Icon(Icons.arrow_back),
         ),
         actions: [
           IconButton(
@@ -71,7 +71,7 @@ class _MapScreenState extends State<MapScreen> {
   late GoogleMapController _googleMapController;
 
   @override
-  void dispose(){
+  void dispose() {
     _googleMapController.dispose();
     super.dispose();
   }
@@ -81,12 +81,12 @@ class _MapScreenState extends State<MapScreen> {
   var shopdata = [
     [13.8232031, 100.506575],
     [13.8242144, 100.515139],
-    [13.8031571,100.5395366]
+    [13.8031571, 100.5395366]
   ];
 
   late LatLng MainLocation;
 
- // สร้าง mark ทั้งหมดบนแผนที่
+  // สร้าง mark ทั้งหมดบนแผนที่
   void addMark() {
     setState(() {
       // เพิ่ม Marker ใน _markers
@@ -114,11 +114,10 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-
   // ย้ายตำแหน่งไปยัง mark นั้นๆ
-  CameraPosition _getShopLocation(index){
-    return CameraPosition(target: LatLng(shopdata[index][0], shopdata[index][1]), zoom: 15);
-    
+  CameraPosition _getShopLocation(index) {
+    return CameraPosition(
+        target: LatLng(shopdata[index][0], shopdata[index][1]), zoom: 15);
   }
 
   // ฟังก์ชั่น ขออนุญาตหาตำแหน่ง
@@ -164,7 +163,8 @@ class _MapScreenState extends State<MapScreen> {
                       initialCameraPosition: _initialCameraPosition,
                       myLocationEnabled: true,
                       myLocationButtonEnabled: true,
-                      onMapCreated: (controller) => _googleMapController = controller,
+                      onMapCreated: (controller) =>
+                          _googleMapController = controller,
                       markers: _markers, // markers
                       // markers: <Marker>[
                       //   Marker(
@@ -172,7 +172,8 @@ class _MapScreenState extends State<MapScreen> {
                       //       position:LatLng(_position!.latitude, _position!.longitude)),
                       // ].toSet(),
                     )
-                  : Text("Loading"),
+                  : Text(
+                      "                                                Loading                                                "),
             ),
           ),
           // สร้างกล่องมา ส่วนของ เมนู
@@ -209,7 +210,9 @@ class _MapScreenState extends State<MapScreen> {
                               subtitle: Text("ร้านนี้ดีนะ"),
                               // ในส่วนของการเลือกร้าน
                               onTap: () {
-                                _googleMapController.animateCamera(CameraUpdate.newCameraPosition(_getShopLocation(index)));
+                                _googleMapController.animateCamera(
+                                    CameraUpdate.newCameraPosition(
+                                        _getShopLocation(index)));
                                 print("คุณเลือกร้านที่ ${index + 1}");
                               }),
                         ),
@@ -219,11 +222,12 @@ class _MapScreenState extends State<MapScreen> {
         ],
       ),
 
-       // ส่วนของปุ่มลอย ขวาล่าง กดแล้วกลับไปตำแหน่งตัวเอง
+      // ส่วนของปุ่มลอย ขวาล่าง กดแล้วกลับไปตำแหน่งตัวเอง
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
-        onPressed:() {
-          _googleMapController.animateCamera(CameraUpdate.newCameraPosition(_initialCameraPosition));
+        onPressed: () {
+          _googleMapController.animateCamera(
+              CameraUpdate.newCameraPosition(_initialCameraPosition));
         },
         tooltip: 'My Location',
         child: Icon(Icons.filter_center_focus),

@@ -1,5 +1,4 @@
 import 'package:LittleBuddy/views/Chatbot2_view.dart';
-import 'package:LittleBuddy/views/Chatbot_view.dart';
 import 'package:LittleBuddy/views/cam_view.dart';
 import 'package:LittleBuddy/views/home.dart';
 import 'package:flutter/material.dart';
