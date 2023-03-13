@@ -29,8 +29,7 @@ class NextPage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 final double latitude = double.parse(_latitudeController.text);
-                final double longitude =
-                    double.parse(_longitudeController.text);
+                final double longitude = double.parse(_longitudeController.text);
                 final geoPoint = GeoPoint(latitude, longitude);
                 ref.update({'status': 'confirm', 'Location': geoPoint});
                 // TODO: ทำการบันทึกค่า latitude และ longitude เป็น geopoint ใน database
