@@ -42,7 +42,7 @@ class _MapnajaState extends State<Mapnaja> {
               MaterialPageRoute(builder: (context) => Home()),
             );
           },
-          icon: Icon(Icons.home),
+          icon: Icon(Icons.arrow_back),
         ),
         actions: [
           IconButton(
@@ -126,30 +126,9 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   // ย้ายตำแหน่งไปยัง mark นั้นๆ
-  CameraPosition _getShopLocation(index) {
-    // ตั้งค่าตัวแปร _destination (ปลายทาง)
-    setState(() {
-      _origin = Marker(
-        markerId: MarkerId("You"),
-        position: MainLocation,
-      );
-      for (var marker in _markers) {
-        if (marker.markerId == MarkerId("marker ${index}")) {
-          _destination = marker;
-          break;
-        }
-      }
-    });
-
-    return CameraPosition(
-        target: LatLng(shopdata[index][0], shopdata[index][1]), zoom: 15);
-  }
-
-  void _route() async {
-    final diarections = await DirectionsRepositoey().getDirections(
-        origin: _origin!.position, destination: _destination!.position);
-    setState(() => _info = diarections);
-    st = !st;
+  CameraPosition _getShopLocation(index){
+    return CameraPosition(target: LatLng(shopdata[index][0], shopdata[index][1]), zoom: 15);
+    
   }
 
   // ฟังก์ชั่น ขออนุญาตหาตำแหน่ง
@@ -191,51 +170,20 @@ class _MapScreenState extends State<MapScreen> {
               child: _position != null
                   ?
                   // Text("CurrentLocation : "+ _position.toString())
-                  Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        GoogleMap(
-                          initialCameraPosition: _initialCameraPosition,
-                          myLocationEnabled: true,
-                          myLocationButtonEnabled: true,
-                          onMapCreated: (controller) =>
-                              _googleMapController = controller,
-                          markers: _markers, // markers
-                         polylines: {
-                          if (_info != null)
-                            Polyline(
-                              polylineId: const PolylineId('overview_polyline'),
-                              color: Colors.blue,
-                              width: 5,
-                              points: _info!.polylinePoints.map((e) => LatLng(e.latitude, e.longitude)).toList(),
-                            )
-                         },
-                        ),
-                        if (_info != null)
-                          Positioned(
-                            top: 20,
-                            child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 6.0, horizontal: 12.0),
-                                decoration: BoxDecoration(
-                                    color: Colors.blueAccent,
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.white,
-                                        offset: Offset(0, 2),
-                                        blurRadius: 6.0,
-                                      )
-                                    ]),
-                                child: Text(
-                                  "${_info!.totalDistance},${_info!.totalDuration}",
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500),
-                                )),
-                          )
-                      ],
+                  GoogleMap(
+                      initialCameraPosition: _initialCameraPosition,
+                      myLocationEnabled: true,
+                      myLocationButtonEnabled: true,
+                      onMapCreated: (controller) => _googleMapController = controller,
+                      markers: _markers, // markers
+                      // markers: <Marker>[
+                      //   Marker(
+                      //       markerId: MarkerId("current_location"),
+                      //       position:LatLng(_position!.latitude, _position!.longitude)),
+                      // ].toSet(),
                     )
-                  : Text("Loading"),
+                  : Text(
+                      "                                                Loading                                                "),
             ),
           ),
           // สร้างกล่องมา ส่วนของ เมนู
@@ -272,10 +220,7 @@ class _MapScreenState extends State<MapScreen> {
                               subtitle: Text("ร้านนี้ดีนะ"),
                               // ในส่วนของการเลือกร้าน
                               onTap: () {
-                                _googleMapController.animateCamera(
-                                    CameraUpdate.newCameraPosition(
-                                        _getShopLocation(index)));
-                                _route();
+                                _googleMapController.animateCamera(CameraUpdate.newCameraPosition(_getShopLocation(index)));
                                 print("คุณเลือกร้านที่ ${index + 1}");
                               }),
                         ),
@@ -288,10 +233,8 @@ class _MapScreenState extends State<MapScreen> {
       // ส่วนของปุ่มลอย ขวาล่าง กดแล้วกลับไปตำแหน่งตัวเอง
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
-        onPressed: () {
-          _googleMapController.animateCamera(_info != null
-              ? CameraUpdate.newLatLngBounds(_info!.bounds, 100.00)
-              : CameraUpdate.newCameraPosition(_initialCameraPosition));
+        onPressed:() {
+          _googleMapController.animateCamera(CameraUpdate.newCameraPosition(_initialCameraPosition));
         },
         tooltip: 'My Location',
         child: Icon(Icons.filter_center_focus),
