@@ -126,9 +126,30 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   // ย้ายตำแหน่งไปยัง mark นั้นๆ
-  CameraPosition _getShopLocation(index){
-    return CameraPosition(target: LatLng(shopdata[index][0], shopdata[index][1]), zoom: 15);
-    
+  CameraPosition _getShopLocation(index) {
+    // ตั้งค่าตัวแปร _destination (ปลายทาง)
+    setState(() {
+      _origin = Marker(
+        markerId: MarkerId("You"),
+        position: MainLocation,
+      );
+      for (var marker in _markers) {
+        if (marker.markerId == MarkerId("marker ${index}")) {
+          _destination = marker;
+          break;
+        }
+      }
+    });
+
+    return CameraPosition(
+        target: LatLng(shopdata[index][0], shopdata[index][1]), zoom: 15);
+  }
+
+  void _route() async {
+    final diarections = await DirectionsRepositoey().getDirections(
+        origin: _origin!.position, destination: _destination!.position);
+    setState(() => _info = diarections);
+    st = !st;
   }
 
   // ฟังก์ชั่น ขออนุญาตหาตำแหน่ง
@@ -220,7 +241,10 @@ class _MapScreenState extends State<MapScreen> {
                               subtitle: Text("ร้านนี้ดีนะ"),
                               // ในส่วนของการเลือกร้าน
                               onTap: () {
-                                _googleMapController.animateCamera(CameraUpdate.newCameraPosition(_getShopLocation(index)));
+                                _googleMapController.animateCamera(
+                                    CameraUpdate.newCameraPosition(
+                                        _getShopLocation(index)));
+                                _route();
                                 print("คุณเลือกร้านที่ ${index + 1}");
                               }),
                         ),
@@ -233,8 +257,10 @@ class _MapScreenState extends State<MapScreen> {
       // ส่วนของปุ่มลอย ขวาล่าง กดแล้วกลับไปตำแหน่งตัวเอง
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
-        onPressed:() {
-          _googleMapController.animateCamera(CameraUpdate.newCameraPosition(_initialCameraPosition));
+        onPressed: () {
+          _googleMapController.animateCamera(_info != null
+              ? CameraUpdate.newLatLngBounds(_info!.bounds, 100.00)
+              : CameraUpdate.newCameraPosition(_initialCameraPosition));
         },
         tooltip: 'My Location',
         child: Icon(Icons.filter_center_focus),
