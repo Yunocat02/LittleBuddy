@@ -191,17 +191,49 @@ class _MapScreenState extends State<MapScreen> {
               child: _position != null
                   ?
                   // Text("CurrentLocation : "+ _position.toString())
-                  GoogleMap(
-                      initialCameraPosition: _initialCameraPosition,
-                      myLocationEnabled: true,
-                      myLocationButtonEnabled: true,
-                      onMapCreated: (controller) => _googleMapController = controller,
-                      markers: _markers, // markers
-                      // markers: <Marker>[
-                      //   Marker(
-                      //       markerId: MarkerId("current_location"),
-                      //       position:LatLng(_position!.latitude, _position!.longitude)),
-                      // ].toSet(),
+                  Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        GoogleMap(
+                          initialCameraPosition: _initialCameraPosition,
+                          myLocationEnabled: true,
+                          myLocationButtonEnabled: true,
+                          onMapCreated: (controller) =>
+                              _googleMapController = controller,
+                          markers: _markers, // markers
+                         polylines: {
+                          if (_info != null)
+                            Polyline(
+                              polylineId: const PolylineId('overview_polyline'),
+                              color: Colors.blue,
+                              width: 5,
+                              points: _info!.polylinePoints.map((e) => LatLng(e.latitude, e.longitude)).toList(),
+                            )
+                         },
+                        ),
+                        if (_info != null)
+                          Positioned(
+                            top: 20,
+                            child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 6.0, horizontal: 12.0),
+                                decoration: BoxDecoration(
+                                    color: Colors.blueAccent,
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.white,
+                                        offset: Offset(0, 2),
+                                        blurRadius: 6.0,
+                                      )
+                                    ]),
+                                child: Text(
+                                  "${_info!.totalDistance},${_info!.totalDuration}",
+                                  style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500),
+                                )),
+                          )
+                      ],
                     )
                   : Text(
                       "                                                Loading                                                "),
