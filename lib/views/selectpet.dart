@@ -116,11 +116,12 @@ class _selectpets extends State<selectpets> {
                                 // ในส่วนของการเลือกร้าน
                                 onTap: () {
                                   String useruid=getuser()!.uid.toString();
+                                  print(index);
                                   Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                           builder: (context) => waitdoctor(
-                                          uidpet: index.toString(),
+                                          uidpet:index.toString(),
                                           useruid: useruid
                                           ),
                                         ),

@@ -1,4 +1,4 @@
-
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:LittleBuddy/views/datareport.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,14 +18,18 @@ import 'help_view.dart';
 import 'home.dart';
 import 'nextpage.dart';
 
-class doctorviewmember extends StatefulWidget {
-  const doctorviewmember({Key? key});
-
+class showdatareportmem extends StatefulWidget {
+  const showdatareportmem({
+    Key? key,
+    this.doctorid,this.index,
+  }) : super(key: key);
+  final String? doctorid;
+  final String? index;
   @override
-  State<doctorviewmember> createState() => _doctorviewmember();
+  State<showdatareportmem> createState() => _showdatareportmem();
 }
 
-class _doctorviewmember extends State<doctorviewmember> {
+class _showdatareportmem extends State<showdatareportmem> {
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
   final firestore = FirebaseFirestore.instance;
 
@@ -54,9 +58,11 @@ class _doctorviewmember extends State<doctorviewmember> {
   
   @override
   Widget build(BuildContext context) {
+    String? doctorid=widget.doctorid.toString();
+    String? petid=widget.index;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ลูกค้าที่รักษากับเราอยู่'),
+        title: const Text('ข้อมูลการรักษาสัตว์ที่ลงทะเบียนกับคลินิก'),
         centerTitle: true,
         automaticallyImplyLeading: false,
         leading: IconButton(
@@ -67,13 +73,11 @@ class _doctorviewmember extends State<doctorviewmember> {
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: firestore
+        stream:  firestore
             .collection('connect')
-            .doc(getuser()?.uid).collection('userconnect')
-            .where('uid', isNotEqualTo: null)
-            .where('status',
-                isEqualTo:
-                    'confirm') // กรอง document ที่มี field uid ไม่เท่ากับ null
+            .doc(doctorid).collection('datareport')
+            .where('userid',isEqualTo: getuser()?.uid)
+             // กรอง document ที่มี field uid ไม่เท่ากับ null
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -138,21 +142,15 @@ class _doctorviewmember extends State<doctorviewmember> {
                    subtitle: Column(
   children: [ 
     
-    Text("อาการ: " + data['symptom'] ?? "N/A"),
-    Text("แพ้ยา: " + data['medic'] ?? "N/A"),
-    Text("วันที่เกิดอาการ: " + data['datetimesym'] ?? "N/A"),
+    Text("วันนัดรับสัตว์เลี้ยง: " + data['appmtime'] ?? "N/A"),
+    Text("วันที่มารักษา: " + data['datetime'] ?? "N/A"),
+    Text("วิธีการรักษา: " + data['remedy'] ?? "N/A"),
   ],
 ),
 
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => datareport(
-                                  userid:data['userid'].toString(),
-                                  petid:data['petid'].toString(),
-                                  doctorid:getuser()?.uid))
-                                  
-                                );
+                               
+                                
                               },
                             )),
                       );

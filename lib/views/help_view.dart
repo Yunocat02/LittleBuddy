@@ -26,7 +26,7 @@ List navItems = [
   {
     'text': 'Clinic',
     'icon': 'assets/nav_icons/heart_icon.svg',
-    'page': const Clinic(doctorid: '',)
+    'page': const Clinic(doctorid: '', petid: '',)
   },
   {
     'text': 'Pets',

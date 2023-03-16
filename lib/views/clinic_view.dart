@@ -1,6 +1,8 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:LittleBuddy/views/Chatbot2_view.dart';
 import 'package:LittleBuddy/views/cam_view.dart';
 import 'package:LittleBuddy/views/home.dart';
+import 'package:LittleBuddy/views/showreportmember.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -10,8 +12,11 @@ import 'help_view.dart';
 import 'mypets_view.dart';
 
 class Clinic extends StatefulWidget {
-  const Clinic({Key? key, required String doctorid}) : super(key: key);
-
+  const Clinic({
+    Key? key,
+    this.doctorid, required String petid,
+  }) : super(key: key);
+  final String? doctorid;
   @override
   State<Clinic> createState() => _ClinicState();
 }
@@ -25,7 +30,7 @@ List navItems = [
   {
     'text': 'Clinic',
     'icon': 'assets/nav_icons/heart_icon.svg',
-    'page': const Clinic(doctorid: '',)
+    'page': const Clinic(doctorid: '', petid: '',)
   },
   {
     'text': 'Pets',
@@ -86,7 +91,18 @@ class _ClinicState extends State<Clinic> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                    String? doctorid=widget.doctorid;
+                    Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                          builder: (context) => showdatareportmem(
+                                          doctorid:doctorid
+                                          ),
+                                        ),
+                                        
+                                    );
+                },
                 child:
                     Text('ลายละเอียดการรักษา', style: TextStyle(fontSize: 24)),
               ),

@@ -1,15 +1,26 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+
 import '../widgets/back_button.dart';
 
 class datareport extends StatefulWidget {
-  const datareport({Key? key}) : super(key: key);
+  const datareport({
+    Key? key,
+    required this.userid,
+    required this.petid,
+    this.doctorid,
+  }) : super(key: key);
 
+  final String userid;
+  final String petid;
+  final String? doctorid;
   @override
   State<datareport> createState() => _datareportstate();
+  
 }
 
 class _datareportstate extends State<datareport> {
@@ -17,18 +28,22 @@ class _datareportstate extends State<datareport> {
   final _formKey = GlobalKey<FormState>();
   
  
-  TextEditingController nameController = TextEditingController();
-  TextEditingController typeController = TextEditingController();
+  TextEditingController remedyController = TextEditingController();
+  TextEditingController urlController = TextEditingController();
   TextEditingController ageyearController = TextEditingController();
   TextEditingController agemonthController = TextEditingController();
   TextEditingController speciesController = TextEditingController();
-  TextEditingController dateCtl = TextEditingController();
-
+  TextEditingController dateCtl1 = TextEditingController();
+TextEditingController dateCtl2 = TextEditingController();
+   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  late User? user = auth.currentUser;
+  late String? uid = user!.uid;
   
   @override
   Widget _dateTimePicker1() {
   return TextFormField(
-    controller: dateCtl,
+    controller: dateCtl1,
     decoration: InputDecoration(
       labelText: 'วันที่มารักษา',
       hintText: 'Ex. Insert your date and time',
@@ -53,14 +68,14 @@ class _datareportstate extends State<datareport> {
       ))!;
 
       // อัพเดตค่าใน controller
-      dateCtl.text =
+      dateCtl1.text =
           '${DateFormat('yyyy-MM-dd').format(date)} ${time.format(context)}';
     },
   );
 }
 Widget _dateTimePicker2() {
   return TextFormField(
-    controller: dateCtl,
+    controller: dateCtl2,
     decoration: InputDecoration(
       labelText: 'วันนัดรับสัตว์เลี้ยง',
       hintText: 'Ex. Insert your date and time',
@@ -85,13 +100,37 @@ Widget _dateTimePicker2() {
       ))!;
 
       // อัพเดตค่าใน controller
-      dateCtl.text =
+      dateCtl2.text =
           '${DateFormat('yyyy-MM-dd').format(date)} ${time.format(context)}';
     },
   );
 }
   
   Widget build(BuildContext context) { 
+    String userId=widget.userid;
+    String petid=widget.petid;
+
+    Future<void> adddatareport() async {
+    if (user != null) {
+      final DocumentReference<Map<String, dynamic>> userDocRef =
+          firestore.collection('connect').doc(uid).collection('datareport').doc();
+      /*final CollectionReference petReportCollectionRef =
+          userDocRef.collection('0001');*/
+
+      final Map<String, dynamic> data = {
+        'remedy': remedyController.text.trim(),
+        'datetime': dateCtl1.text,
+        'appmtime': dateCtl2.text,
+        'url': urlController.text,
+        'userid': userId.toString(),
+        'petid':petid.toString()
+
+      };
+      await userDocRef.set(data);
+    }
+  }
+
+
     
   String Docter='';
   
@@ -116,12 +155,23 @@ Widget _dateTimePicker2() {
                   }
                   return null;
                 },
-                controller: nameController,
+                controller: remedyController,
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: _dateTimePicker2(),
+            ),
+             Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                decoration: InputDecoration(
+                    labelText: "URL", hintText: ""),
+                validator: (value) {
+                  return null;
+                },
+                controller: urlController,
+              ),
             ),
             Stack(
               children: [
@@ -138,6 +188,7 @@ Widget _dateTimePicker2() {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       // Add your onPressed logic here
+                        adddatareport();
                     }
                   },
                   child: const Text('submit'),

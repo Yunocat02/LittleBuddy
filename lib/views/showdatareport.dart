@@ -1,4 +1,3 @@
-
 import 'package:LittleBuddy/views/datareport.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,14 +17,14 @@ import 'help_view.dart';
 import 'home.dart';
 import 'nextpage.dart';
 
-class doctorviewmember extends StatefulWidget {
-  const doctorviewmember({Key? key});
+class showdatareport extends StatefulWidget {
+  const showdatareport({Key? key});
 
   @override
-  State<doctorviewmember> createState() => _doctorviewmember();
+  State<showdatareport> createState() => _showdatareport();
 }
 
-class _doctorviewmember extends State<doctorviewmember> {
+class _showdatareport extends State<showdatareport> {
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
   final firestore = FirebaseFirestore.instance;
 
@@ -56,7 +55,7 @@ class _doctorviewmember extends State<doctorviewmember> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ลูกค้าที่รักษากับเราอยู่'),
+        title: const Text('ข้อมูลการรักษาสัตว์ที่ลงทะเบียนกับคลินิก'),
         centerTitle: true,
         automaticallyImplyLeading: false,
         leading: IconButton(
@@ -69,11 +68,8 @@ class _doctorviewmember extends State<doctorviewmember> {
       body: StreamBuilder<QuerySnapshot>(
         stream: firestore
             .collection('connect')
-            .doc(getuser()?.uid).collection('userconnect')
-            .where('uid', isNotEqualTo: null)
-            .where('status',
-                isEqualTo:
-                    'confirm') // กรอง document ที่มี field uid ไม่เท่ากับ null
+            .doc(getuser()?.uid).collection('datareport')
+            .where('uid', isNotEqualTo: null) // กรอง document ที่มี field uid ไม่เท่ากับ null
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -138,9 +134,9 @@ class _doctorviewmember extends State<doctorviewmember> {
                    subtitle: Column(
   children: [ 
     
-    Text("อาการ: " + data['symptom'] ?? "N/A"),
-    Text("แพ้ยา: " + data['medic'] ?? "N/A"),
-    Text("วันที่เกิดอาการ: " + data['datetimesym'] ?? "N/A"),
+    Text("วันนัดรับสัตว์เลี้ยง: " + data['appmtime'] ?? "N/A"),
+    Text("วันที่มารักษา: " + data['datetime'] ?? "N/A"),
+    Text("วิธีการรักษา: " + data['remedy'] ?? "N/A"),
   ],
 ),
 

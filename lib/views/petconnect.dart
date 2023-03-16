@@ -142,7 +142,8 @@ class _petconnect extends State<petconnect> {
                                           context,
                                           MaterialPageRoute(
                                           builder: (context) => Clinic(
-                                          doctorid:data['doctorid'].toString()
+                                          doctorid:data['doctorid'].toString(),
+                                          petid:index.toString()
                                           ),
                                         ),
                                         
