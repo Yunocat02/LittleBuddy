@@ -6,7 +6,6 @@ import 'home.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class bot2 extends StatefulWidget {
   @override
   _bot2State createState() => _bot2State();
@@ -35,37 +34,63 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   final messageInsert = TextEditingController();
   List<Map> messsages = [];
   void response(query) async {
-    AuthGoogle authGoogle =
-        await AuthGoogle(fileJson: "assets/dialog_flow_auth.json").build();
-    DialogFlow dialogflow = DialogFlow(authGoogle: authGoogle, language: "th");
-    AIResponse aiResponse = await dialogflow.detectIntent(query);
-    for (var message in aiResponse.getListMessage()!) {
-      if (message.containsKey("payload")) {
-        var payload = message["payload"]["richContent"][0];
-        for (var content in payload) {
-          if (content["type"] == "chips") {
-            setState(() {
-              messsages.insert(0,
-                  {"data": 0, "message": "", "chips": content["options"]});
+  AuthGoogle authGoogle =
+      await AuthGoogle(fileJson: "assets/dialog_flow_auth.json").build();
+  DialogFlow dialogflow = DialogFlow(authGoogle: authGoogle, language: "th");
+  AIResponse aiResponse = await dialogflow.detectIntent(query);
+  for (var message in aiResponse.getListMessage()!) {
+    if (message.containsKey("payload")) {
+      var payload = message["payload"]["richContent"][0];
+      for (var content in payload) {
+        if (content["type"] == "cards") {
+          setState(() {
+            messsages.insert(0, {
+              "data": 0,
+              "message": "",
+              "cards": content["options"],
             });
-          }
+          });
+        } else if (content["type"] == "chips") {
+          setState(() {
+            messsages.insert(
+                0, {"data": 0, "message": "", "chips": content["options"]});
+          });
         }
-      } else {
-        setState(() {
-          messsages.insert(
-              0, {"data": 0, "message": message["text"]["text"][0].toString()});
-        });
       }
+    } else {
+      setState(() {
+        messsages.insert(
+            0, {"data": 0, "message": message["text"]["text"][0].toString()});
+      });
     }
   }
-  
+  }
+
+
   @override
   void launchURL(String url) async {
     if (await canLaunch(url)) {
-    await launch(url);
+      await launch(url);
     } else {
-    throw 'Could not launch $url';
+      throw 'Could not launch $url';
     }
+  }
+
+  void showInitialChips() {
+    final List<dynamic> initialChips = [
+      {"text": "หาคลินิคใกล้ฉัน"},
+      {"text": "สัตว์เลี้ยงมีอาการผิดปกติ"},
+      {"text": "ข้อมูลของคลินิคที่ลงทะเบียน"},
+      {"text": "แอพนี้คือไรหรอ"}
+    ];
+
+    setState(() {
+      messsages.insert(0, {
+        "data": 0,
+        "message": "สวัสดี",
+        "chips": initialChips,
+      });
+    });
   }
 
   @override
@@ -74,10 +99,10 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
     setState(() {
       messsages.insert(0, {
         "data": 0,
-        "message":
-            "สวัสดีครับมีอะไรให้รับใช้ครับ       1.หาคลินิคใกล้ฉัน                            2.อาการทั่วไปของสัตว์                 3.ข้อมูลของคลินิคที่ลงทะเบียน               4.แอพนี้คือไรหรอ                                                  พิมพ์หมายเลขมาได้เลยครับ"
+        "message":"สวัสดีครับต้องการใช้บริการอะไรครับ"
       });
     });
+    showInitialChips();
   }
 
   @override
@@ -108,95 +133,86 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
           children: <Widget>[
             Container(
               padding: EdgeInsets.only(top: 15, bottom: 10),
-              child: Text("Today, ${DateFormat("Hm").format(DateTime.now())}", style: TextStyle(
-                fontSize: 20
-              ),),
+              child: Text(
+                "Today, ${DateFormat("Hm").format(DateTime.now())}",
+                style: TextStyle(fontSize: 20),
+              ),
             ),
             Flexible(
               child: ListView.builder(
-              reverse: true,
-              itemCount: messsages.length,
-              itemBuilder: (context, index) => chat(
-                    messsages[index]["message"].toString(),
-                    messsages[index]["data"],
-                    messsages[index]["chips"])),),
-
+                  reverse: true,
+                  itemCount: messsages.length,
+                  itemBuilder: (context, index) => chat(
+                      messsages[index]["message"].toString(),
+                      messsages[index]["data"],
+                      messsages[index]["chips"],
+                      messsages[index]["cards"])),
+            ),
             SizedBox(
               height: 20,
             ),
-
             Divider(
               height: 5.0,
               color: Colors.greenAccent,
             ),
             Container(
               child: ListTile(
-                  // ignore: prefer_const_constructors
-                  leading: IconButton(
-                    icon: Icon(Icons.camera_alt, color: Color.fromARGB(255, 192, 247, 248), size: 35,), onPressed: () {    },
+                // ignore: prefer_const_constructors
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.camera_alt,
+                    color: Color.fromARGB(255, 192, 247, 248),
+                    size: 35,
                   ),
-                  title: Container(
-                    height: 35,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(
-                          15)),
-                      color: Color.fromRGBO(220, 220, 220, 1),
-                    ),
-                    padding: EdgeInsets.only(left: 15),
-                    child: TextFormField(
-                      controller: messageInsert,
-                      decoration: InputDecoration(
-                        hintText: "Enter a Message...",
-                        hintStyle: TextStyle(
-                            color: Colors.black26
-                        ),
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                      ),
-
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black
-                      ),
-                      onChanged: (value) {
-
-                      },
-                    ),
+                  onPressed: () {},
+                ),
+                title: Container(
+                  height: 35,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    color: Color.fromRGBO(220, 220, 220, 1),
                   ),
+                  padding: EdgeInsets.only(left: 15),
+                  child: TextFormField(
+                    controller: messageInsert,
+                    decoration: InputDecoration(
+                      hintText: "Enter a Message...",
+                      hintStyle: TextStyle(color: Colors.black26),
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                    ),
+                    style: TextStyle(fontSize: 16, color: Colors.black),
+                    onChanged: (value) {},
+                  ),
+                ),
 
-                  trailing: IconButton(
-
-                      icon: Icon(
-
-                        Icons.send,
-                        size: 30.0,
-                        color: Color.fromARGB(255, 192, 247, 248),
-                      ),
-                      onPressed: () {
-
-                        if (messageInsert.text.isEmpty) {
-                          print("empty message");
-                        } else {
-                          setState(() {
-                            messsages.insert(0,
-                                {"data": 1, "message": messageInsert.text});
-                          });
-                          response(messageInsert.text);
-                          messageInsert.clear();
-                        }
-                        FocusScopeNode currentFocus = FocusScope.of(context);
-                        if (!currentFocus.hasPrimaryFocus) {
-                          currentFocus.unfocus();
-                        }
-                      }),
-
+                trailing: IconButton(
+                    icon: Icon(
+                      Icons.send,
+                      size: 30.0,
+                      color: Color.fromARGB(255, 192, 247, 248),
+                    ),
+                    onPressed: () {
+                      if (messageInsert.text.isEmpty) {
+                        print("empty message");
+                      } else {
+                        setState(() {
+                          messsages.insert(
+                              0, {"data": 1, "message": messageInsert.text});
+                        });
+                        response(messageInsert.text);
+                        messageInsert.clear();
+                      }
+                      FocusScopeNode currentFocus = FocusScope.of(context);
+                      if (!currentFocus.hasPrimaryFocus) {
+                        currentFocus.unfocus();
+                      }
+                    }),
               ),
-
             ),
-
             SizedBox(
               height: 15.0,
             )
@@ -206,79 +222,120 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
     );
   }
 
-  Widget chat(String message, int data, List<dynamic>? chips) {
-  return Container(
-    padding: EdgeInsets.only(left: 20, right: 20),
-    child: Row(
-      mainAxisAlignment:
-          data == 1 ? MainAxisAlignment.end : MainAxisAlignment.start,
-      children: [
-        data == 0
+  Widget chat(String message, int data, List<dynamic>? chips, List<dynamic>? cards) {
+    return Container(
+      padding: EdgeInsets.only(left: 20, right: 20),
+      child: Row(
+        mainAxisAlignment:
+            data == 1 ? MainAxisAlignment.end : MainAxisAlignment.start,
+        children: [data == 0
             ? Container(
-                height: 60,
-                width: 60,
+                height: 40,
+                width: 40,
                 child: CircleAvatar(
                   backgroundImage: AssetImage("assets/robot.jpg"),
                 ),
               )
             : Container(),
-        Padding(
-          padding: EdgeInsets.all(10.0),
-          child: chips != null
-              ? Wrap(
-                  spacing: 8.0,
-                  children: chips
-                      .map(
-                        (chip) => ActionChip(
-                          label: Text(chip['text']),
-                          onPressed: () {
-                            launch(chip['link']);
-                          },
-                        ),
-                      )
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: cards != null
+            ? Wrap(
+                direction: Axis.vertical,
+                runSpacing: 4.0,
+                spacing: 8.0,
+                children: cards
+                .map(
+                (card) => InkWell(
+                onTap: () {
+                  // Do nothing or remove this onTap function if you don't want any action to be taken.
+                  },
+                child: Column(
+                  children: [
+                    Image.network(
+                      card['image'],
+                      height: 100,
+                      width: 100,
+                    ),
+                    SizedBox(height: 5),
+                    Text(card['title']),
+                    SizedBox(height: 5),
+                    Text(
+                      card['subtitle'],
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ] ,
+                ),
+              ),
+            )
                       .toList(),
                 )
-              : Bubble(
-                  radius: Radius.circular(15.0),
-                  color: data == 0
-                      ? Color.fromRGBO(3, 179, 155, 1)
-                      : Colors.orangeAccent,
-                  elevation: 0.0,
-                  child: Padding(
-                    padding: EdgeInsets.all(2.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                        Flexible(
-                            child: Container(
-                          constraints: BoxConstraints(maxWidth: 200),
-                          child: Text(
-                            message,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
+                : chips != null
+                ? Wrap(
+                    direction: Axis.vertical, // ตั้งค่าเป็นแนวตั้ง
+                    runSpacing: 4.0, // ตั้งค่าระยะห่างระหว่างบรรทัด
+                    spacing: 8.0,
+                    children: chips
+                        .map(
+                          (chip) => ActionChip(
+                            label: Text(chip['text']),
+                            onPressed: () {
+                              // Check if 'link' is present in the chip payload.
+                              // If it exists, launch the URL; otherwise, send the text as a message.
+                              if (chip.containsKey('link')) {
+                                launch(chip['link']);
+                              } else {
+                                setState(() {
+                                  messsages.insert(
+                                      0, {"data": 1, "message": chip['text']});
+                                });
+                                response(chip['text']);
+                              }
+                            },
                           ),
-                        ))
-                      ],
+                        )
+                        .toList(),
+                  )
+                : Bubble(
+                    radius: Radius.circular(15.0),
+                    color: data == 0
+                        ? Color.fromRGBO(3, 179, 155, 1)
+                        : Colors.orangeAccent,
+                    elevation: 0.0,
+                    child: Padding(
+                      padding: EdgeInsets.all(2.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          SizedBox(
+                            width: 10.0,
+                          ),
+                          Flexible(
+                              child: Container(
+                            constraints: BoxConstraints(maxWidth: 200),
+                            child: Text(
+                              message,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ))
+                        ],
+                      ),
                     ),
                   ),
-                ),
-        ),
-        data == 1
-            ? Container(
-                height: 60,
-                width: 60,
-                child: CircleAvatar(
-                  backgroundImage: AssetImage("assets/default.jpg"),
-                ),
-              )
-            : Container(),
-      ],
-    ),
-  );
+          ),
+          data == 1
+              ? Container(
+                  height: 40,
+                  width: 40,
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage("assets/default.jpg"),
+                  ),
+                )
+              : Container(),
+        ],
+      ),
+    );
   }
-
 }
