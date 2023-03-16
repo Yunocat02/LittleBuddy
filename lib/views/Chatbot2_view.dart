@@ -5,6 +5,8 @@ import 'package:dialogflow_flutter/dialogflowFlutter.dart';
 import 'home.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../views/map_view.dart';
+
 
 class bot2 extends StatefulWidget {
   @override
@@ -34,6 +36,11 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   final messageInsert = TextEditingController();
   List<Map> messsages = [];
   void response(query) async {
+    if (query == "หาคลินิคใกล้ฉัน") {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Mapnaja()));
+    } else {
+    // ส่วนที่เหลือของโค้ดภายในฟังก์ชัน response()
+  }
   AuthGoogle authGoogle =
       await AuthGoogle(fileJson: "assets/dialog_flow_auth.json").build();
   DialogFlow dialogflow = DialogFlow(authGoogle: authGoogle, language: "th");
