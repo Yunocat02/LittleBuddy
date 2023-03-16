@@ -58,6 +58,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   dialog_flowtter:
+  url_launcher: ^6.0.12
 
   flutter_lints: ^2.0.0
 
