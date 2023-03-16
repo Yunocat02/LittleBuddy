@@ -1,14 +1,17 @@
+import 'package:LittleBuddy/views/directions_repository.dart';
 import 'package:LittleBuddy/views/home.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-// import 'package:google_directions_api/google_directions_api.dart';
+import 'package:google_directions_api/google_directions_api.dart';
 
 // GPS
 import 'package:geolocator/geolocator.dart';
+
+import 'direction_model.dart';
 
 class Mapnaja extends StatefulWidget {
   const Mapnaja({super.key});
@@ -92,7 +95,7 @@ class _MapScreenState extends State<MapScreen> {
       // เพิ่ม Marker ใน _markers
       for (var i = 0; i < shopdata.length; i++) {
         _markers.add(Marker(
-          markerId: MarkerId("marker1"),
+          markerId: MarkerId("marker ${i}"),
           position: LatLng(shopdata[i][0], shopdata[i][1]),
           infoWindow: InfoWindow(
             title: "ร้านที่ ${i + 1}",
@@ -106,6 +109,14 @@ class _MapScreenState extends State<MapScreen> {
   // ตัวแปรเก็บพิกัด user
   Position? _position;
 
+  // ตัวแปร เกี่ยวกับเส้นทาง
+  Directions? _info;
+  Marker? _origin;
+  Marker? _destination;
+
+  // สถานะ route
+  bool st = false;
+
   // หาพิกัด latitude, longitude
   void _getCurrentLocation() async {
     Position position = await _determinePosition(); // ขออนุญาตหาตำแหน่ง
@@ -116,8 +127,29 @@ class _MapScreenState extends State<MapScreen> {
 
   // ย้ายตำแหน่งไปยัง mark นั้นๆ
   CameraPosition _getShopLocation(index) {
+    // ตั้งค่าตัวแปร _destination (ปลายทาง)
+    setState(() {
+      _origin = Marker(
+        markerId: MarkerId("You"),
+        position: MainLocation,
+      );
+      for (var marker in _markers) {
+        if (marker.markerId == MarkerId("marker ${index}")) {
+          _destination = marker;
+          break;
+        }
+      }
+    });
+
     return CameraPosition(
         target: LatLng(shopdata[index][0], shopdata[index][1]), zoom: 15);
+  }
+
+  void _route() async {
+    final diarections = await DirectionsRepositoey().getDirections(
+        origin: _origin!.position, destination: _destination!.position);
+    setState(() => _info = diarections);
+    st = !st;
   }
 
   // ฟังก์ชั่น ขออนุญาตหาตำแหน่ง
@@ -159,18 +191,49 @@ class _MapScreenState extends State<MapScreen> {
               child: _position != null
                   ?
                   // Text("CurrentLocation : "+ _position.toString())
-                  GoogleMap(
-                      initialCameraPosition: _initialCameraPosition,
-                      myLocationEnabled: true,
-                      myLocationButtonEnabled: true,
-                      onMapCreated: (controller) =>
-                          _googleMapController = controller,
-                      markers: _markers, // markers
-                      // markers: <Marker>[
-                      //   Marker(
-                      //       markerId: MarkerId("current_location"),
-                      //       position:LatLng(_position!.latitude, _position!.longitude)),
-                      // ].toSet(),
+                  Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        GoogleMap(
+                          initialCameraPosition: _initialCameraPosition,
+                          myLocationEnabled: true,
+                          myLocationButtonEnabled: true,
+                          onMapCreated: (controller) =>
+                              _googleMapController = controller,
+                          markers: _markers, // markers
+                         polylines: {
+                          if (_info != null)
+                            Polyline(
+                              polylineId: const PolylineId('overview_polyline'),
+                              color: Colors.blue,
+                              width: 5,
+                              points: _info!.polylinePoints.map((e) => LatLng(e.latitude, e.longitude)).toList(),
+                            )
+                         },
+                        ),
+                        if (_info != null)
+                          Positioned(
+                            top: 20,
+                            child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 6.0, horizontal: 12.0),
+                                decoration: BoxDecoration(
+                                    color: Colors.blueAccent,
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.white,
+                                        offset: Offset(0, 2),
+                                        blurRadius: 6.0,
+                                      )
+                                    ]),
+                                child: Text(
+                                  "${_info!.totalDistance},${_info!.totalDuration}",
+                                  style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500),
+                                )),
+                          )
+                      ],
                     )
                   : Text(
                       "                                                Loading                                                "),
@@ -213,6 +276,7 @@ class _MapScreenState extends State<MapScreen> {
                                 _googleMapController.animateCamera(
                                     CameraUpdate.newCameraPosition(
                                         _getShopLocation(index)));
+                                _route();
                                 print("คุณเลือกร้านที่ ${index + 1}");
                               }),
                         ),
@@ -226,8 +290,9 @@ class _MapScreenState extends State<MapScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         onPressed: () {
-          _googleMapController.animateCamera(
-              CameraUpdate.newCameraPosition(_initialCameraPosition));
+          _googleMapController.animateCamera(_info != null
+              ? CameraUpdate.newLatLngBounds(_info!.bounds, 100.00)
+              : CameraUpdate.newCameraPosition(_initialCameraPosition));
         },
         tooltip: 'My Location',
         child: Icon(Icons.filter_center_focus),

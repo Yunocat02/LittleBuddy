@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:dialogflow_flutter/dialogflowFlutter.dart';
 import 'home.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+
 class bot2 extends StatefulWidget {
   @override
   _bot2State createState() => _bot2State();
@@ -37,12 +40,34 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
     DialogFlow dialogflow = DialogFlow(authGoogle: authGoogle, language: "th");
     AIResponse aiResponse = await dialogflow.detectIntent(query);
     for (var message in aiResponse.getListMessage()!) {
-      setState(() {
-        messsages.insert(
-            0, {"data": 0, "message": message["text"]["text"][0].toString()});
-      });
+      if (message.containsKey("payload")) {
+        var payload = message["payload"]["richContent"][0];
+        for (var content in payload) {
+          if (content["type"] == "chips") {
+            setState(() {
+              messsages.insert(0,
+                  {"data": 0, "message": "", "chips": content["options"]});
+            });
+          }
+        }
+      } else {
+        setState(() {
+          messsages.insert(
+              0, {"data": 0, "message": message["text"]["text"][0].toString()});
+        });
+      }
     }
   }
+  
+  @override
+  void launchURL(String url) async {
+    if (await canLaunch(url)) {
+    await launch(url);
+    } else {
+    throw 'Could not launch $url';
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -88,12 +113,14 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
               ),),
             ),
             Flexible(
-                child: ListView.builder(
-                    reverse: true,
-                    itemCount: messsages.length,
-                    itemBuilder: (context, index) => chat(
-                        messsages[index]["message"].toString(),
-                        messsages[index]["data"]))),
+              child: ListView.builder(
+              reverse: true,
+              itemCount: messsages.length,
+              itemBuilder: (context, index) => chat(
+                    messsages[index]["message"].toString(),
+                    messsages[index]["data"],
+                    messsages[index]["chips"])),),
+
             SizedBox(
               height: 20,
             ),
@@ -179,61 +206,79 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
     );
   }
 
-  Widget chat(String message, int data) {
-    return Container(
-      padding: EdgeInsets.only(left: 20, right: 20),
-
-      child: Row(
-          mainAxisAlignment: data == 1 ? MainAxisAlignment.end : MainAxisAlignment.start,
-          children: [
-
-            data == 0 ? Container(
-              height: 60,
-              width: 60,
-              child: CircleAvatar(
-                backgroundImage: AssetImage("assets/robot.jpg"),
-              ),
-            ) : Container(),
-
+  Widget chat(String message, int data, List<dynamic>? chips) {
+  return Container(
+    padding: EdgeInsets.only(left: 20, right: 20),
+    child: Row(
+      mainAxisAlignment:
+          data == 1 ? MainAxisAlignment.end : MainAxisAlignment.start,
+      children: [
+        data == 0
+            ? Container(
+                height: 60,
+                width: 60,
+                child: CircleAvatar(
+                  backgroundImage: AssetImage("assets/robot.jpg"),
+                ),
+              )
+            : Container(),
         Padding(
-        padding: EdgeInsets.all(10.0),
-        child: Bubble(
-            radius: Radius.circular(15.0),
-            color: data == 0 ? Color.fromRGBO(3, 179, 155, 1) : Colors.orangeAccent,
-            elevation: 0.0,
-
-            child: Padding(
-              padding: EdgeInsets.all(2.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                  Flexible(
-                      child: Container(
-                        constraints: BoxConstraints( maxWidth: 200),
-                        child: Text(
-                          message,
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+          padding: EdgeInsets.all(10.0),
+          child: chips != null
+              ? Wrap(
+                  spacing: 8.0,
+                  children: chips
+                      .map(
+                        (chip) => ActionChip(
+                          label: Text(chip['text']),
+                          onPressed: () {
+                            launch(chip['link']);
+                          },
                         ),
-                      ))
-                ],
-              ),
-            )),
-            ),
-            data == 1? Container(
-              height: 60,
-              width: 60,
-              child: CircleAvatar(
-                backgroundImage: AssetImage("assets/default.jpg"),
-              ),
-            ) : Container(),
-
-          ],
+                      )
+                      .toList(),
+                )
+              : Bubble(
+                  radius: Radius.circular(15.0),
+                  color: data == 0
+                      ? Color.fromRGBO(3, 179, 155, 1)
+                      : Colors.orangeAccent,
+                  elevation: 0.0,
+                  child: Padding(
+                    padding: EdgeInsets.all(2.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        SizedBox(
+                          width: 10.0,
+                        ),
+                        Flexible(
+                            child: Container(
+                          constraints: BoxConstraints(maxWidth: 200),
+                          child: Text(
+                            message,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ))
+                      ],
+                    ),
+                  ),
+                ),
         ),
-    );
+        data == 1
+            ? Container(
+                height: 60,
+                width: 60,
+                child: CircleAvatar(
+                  backgroundImage: AssetImage("assets/default.jpg"),
+                ),
+              )
+            : Container(),
+      ],
+    ),
+  );
   }
+
 }
