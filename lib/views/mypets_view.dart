@@ -35,7 +35,7 @@ class _Mypets extends State<Mypets> {
     {
       'text': 'Clinic',
       'icon': 'assets/nav_icons/heart_icon.svg',
-      'page': const Clinic()
+      'page': const Clinic(doctorid: '',)
     },
     {
       'text': 'Pets',

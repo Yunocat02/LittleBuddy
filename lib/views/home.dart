@@ -1,6 +1,8 @@
 import 'package:LittleBuddy/views/checkdoctorregis.dart';
 import 'package:LittleBuddy/views/datareport.dart';
 import 'package:LittleBuddy/views/datareportviewsmember.dart';
+import 'package:LittleBuddy/views/doctorconnectcheck.dart';
+import 'package:LittleBuddy/views/petconnect.dart';
 import 'package:LittleBuddy/views/selectpet.dart';
 import 'package:LittleBuddy/widgets/pet_card2.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -45,7 +47,7 @@ class Home extends StatelessWidget {
       {
         'text': 'Clinic',
         'icon': 'assets/nav_icons/heart_icon.svg',
-        'page': const Clinic()
+        'page': const petconnect()
       },
       {
         'text': 'Pets',

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -173,11 +174,6 @@ class _doctorconnect extends State<doctorconnect> {
                                                           .docs[index].id);
 
                                                   // ลบไฟล์ที่อยู่ใน URL
-                                                  final url = data['pdfUrl'];
-                                                  FirebaseStorage.instance
-                                                      .refFromURL(url)
-                                                      .delete();
-
                                                   // ลบเอกสารออกจาก Firestore
                                                   ref.delete();
 
@@ -199,7 +195,12 @@ class _doctorconnect extends State<doctorconnect> {
                                           ref.update({
                                         'status': 'confirm',
                                       });
-
+                                      final String petid=data['petid'].replaceAll(' ', '');
+                                      final refpet =FirebaseFirestore.instance.collection('petreport').doc(data['userid']).collection('0001').doc(petid);
+                                      refpet.update({
+                                        'doctorid':getuser()?.uid,
+                                        'status': 'connected'
+                                      });
                                     },
                                   ),
                                   

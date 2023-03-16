@@ -10,7 +10,7 @@ import 'help_view.dart';
 import 'mypets_view.dart';
 
 class Clinic extends StatefulWidget {
-  const Clinic({Key? key}) : super(key: key);
+  const Clinic({Key? key, required String doctorid}) : super(key: key);
 
   @override
   State<Clinic> createState() => _ClinicState();
@@ -25,7 +25,7 @@ List navItems = [
   {
     'text': 'Clinic',
     'icon': 'assets/nav_icons/heart_icon.svg',
-    'page': const Clinic()
+    'page': const Clinic(doctorid: '',)
   },
   {
     'text': 'Pets',

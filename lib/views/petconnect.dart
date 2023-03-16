@@ -1,4 +1,4 @@
-import 'package:LittleBuddy/views/wait_doctor.dart';
+import 'package:LittleBuddy/views/mypets_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,14 +12,14 @@ import 'datareportviewsmember.dart';
 import 'help_view.dart';
 import 'home.dart';
 
-class selectpets extends StatefulWidget {
-  const selectpets({super.key});
+class petconnect extends StatefulWidget {
+  const petconnect({super.key});
 
   @override
-  State<selectpets> createState() => _selectpets();
+  State<petconnect> createState() => _petconnect();
 }
 
-class _selectpets extends State<selectpets> {
+class _petconnect extends State<petconnect> {
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
   final firestore = FirebaseFirestore.instance;
 
@@ -27,7 +27,29 @@ class _selectpets extends State<selectpets> {
   final _user = Rxn<User>();
   late Stream<User?> _authStateChanges;
 
- 
+  List navItems = [
+    {
+      'text': 'Adopt',
+      'icon': 'assets/nav_icons/pill_icon.svg',
+      'page': const Home()
+    },
+    {
+      'text': 'Clinic',
+      'icon': 'assets/nav_icons/heart_icon.svg',
+      'page': const petconnect()
+    },
+    {
+      'text': 'Pets',
+      'icon': 'assets/nav_icons/vet_icon.svg',
+      'page': const Mypets()
+    },
+    {
+      'text': 'Help',
+      'icon': 'assets/nav_icons/help_icon.svg',
+      'page': const Helpview()
+    },
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -51,7 +73,7 @@ class _selectpets extends State<selectpets> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mypet'),
+        title: const Text('สัตว์เลี้ยงที่ลงทะเบียนกับคลินิก'),
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),
@@ -60,7 +82,7 @@ class _selectpets extends State<selectpets> {
             .collection('petreport') // ชื่อตาราง
             .doc(getuser()?.uid) // เอา id เก็บแบบ doc
             .collection("0001")
-            .where('') // id sub field ที่แต่ย่อยมาตอน addpet
+            .where('status',isEqualTo: 'connected') // id sub field ที่แต่ย่อยมาตอน addpet
             .snapshots(), // ตัวกลางในการ อ่าน/เขียน ข้อมูล
         builder: (context, subCollectionSnapshot) {
           if (subCollectionSnapshot.hasData) {
@@ -113,15 +135,14 @@ class _selectpets extends State<selectpets> {
                                     Text("พันธ์: " + data['species'] ?? "N/A"),
                                   ],
                                 ),
+
                                 // ในส่วนของการเลือกร้าน
                                 onTap: () {
-                                  String useruid=getuser()!.uid.toString();
-                                  Navigator.push(
+                                 Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                          builder: (context) => waitdoctor(
-                                          uidpet: index.toString(),
-                                          useruid: useruid
+                                          builder: (context) => Clinic(
+                                          doctorid:data['doctorid'].toString()
                                           ),
                                         ),
                                         
@@ -155,10 +176,48 @@ class _selectpets extends State<selectpets> {
           }
         },
       ),
-      
+      bottomNavigationBar: Container(
+        height: 85,
+        decoration: BoxDecoration(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
+            color: Styles.bgColor),
+        padding: const EdgeInsets.fromLTRB(25, 20, 25, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: navItems.map<Widget>((e) {
+            return InkWell(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(e['icon'],
+                      height: 20,
+                      color: navItems.indexOf(e) == 1
+                          ? Styles.highlightColor
+                          : null),
+                  Text(
+                    e['text'],
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: navItems.indexOf(e) == 1
+                            ? Styles.highlightColor
+                            : Styles.blackColor,
+                        fontWeight:
+                            navItems.indexOf(e) == 1 ? FontWeight.bold : null),
+                  )
+                ],
+              ),
+              onTap: () async {
+                if (navItems.indexOf(e) == 0 ||
+                    navItems.indexOf(e) == 2 ||
+                    navItems.indexOf(e) == 3) {
+                  Navigator.pushReplacement(
+                      context, MaterialPageRoute(builder: (_) => e['page']));
+                }
+              },
             );
-          }
-        
-    
+          }).toList(),
+        ),
+      ),
+    );
   }
-
+}
