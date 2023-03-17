@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../views/map_view.dart';
 
-
 class bot2 extends StatefulWidget {
   @override
   _bot2State createState() => _bot2State();
@@ -37,42 +36,42 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   List<Map> messsages = [];
   void response(query) async {
     if (query == "หาคลินิคใกล้ฉัน") {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Mapnaja()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Mapnaja()));
     } else {
-    // ส่วนที่เหลือของโค้ดภายในฟังก์ชัน response()
-  }
-  AuthGoogle authGoogle =
-      await AuthGoogle(fileJson: "assets/dialog_flow_auth.json").build();
-  DialogFlow dialogflow = DialogFlow(authGoogle: authGoogle, language: "th");
-  AIResponse aiResponse = await dialogflow.detectIntent(query);
-  for (var message in aiResponse.getListMessage()!) {
-    if (message.containsKey("payload")) {
-      var payload = message["payload"]["richContent"][0];
-      for (var content in payload) {
-        if (content["type"] == "cards") {
-          setState(() {
-            messsages.insert(0, {
-              "data": 0,
-              "message": "",
-              "cards": content["options"],
+      // ส่วนที่เหลือของโค้ดภายในฟังก์ชัน response()
+    }
+    AuthGoogle authGoogle =
+        await AuthGoogle(fileJson: "assets/dialog_flow_auth.json").build();
+    DialogFlow dialogflow = DialogFlow(authGoogle: authGoogle, language: "th");
+    AIResponse aiResponse = await dialogflow.detectIntent(query);
+    for (var message in aiResponse.getListMessage()!) {
+      if (message.containsKey("payload")) {
+        var payload = message["payload"]["richContent"][0];
+        for (var content in payload) {
+          if (content["type"] == "cards") {
+            setState(() {
+              messsages.insert(0, {
+                "data": 0,
+                "message": "",
+                "cards": content["options"],
+              });
             });
-          });
-        } else if (content["type"] == "chips") {
-          setState(() {
-            messsages.insert(
-                0, {"data": 0, "message": "", "chips": content["options"]});
-          });
+          } else if (content["type"] == "chips") {
+            setState(() {
+              messsages.insert(
+                  0, {"data": 0, "message": "", "chips": content["options"]});
+            });
+          }
         }
+      } else {
+        setState(() {
+          messsages.insert(
+              0, {"data": 0, "message": message["text"]["text"][0].toString()});
+        });
       }
-    } else {
-      setState(() {
-        messsages.insert(
-            0, {"data": 0, "message": message["text"]["text"][0].toString()});
-      });
     }
   }
-  }
-
 
   @override
   void launchURL(String url) async {
@@ -104,10 +103,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   void initState() {
     super.initState();
     setState(() {
-      messsages.insert(0, {
-        "data": 0,
-        "message":"สวัสดีครับต้องการใช้บริการอะไรครับ"
-      });
+      messsages.insert(
+          0, {"data": 0, "message": "สวัสดีครับต้องการใช้บริการอะไรครับ"});
     });
     showInitialChips();
   }
@@ -158,17 +155,14 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
             SizedBox(
               height: 20,
             ),
-            Divider(
-              height: 5.0,
-              color: Colors.greenAccent,
-            ),
             Container(
               child: ListTile(
+                tileColor: Color.fromARGB(255, 192, 247, 248),
                 // ignore: prefer_const_constructors
                 leading: IconButton(
                   icon: Icon(
                     Icons.camera_alt,
-                    color: Color.fromARGB(255, 192, 247, 248),
+                    color: Color.fromARGB(255, 18, 97, 99),
                     size: 35,
                   ),
                   onPressed: () {},
@@ -177,7 +171,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                   height: 35,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
-                    color: Color.fromRGBO(220, 220, 220, 1),
+                    color: Color.fromARGB(255, 255, 255, 255),
                   ),
                   padding: EdgeInsets.only(left: 15),
                   child: TextFormField(
@@ -195,12 +189,11 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                     onChanged: (value) {},
                   ),
                 ),
-
                 trailing: IconButton(
                     icon: Icon(
                       Icons.send,
                       size: 30.0,
-                      color: Color.fromARGB(255, 192, 247, 248),
+                      color: Color.fromARGB(255, 18, 97, 99),
                     ),
                     onPressed: () {
                       if (messageInsert.text.isEmpty) {
@@ -220,117 +213,118 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                     }),
               ),
             ),
-            SizedBox(
-              height: 15.0,
-            )
           ],
         ),
       ),
     );
   }
 
-  Widget chat(String message, int data, List<dynamic>? chips, List<dynamic>? cards) {
+  Widget chat(
+      String message, int data, List<dynamic>? chips, List<dynamic>? cards) {
     return Container(
       padding: EdgeInsets.only(left: 20, right: 20),
       child: Row(
         mainAxisAlignment:
             data == 1 ? MainAxisAlignment.end : MainAxisAlignment.start,
-        children: [data == 0
-            ? Container(
-                height: 40,
-                width: 40,
-                child: CircleAvatar(
-                  backgroundImage: AssetImage("assets/robot.jpg"),
-                ),
-              )
-            : Container(),
+        children: [
+          data == 0
+              ? Container(
+                  height: 40,
+                  width: 40,
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage("assets/robot.jpg"),
+                  ),
+                )
+              : Container(),
           Padding(
             padding: EdgeInsets.all(10.0),
             child: cards != null
-            ? Wrap(
-                direction: Axis.vertical,
-                runSpacing: 4.0,
-                spacing: 8.0,
-                children: cards
-                .map(
-                (card) => InkWell(
-                onTap: () {
-                  // Do nothing or remove this onTap function if you don't want any action to be taken.
-                  },
-                child: Column(
-                  children: [
-                    Image.network(
-                      card['image'],
-                      height: 100,
-                      width: 100,
-                    ),
-                    SizedBox(height: 5),
-                    Text(card['title']),
-                    SizedBox(height: 5),
-                    Text(
-                      card['subtitle'],
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ] ,
-                ),
-              ),
-            )
-                      .toList(),
-                )
-                : chips != null
                 ? Wrap(
-                    direction: Axis.vertical, // ตั้งค่าเป็นแนวตั้ง
-                    runSpacing: 4.0, // ตั้งค่าระยะห่างระหว่างบรรทัด
+                    direction: Axis.vertical,
+                    runSpacing: 4.0,
                     spacing: 8.0,
-                    children: chips
+                    children: cards
                         .map(
-                          (chip) => ActionChip(
-                            label: Text(chip['text']),
-                            onPressed: () {
-                              // Check if 'link' is present in the chip payload.
-                              // If it exists, launch the URL; otherwise, send the text as a message.
-                              if (chip.containsKey('link')) {
-                                launch(chip['link']);
-                              } else {
-                                setState(() {
-                                  messsages.insert(
-                                      0, {"data": 1, "message": chip['text']});
-                                });
-                                response(chip['text']);
-                              }
+                          (card) => InkWell(
+                            onTap: () {
+                              // Do nothing or remove this onTap function if you don't want any action to be taken.
                             },
+                            child: Column(
+                              children: [
+                                Image.network(
+                                  card['image'],
+                                  height: 100,
+                                  width: 100,
+                                ),
+                                SizedBox(height: 5),
+                                Text(card['title']),
+                                SizedBox(height: 5),
+                                Text(
+                                  card['subtitle'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
                           ),
                         )
                         .toList(),
                   )
-                : Bubble(
-                    radius: Radius.circular(15.0),
-                    color: data == 0
-                        ? Color.fromRGBO(3, 179, 155, 1)
-                        : Colors.orangeAccent,
-                    elevation: 0.0,
-                    child: Padding(
-                      padding: EdgeInsets.all(2.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          SizedBox(
-                            width: 10.0,
+                : chips != null
+                    ? Wrap(
+                        direction: Axis.vertical, // ตั้งค่าเป็นแนวตั้ง
+                        runSpacing: 4.0, // ตั้งค่าระยะห่างระหว่างบรรทัด
+                        spacing: 8.0,
+                        children: chips
+                            .map(
+                              (chip) => ActionChip(
+                                backgroundColor: Color.fromRGBO(4, 173, 55, 1),
+                                label: Text(chip['text'],
+                                    style: TextStyle(color: Colors.white)),
+                                onPressed: () {
+                                  // Check if 'link' is present in the chip payload.
+                                  // If it exists, launch the URL; otherwise, send the text as a message.
+                                  if (chip.containsKey('link')) {
+                                    launch(chip['link']);
+                                  } else {
+                                    setState(() {
+                                      messsages.insert(0,
+                                          {"data": 1, "message": chip['text']});
+                                    });
+                                    response(chip['text']);
+                                  }
+                                },
+                              ),
+                            )
+                            .toList(),
+                      )
+                    : Bubble(
+                        radius: Radius.circular(15.0),
+                        color: data == 0
+                            ? Color.fromRGBO(3, 179, 155, 1)
+                            : Colors.orangeAccent,
+                        elevation: 0.0,
+                        child: Padding(
+                          padding: EdgeInsets.all(2.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              SizedBox(
+                                width: 10.0,
+                              ),
+                              Flexible(
+                                  child: Container(
+                                constraints: BoxConstraints(maxWidth: 200),
+                                child: Text(
+                                  message,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ))
+                            ],
                           ),
-                          Flexible(
-                              child: Container(
-                            constraints: BoxConstraints(maxWidth: 200),
-                            child: Text(
-                              message,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ))
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
           ),
           data == 1
               ? Container(
