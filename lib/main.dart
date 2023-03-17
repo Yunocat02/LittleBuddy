@@ -1,3 +1,4 @@
+import 'package:LittleBuddy/views/chatpage.dart';
 import 'package:LittleBuddy/views/login_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -41,6 +42,7 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  String email = 'test';
   @override
   Widget build(BuildContext context) {
     return isGetUserRoleFinished // ตรวจสอบว่า getUserRole() เสร็จสิ้นหรือยัง

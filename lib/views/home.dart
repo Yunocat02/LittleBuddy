@@ -1,3 +1,4 @@
+import 'package:LittleBuddy/views/chatpage.dart';
 import 'package:LittleBuddy/views/checkdoctorregis.dart';
 import 'package:LittleBuddy/views/datareport.dart';
 import 'package:LittleBuddy/views/datareportviewsmember.dart';
@@ -7,6 +8,7 @@ import 'package:LittleBuddy/views/selectpet.dart';
 import 'package:LittleBuddy/widgets/pet_card2.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -24,8 +26,25 @@ import 'help_view.dart';
 import 'login_view.dart';
 import 'mypets_view.dart';
 
-class Home extends StatelessWidget {
+final Future<FirebaseApp> firebase = Firebase.initializeApp();
+final auth = FirebaseAuth.instance;
+final firestore = FirebaseFirestore.instance;
+late String _username = "";
+
+class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  String _username = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserInfo();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +66,9 @@ class Home extends StatelessWidget {
       {
         'text': 'Clinic',
         'icon': 'assets/nav_icons/heart_icon.svg',
-        'page': const petconnect()
+        'page': chatpage(
+          email: _username,
+        )
       },
       {
         'text': 'Pets',
@@ -276,5 +297,27 @@ class Home extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _loadUserInfo() async {
+    final userId = auth.currentUser?.uid;
+
+    if (userId != null) {
+      final userDoc =
+          await firestore.collection('userdatabase').doc(userId).get();
+      final userData = userDoc.data() as Map<String, dynamic>?;
+      setState(() {
+        //_appmtime = userData?['appm. time'] as Timestamp;
+
+        _username = userData?['username'] ?? 'N/A';
+
+        //_content = userData?['content'] ?? 'N/A';
+        //_datetime = userData?['datetime'] as Timestamp;
+        //_idpet = userData?['idpet'] ?? 'N/A';
+        //_namepet = userData?['namepet'] ?? 'N/A';
+        //_remedy = userData?['remedy'] ?? 'N/A';
+        //_url = userData?['url'] ?? 'N/A';
+      });
+    }
   }
 }

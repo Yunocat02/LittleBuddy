@@ -49,7 +49,7 @@ class _doctorviewmember extends State<doctorviewmember> {
     _user.value = _auth.currentUser;
     return _user.value;
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +67,8 @@ class _doctorviewmember extends State<doctorviewmember> {
       body: StreamBuilder<QuerySnapshot>(
         stream: firestore
             .collection('connect')
-            .doc(getuser()?.uid).collection('userconnect')
+            .doc(getuser()?.uid)
+            .collection('userconnect')
             .where('uid', isNotEqualTo: null)
             .where('status',
                 isEqualTo:
@@ -94,7 +95,7 @@ class _doctorviewmember extends State<doctorviewmember> {
                       // ดึงข้อมูล
                       final data = snapshot.data!.docs[index].data()
                           as Map<String, dynamic>;
-                       
+
                       return Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: Container(
@@ -104,43 +105,53 @@ class _doctorviewmember extends State<doctorviewmember> {
                                 color: Color.fromARGB(255, 192, 247, 248)),
                             // เนื้อใน
                             child: ListTile(
-                                title: FutureBuilder<DocumentSnapshot>(
-                                future: firestore.collection('userdatabase').doc(data['userid']).get(),
-  builder: (context, userSnapshot) {
-    if (userSnapshot.hasData) {
-      final userDataMap = userSnapshot.data!.data() as Map<String, dynamic>;
-      final userName = userDataMap['username'];
-      final String petid=data['petid'].replaceAll(' ', '');
-      return FutureBuilder<DocumentSnapshot>(
-        future: firestore.collection('petreport').doc(data['userid']).collection('0001').doc(petid). get(),
-        builder: (context, petSnapshot) {
-          if (petSnapshot.hasData) {
-            final petDataMap = petSnapshot.data!.data() as Map<String, dynamic>;
-            final petName = petDataMap['name'];
-            return Column(
-              children: [
-                Text("ชื่อเจ้าของ: $userName"),
-                Text("ชื่อสัตว์เลี้ยง: $petName"),
-              ],
-            );
-          }
-          return const SizedBox();
-        },
-      );
-    }
-    return const SizedBox();
-  },
-),
-
-                   subtitle: Column(
-  children: [ 
-    
-    Text("อาการ: " + data['symptom'] ?? "N/A"),
-    Text("แพ้ยา: " + data['medic'] ?? "N/A"),
-    Text("วันที่เกิดอาการ: " + data['datetimesym'] ?? "N/A"),
-  ],
-),
-
+                              title: FutureBuilder<DocumentSnapshot>(
+                                future: firestore
+                                    .collection('userdatabase')
+                                    .doc(data['userid'])
+                                    .get(),
+                                builder: (context, userSnapshot) {
+                                  if (userSnapshot.hasData) {
+                                    final userDataMap = userSnapshot.data!
+                                        .data() as Map<String, dynamic>;
+                                    final userName = userDataMap['username'];
+                                    final String petid =
+                                        data['petid'].replaceAll(' ', '');
+                                    return FutureBuilder<DocumentSnapshot>(
+                                      future: firestore
+                                          .collection('petreport')
+                                          .doc(data['userid'])
+                                          .collection('0001')
+                                          .doc(petid)
+                                          .get(),
+                                      builder: (context, petSnapshot) {
+                                        if (petSnapshot.hasData) {
+                                          final petDataMap = petSnapshot.data!
+                                              .data() as Map<String, dynamic>;
+                                          final petName = petDataMap['name'];
+                                          return Column(
+                                            children: [
+                                              Text("ชื่อเจ้าของ: $userName"),
+                                              Text("ชื่อสัตว์เลี้ยง: $petName"),
+                                            ],
+                                          );
+                                        }
+                                        return const SizedBox();
+                                      },
+                                    );
+                                  }
+                                  return const SizedBox();
+                                },
+                              ),
+                              subtitle: Column(
+                                children: [
+                                  Text("อาการ: " + data['symptom'] ?? "N/A"),
+                                  Text("แพ้ยา: " + data['medic'] ?? "N/A"),
+                                  Text("วันที่เกิดอาการ: " +
+                                          data['datetimesym'] ??
+                                      "N/A"),
+                                ],
+                              ),
                               onTap: () {},
                             )),
                       );
