@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'home.dart';
 import 'message.dart';
@@ -19,16 +18,6 @@ class _chatpageState extends State<chatpage> {
   final fs = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
   final TextEditingController message = new TextEditingController();
-  late String _username = "";
-  final Future<FirebaseApp> firebase = Firebase.initializeApp();
-  final auth = FirebaseAuth.instance;
-  final firestore = FirebaseFirestore.instance;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUserInfo();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +25,6 @@ class _chatpageState extends State<chatpage> {
     final User? user = _auth.currentUser;
     final uid = user?.uid;
     final FirebaseFirestore _db = FirebaseFirestore.instance;
-
-    final Future<FirebaseApp> firebase = Firebase.initializeApp();
-    final auth = FirebaseAuth.instance;
-    final firestore = FirebaseFirestore.instance;
-
-    late String _username = "";
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -113,26 +95,5 @@ class _chatpageState extends State<chatpage> {
         ),
       ),
     );
-  }
-
-  Future<void> _loadUserInfo() async {
-    final userId = auth.currentUser?.uid;
-
-    if (userId != null) {
-      final userDoc =
-          await firestore.collection('userdatabase').doc(userId).get();
-      final userData = userDoc.data() as Map<String, dynamic>?;
-      setState(() {
-        //_appmtime = userData?['appm. time'] as Timestamp;
-
-        _username = userData?['username'] ?? 'N/A';
-        //_content = userData?['content'] ?? 'N/A';
-        //_datetime = userData?['datetime'] as Timestamp;
-        //_idpet = userData?['idpet'] ?? 'N/A';
-        //_namepet = userData?['namepet'] ?? 'N/A';
-        //_remedy = userData?['remedy'] ?? 'N/A';
-        //_url = userData?['url'] ?? 'N/A';
-      });
-    }
   }
 }
