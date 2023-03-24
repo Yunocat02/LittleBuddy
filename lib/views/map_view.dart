@@ -195,7 +195,7 @@ class _MapScreenState extends State<MapScreen> {
                       alignment: Alignment.center,
                       children: [
                         GoogleMap(
-                          initialCameraPosition: _initialCameraPosition,
+                          initialCameraPosition: CameraPosition(target: MainLocation, zoom: 15),
                           myLocationEnabled: true,
                           myLocationButtonEnabled: true,
                           onMapCreated: (controller) =>
