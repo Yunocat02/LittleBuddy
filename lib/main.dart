@@ -9,6 +9,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
+  // โดนแฮ็กแล้ว
   // Run the app
   runApp(MyApp());
 }
