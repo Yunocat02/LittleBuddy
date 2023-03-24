@@ -49,7 +49,6 @@ class Home extends StatelessWidget {
       {
         'text': 'Clinic',
         'icon': 'assets/nav_icons/heart_icon.svg',
-        'page': const petconnect()
       },
       {
         'text': 'Pets',
@@ -262,14 +261,45 @@ class Home extends StatelessWidget {
                   Navigator.push(
                       context, MaterialPageRoute(builder: (_) => e['page']));
                 }
-                if (navItems.indexOf(e) == 1 || navItems.indexOf(e) == 2) {
-                  if (globalRole?.role == 'A' ||
-                      globalRole?.role == 'M' ||
-                      globalRole?.role == 'D') {
+
+                if (navItems.indexOf(e) == 2) {
+                  if (globalRole?.role == 'M') {
                     Navigator.push(
-                        context, MaterialPageRoute(builder: (_) => e['page']));
-                  } else {
-                    showAlert();
+                      context,
+                      MaterialPageRoute(builder: (context) => Mypets()),
+                    );
+                  }
+                  if (globalRole?.role == 'D') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => showdatareport()),
+                    );
+                  }
+                  if (globalRole?.role == 'A') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Helpview()),
+                    );
+                  }
+                }
+
+                if (navItems.indexOf(e) == 1) {
+                  if (globalRole?.role == 'M') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => petconnect()),
+                    );
+                  } else if (globalRole?.role == 'D') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => doctorviewmember()),
+                    );
+                  } else if (globalRole?.role == 'A') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Helpview()),
+                    );
                   }
                 }
               },

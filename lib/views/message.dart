@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 
 class messages extends StatefulWidget {
   String email;
-  messages({required this.email});
+  String petid;
+  String doctorid;
+  messages({required this.email,required this.petid,required this.doctorid});
   @override
-  _messagesState createState() => _messagesState(email: email);
+  _messagesState createState() => _messagesState(email: email,petid: petid,doctorid: doctorid);
 }
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -16,16 +18,20 @@ final FirebaseFirestore _db = FirebaseFirestore.instance;
 
 class _messagesState extends State<messages> {
   String email;
-  _messagesState({required this.email});
+  String petid;
+  String doctorid;
+  _messagesState({required this.email,required this.petid,required this.doctorid});
   final ScrollController _scrollController = ScrollController();
-  Stream<QuerySnapshot> _messageStream = FirebaseFirestore.instance
+  @override
+  Widget build(BuildContext context) {
+    Stream<QuerySnapshot> _messageStream = FirebaseFirestore.instance
       .collection('connect')
-      .doc(uid)
+      .doc(widget.doctorid)
+      .collection('userconnect')
+      .doc(widget.petid)
       .collection('message')
       .orderBy('time', descending: true)
       .snapshots();
-  @override
-  Widget build(BuildContext context) {
     return StreamBuilder(
       stream: _messageStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

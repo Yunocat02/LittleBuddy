@@ -50,7 +50,7 @@ class _showdatareport extends State<showdatareport> {
     _user.value = _auth.currentUser;
     return _user.value;
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,15 +61,20 @@ class _showdatareport extends State<showdatareport> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => Home()),
+                (Route<dynamic> route) => false);
           },
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: firestore
             .collection('connect')
-            .doc(getuser()?.uid).collection('datareport')
-            .where('uid', isNotEqualTo: null) // กรอง document ที่มี field uid ไม่เท่ากับ null
+            .doc(getuser()?.uid)
+            .collection('datareport')
+            .where('uid',
+                isNotEqualTo:
+                    null) // กรอง document ที่มี field uid ไม่เท่ากับ null
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -92,7 +97,7 @@ class _showdatareport extends State<showdatareport> {
                       // ดึงข้อมูล
                       final data = snapshot.data!.docs[index].data()
                           as Map<String, dynamic>;
-                       
+
                       return Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: Container(
@@ -102,53 +107,64 @@ class _showdatareport extends State<showdatareport> {
                                 color: Color.fromARGB(255, 192, 247, 248)),
                             // เนื้อใน
                             child: ListTile(
-                                title: FutureBuilder<DocumentSnapshot>(
-                                future: firestore.collection('userdatabase').doc(data['userid']).get(),
-  builder: (context, userSnapshot) {
-    if (userSnapshot.hasData) {
-      final userDataMap = userSnapshot.data!.data() as Map<String, dynamic>;
-      final userName = userDataMap['username'];
-      final String petid=data['petid'].replaceAll(' ', '');
-      return FutureBuilder<DocumentSnapshot>(
-        future: firestore.collection('petreport').doc(data['userid']).collection('0001').doc(petid). get(),
-        builder: (context, petSnapshot) {
-          if (petSnapshot.hasData) {
-            final petDataMap = petSnapshot.data!.data() as Map<String, dynamic>;
-            final petName = petDataMap['name'];
-            return Column(
-              children: [
-                
-                Text("ชื่อสัตว์เลี้ยง: $petName"),
-                Text("ชื่อเจ้าของ: $userName"),
-              ],
-            );
-          }
-          return const SizedBox();
-        },
-      );
-    }
-    return const SizedBox();
-  },
-),
-
-                   subtitle: Column(
-  children: [ 
-    
-    Text("วันนัดรับสัตว์เลี้ยง: " + data['appmtime'] ?? "N/A"),
-    Text("วันที่มารักษา: " + data['datetime'] ?? "N/A"),
-    Text("วิธีการรักษา: " + data['remedy'] ?? "N/A"),
-  ],
-),
-
+                              title: FutureBuilder<DocumentSnapshot>(
+                                future: firestore
+                                    .collection('userdatabase')
+                                    .doc(data['userid'])
+                                    .get(),
+                                builder: (context, userSnapshot) {
+                                  if (userSnapshot.hasData) {
+                                    final userDataMap = userSnapshot.data!
+                                        .data() as Map<String, dynamic>;
+                                    final userName = userDataMap['username'];
+                                    final String petid =
+                                        data['petid'].replaceAll(' ', '');
+                                    return FutureBuilder<DocumentSnapshot>(
+                                      future: firestore
+                                          .collection('petreport')
+                                          .doc(data['userid'])
+                                          .collection('0001')
+                                          .doc(petid)
+                                          .get(),
+                                      builder: (context, petSnapshot) {
+                                        if (petSnapshot.hasData) {
+                                          final petDataMap = petSnapshot.data!
+                                              .data() as Map<String, dynamic>;
+                                          final petName = petDataMap['name'];
+                                          return Column(
+                                            children: [
+                                              Text("ชื่อสัตว์เลี้ยง: $petName"),
+                                              Text("ชื่อเจ้าของ: $userName"),
+                                            ],
+                                          );
+                                        }
+                                        return const SizedBox();
+                                      },
+                                    );
+                                  }
+                                  return const SizedBox();
+                                },
+                              ),
+                              subtitle: Column(
+                                children: [
+                                  Text("วันนัดรับสัตว์เลี้ยง: " +
+                                          data['appmtime'] ??
+                                      "N/A"),
+                                  Text("วันที่มารักษา: " + data['datetime'] ??
+                                      "N/A"),
+                                  Text("วิธีการรักษา: " + data['remedy'] ??
+                                      "N/A"),
+                                ],
+                              ),
                               onTap: () {
-                                Navigator.push(
+                                /*Navigator.push(
                                   context,
                                   MaterialPageRoute(builder: (context) => datareport(
                                   userid:data['userid'].toString(),
                                   petid:data['petid'].toString(),
                                   doctorid:getuser()?.uid))
                                   
-                                );
+                                );*/
                               },
                             )),
                       );

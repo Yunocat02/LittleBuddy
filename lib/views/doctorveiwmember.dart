@@ -70,7 +70,6 @@ class _doctorviewmember extends State<doctorviewmember> {
         stream: firestore
             .collection('connect')
             .doc(getuser()?.uid).collection('userconnect')
-            .where('uid', isNotEqualTo: null)
             .where('status',
                 isEqualTo:
                     'confirm') // กรอง document ที่มี field uid ไม่เท่ากับ null

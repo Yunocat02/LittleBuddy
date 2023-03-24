@@ -5,15 +5,25 @@ import 'home.dart';
 import 'message.dart';
 
 class chatpage extends StatefulWidget {
-  String email;
-  chatpage({required this.email, required String doctorid, required petid});
+  final String email;
+  final String petid;
+  final String doctorid;
+
+
+  chatpage({
+    required this.email, required this.petid, required this.doctorid,
+
+  });
   @override
   _chatpageState createState() => _chatpageState(email: email);
 }
 
 class _chatpageState extends State<chatpage> {
   String email;
-  _chatpageState({required this.email});
+
+
+  _chatpageState({required this.email}) {
+  }
 
   final fs = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
@@ -21,6 +31,8 @@ class _chatpageState extends State<chatpage> {
 
   @override
   Widget build(BuildContext context) {
+    String petid = widget.petid;
+    String doctorid = widget.doctorid;
     final FirebaseAuth _auth = FirebaseAuth.instance;
     final User? user = _auth.currentUser;
     final uid = user?.uid;
@@ -39,7 +51,7 @@ class _chatpageState extends State<chatpage> {
             Container(
               height: MediaQuery.of(context).size.height * 0.79,
               child: messages(
-                email: email,
+                email: email, doctorid: doctorid, petid: petid,
               ),
             ),
             Row(
@@ -74,7 +86,9 @@ class _chatpageState extends State<chatpage> {
                     if (message.text.isNotEmpty) {
                       fs
                           .collection('connect')
-                          .doc(uid)
+                          .doc(doctorid)
+                          .collection('userconnect')
+                          .doc(petid)
                           .collection('message')
                           .doc()
                           .set({

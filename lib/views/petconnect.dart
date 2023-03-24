@@ -83,11 +83,13 @@ class _petconnect extends State<petconnect> {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: firestore
-            .collection('petreport') // ชื่อตาราง
-            .doc(getuser()?.uid) // เอา id เก็บแบบ doc
-            .collection("0001")
-            .where('status',isEqualTo: 'connected') // id sub field ที่แต่ย่อยมาตอน addpet
-            .snapshots(), // ตัวกลางในการ อ่าน/เขียน ข้อมูล
+            .collection('petreport') // ชื่อคอลเล็กชัน
+    .doc(getuser()?.uid) // เอา uid ของผู้ใช้เก็บแบบ doc
+    .collection("0001")
+    .where('status', isEqualTo: 'connected') // id sub field ที่แต่งย่อยมาตอน addpet
+    .snapshots(),
+
+        // ตัวกลางในการ อ่าน/เขียน ข้อมูล
         builder: (context, subCollectionSnapshot) {
           if (subCollectionSnapshot.hasData) {
             return Container(
@@ -147,7 +149,7 @@ class _petconnect extends State<petconnect> {
                                           MaterialPageRoute(
                                           builder: (context) => Clinic(
                                           doctorid:data['doctorid'].toString(),
-                                          petid:index.toString(),
+                                          petid:subCollectionSnapshot.data!.docs[index].id,
                                           username:_username,
                                           ),
                                         ),
