@@ -1,4 +1,5 @@
 import 'package:LittleBuddy/views/datareport.dart';
+import 'package:LittleBuddy/views/petconnect.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -6,6 +7,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -13,8 +16,11 @@ import '../utils/styles.dart';
 import 'PDF_view.dart';
 import 'clinic_view.dart';
 import 'datareportviewsmember.dart';
+import 'doctorveiwmember.dart';
 import 'help_view.dart';
 import 'home.dart';
+import 'login_view.dart';
+import 'mypets_view.dart';
 import 'nextpage.dart';
 
 class showdatareport extends StatefulWidget {
@@ -25,12 +31,36 @@ class showdatareport extends StatefulWidget {
 }
 
 class _showdatareport extends State<showdatareport> {
+  List navItems = [
+    {
+      'text': 'Adopt',
+      'icon': 'assets/nav_icons/pill_icon.svg',
+    },
+    {
+      'text': 'Clinic',
+      'icon': 'assets/nav_icons/heart_icon.svg',
+    },
+    {
+      'text': 'Pets',
+      'icon': 'assets/nav_icons/vet_icon.svg',
+    },
+    {
+      'text': 'Help',
+      'icon': 'assets/nav_icons/help_icon.svg',
+      'page': const Helpview()
+    },
+  ];
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
   final firestore = FirebaseFirestore.instance;
 
   late FirebaseAuth _auth;
   final _user = Rxn<User>();
   late Stream<User?> _authStateChanges;
+
+  void showAlert() {
+    QuickAlert.show(
+        context: context, title: "Please login", type: QuickAlertType.error);
+  }
 
   @override
   void initState() {
@@ -58,14 +88,6 @@ class _showdatareport extends State<showdatareport> {
         title: const Text('ข้อมูลการรักษาสัตว์ที่ลงทะเบียนกับคลินิก'),
         centerTitle: true,
         automaticallyImplyLeading: false,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => Home()),
-                (Route<dynamic> route) => false);
-          },
-        ),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: firestore
@@ -171,6 +193,71 @@ class _showdatareport extends State<showdatareport> {
                     })),
           );
         },
+      ),
+      bottomNavigationBar: Container(
+        height: 85,
+        decoration: BoxDecoration(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
+            color: Styles.bgColor),
+        padding: const EdgeInsets.fromLTRB(25, 20, 25, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: navItems.map<Widget>((e) {
+            return InkWell(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(e['icon'],
+                      height: 20,
+                      color: navItems.indexOf(e) == 2
+                          ? Styles.highlightColor
+                          : null),
+                  Text(
+                    e['text'],
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: navItems.indexOf(e) == 2
+                            ? Styles.highlightColor
+                            : Styles.blackColor,
+                        fontWeight:
+                            navItems.indexOf(e) == 2 ? FontWeight.bold : null),
+                  )
+                ],
+              ),
+              onTap: () async {
+                if (navItems.indexOf(e) == 3) {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (_) => e['page']));
+                }
+                if (navItems.indexOf(e) == 1) {
+                  if (globalRole?.role == 'M') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => petconnect()),
+                    );
+                  } else if (globalRole?.role == 'D') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => doctorviewmember()),
+                    );
+                  } else if (globalRole?.role == 'A') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Helpview()),
+                    );
+                  }
+                }
+                if (navItems.indexOf(e) == 0) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Home()),
+                    );
+                }
+              },
+            );
+          }).toList(),
+        ),
       ),
     );
   }

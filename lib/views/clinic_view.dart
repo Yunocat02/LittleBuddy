@@ -14,12 +14,12 @@ import 'help_view.dart';
 import 'mypets_view.dart';
 
 class Clinic extends StatefulWidget {
-  const Clinic({
-    Key? key,
-    required this.doctorid,
-    required this.petid,
-    required this.username
-  }) : super(key: key);
+  const Clinic(
+      {Key? key,
+      required this.doctorid,
+      required this.petid,
+      required this.username})
+      : super(key: key);
 
   final String doctorid;
   final String petid;
@@ -59,6 +59,12 @@ class _ClinicState extends State<Clinic> {
         title: Text("Menu ในร้าน Clinic"),
         centerTitle: true,
         automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0), // add some padding
@@ -77,15 +83,18 @@ class _ClinicState extends State<Clinic> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                          builder: (context) => chatpage(
-                                          doctorid:widget.doctorid, petid: widget.petid, email: widget.username,
-                                          ),
-                                        ),
-                                        
-                                    );},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => chatpage(
+                        doctorid: widget.doctorid,
+                        petid: widget.petid,
+                        email: widget.username,
+                      ),
+                    ),
+                  );
+                },
                 child: Text('Chat คลินิก', style: TextStyle(fontSize: 24)),
               ),
             ),
@@ -93,10 +102,12 @@ class _ClinicState extends State<Clinic> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {Navigator.pushReplacement(
+                onPressed: () {
+                  Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => bot2()),
-                  );},
+                  );
+                },
                 child: Text('Chatbot', style: TextStyle(fontSize: 24)),
               ),
             ),
@@ -105,16 +116,15 @@ class _ClinicState extends State<Clinic> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                    String? doctorid=widget.doctorid;
-                    Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                          builder: (context) => showdatareportmem(
-                                          doctorid:doctorid, petid: null,
-                                          ),
-                                        ),
-                                        
-                                    );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => showdatareportmem(
+                        doctorid: widget.doctorid,
+                        petid: widget.petid,
+                      ),
+                    ),
+                  );
                 },
                 child:
                     Text('ลายละเอียดการรักษา', style: TextStyle(fontSize: 24)),
@@ -133,7 +143,7 @@ class _ClinicState extends State<Clinic> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => cam()),
                   );

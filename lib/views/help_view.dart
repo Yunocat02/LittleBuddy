@@ -1,3 +1,5 @@
+import 'package:LittleBuddy/views/petconnect.dart';
+import 'package:LittleBuddy/views/showdatareport.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
@@ -6,6 +8,7 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../utils/styles.dart';
 import 'clinic_view.dart';
+import 'doctorveiwmember.dart';
 import 'home.dart';
 import 'login_view.dart';
 import 'mypets_view.dart';
@@ -150,19 +153,53 @@ class _HelpviewState extends State<Helpview> {
                 ],
               ),
               onTap: () async {
-                if (navItems.indexOf(e) == 0) {
-                  Navigator.pushReplacement(
-                      context, MaterialPageRoute(builder: (_) => e['page']));
-                }
-                if (navItems.indexOf(e) == 1 || navItems.indexOf(e) == 2) {
-                  if (globalRole?.role == 'A' ||
-                      globalRole?.role == 'M' ||
-                      globalRole?.role == 'D') {
-                    Navigator.pushReplacement(
-                        context, MaterialPageRoute(builder: (_) => e['page']));
-                  } else {
-                    showAlert();
+                if (navItems.indexOf(e) == 2) {
+                  if (globalRole?.role == 'M') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Mypets()),
+                    );
                   }
+                  else if (globalRole?.role == 'D') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => showdatareport()),
+                    );
+                  }
+                  else if (globalRole?.role == 'A') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Helpview()),
+                    );
+                  }
+                  else{showAlert();}
+                }
+
+                if (navItems.indexOf(e) == 1) {
+                  if (globalRole?.role == 'M') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => petconnect()),
+                    );
+                  } else if (globalRole?.role == 'D') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => doctorviewmember()),
+                    );
+                  } else if (globalRole?.role == 'A') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Helpview()),
+                    );
+                  }
+                  else{showAlert();}
+                }
+                if (navItems.indexOf(e) == 0) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Home()),
+                    );
                 }
               },
             );

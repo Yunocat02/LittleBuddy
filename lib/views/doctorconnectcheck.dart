@@ -50,7 +50,7 @@ class _doctorconnect extends State<doctorconnect> {
     _user.value = _auth.currentUser;
     return _user.value;
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,7 +68,8 @@ class _doctorconnect extends State<doctorconnect> {
       body: StreamBuilder<QuerySnapshot>(
         stream: firestore
             .collection('connect')
-            .doc(getuser()?.uid).collection('userconnect')
+            .doc(getuser()?.uid)
+            .collection('userconnect')
             .where('uid', isNotEqualTo: null)
             .where('status',
                 isEqualTo:
@@ -95,7 +96,7 @@ class _doctorconnect extends State<doctorconnect> {
                       // ดึงข้อมูล
                       final data = snapshot.data!.docs[index].data()
                           as Map<String, dynamic>;
-                       
+
                       return Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: Container(
@@ -105,43 +106,53 @@ class _doctorconnect extends State<doctorconnect> {
                                 color: Color.fromARGB(255, 192, 247, 248)),
                             // เนื้อใน
                             child: ListTile(
-                                title: FutureBuilder<DocumentSnapshot>(
-                                future: firestore.collection('userdatabase').doc(data['userid']).get(),
-  builder: (context, userSnapshot) {
-    if (userSnapshot.hasData) {
-      final userDataMap = userSnapshot.data!.data() as Map<String, dynamic>;
-      final userName = userDataMap['username'];
-      final String petid=data['petid'].replaceAll(' ', '');
-      return FutureBuilder<DocumentSnapshot>(
-        future: firestore.collection('petreport').doc(data['userid']).collection('0001').doc(petid). get(),
-        builder: (context, petSnapshot) {
-          if (petSnapshot.hasData) {
-            final petDataMap = petSnapshot.data!.data() as Map<String, dynamic>;
-            final petName = petDataMap['name'];
-            return Column(
-              children: [
-                Text("ชื่อเจ้าของ: $userName"),
-                Text("ชื่อสัตว์เลี้ยง: $petName"),
-              ],
-            );
-          }
-          return const SizedBox();
-        },
-      );
-    }
-    return const SizedBox();
-  },
-),
-
-                   subtitle: Column(
-  children: [ 
-    
-    Text("อาการ: " + data['symptom'] ?? "N/A"),
-    Text("แพ้ยา: " + data['medic'] ?? "N/A"),
-    Text("วันที่เกิดอาการ: " + data['datetimesym'] ?? "N/A"),
-  ],
-),
-
+                              title: FutureBuilder<DocumentSnapshot>(
+                                future: firestore
+                                    .collection('userdatabase')
+                                    .doc(data['userid'])
+                                    .get(),
+                                builder: (context, userSnapshot) {
+                                  if (userSnapshot.hasData) {
+                                    final userDataMap = userSnapshot.data!
+                                        .data() as Map<String, dynamic>;
+                                    final userName = userDataMap['username'];
+                                    final String petid =
+                                        data['petid'].replaceAll(' ', '');
+                                    return FutureBuilder<DocumentSnapshot>(
+                                      future: firestore
+                                          .collection('petreport')
+                                          .doc(data['userid'])
+                                          .collection('0001')
+                                          .doc(petid)
+                                          .get(),
+                                      builder: (context, petSnapshot) {
+                                        if (petSnapshot.hasData) {
+                                          final petDataMap = petSnapshot.data!
+                                              .data() as Map<String, dynamic>;
+                                          final petName = petDataMap['name'];
+                                          return Column(
+                                            children: [
+                                              Text("ชื่อเจ้าของ: $userName"),
+                                              Text("ชื่อสัตว์เลี้ยง: $petName"),
+                                            ],
+                                          );
+                                        }
+                                        return const SizedBox();
+                                      },
+                                    );
+                                  }
+                                  return const SizedBox();
+                                },
+                              ),
+                              subtitle: Column(
+                                children: [
+                                  Text("อาการ: " + data['symptom'] ?? "N/A"),
+                                  Text("แพ้ยา: " + data['medic'] ?? "N/A"),
+                                  Text("วันที่เกิดอาการ: " +
+                                          data['datetimesym'] ??
+                                      "N/A"),
+                                ],
+                              ),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -190,20 +201,26 @@ class _doctorconnect extends State<doctorconnect> {
                                     icon: const Icon(Icons.add),
                                     onPressed: () {
                                       final ref = FirebaseFirestore.instance
-                                          .collection('connect').doc(getuser()?.uid).collection('userconnect')
+                                          .collection('connect')
+                                          .doc(getuser()?.uid)
+                                          .collection('userconnect')
                                           .doc(snapshot.data!.docs[index].id);
-                                          ref.update({
+                                      ref.update({
                                         'status': 'confirm',
                                       });
-                                      final String petid=data['petid'].replaceAll(' ', '');
-                                      final refpet =FirebaseFirestore.instance.collection('petreport').doc(data['userid']).collection('0001').doc(petid);
+                                      final String petid =
+                                          data['petid'].replaceAll(' ', '');
+                                      final refpet = FirebaseFirestore.instance
+                                          .collection('petreport')
+                                          .doc(data['userid'])
+                                          .collection('0001')
+                                          .doc(petid);
                                       refpet.update({
-                                        'doctorid':getuser()?.uid,
+                                        'doctorid': getuser()?.uid,
                                         'status': 'connected'
                                       });
                                     },
                                   ),
-                                  
                                 ],
                               ),
                               onTap: () {},

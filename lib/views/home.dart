@@ -82,7 +82,7 @@ class Home extends StatelessWidget {
               showAlert();
             }
           },
-          icon: globalRole?.role == 'M' || globalRole?.role == ''
+          icon: globalRole?.role == 'M' || globalRole?.role == null
               ? Icon(Icons.pets) // กรณี role เป็น M
               : Icon(Icons.add),
         ),
@@ -269,18 +269,19 @@ class Home extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => Mypets()),
                     );
                   }
-                  if (globalRole?.role == 'D') {
+                  else if (globalRole?.role == 'D') {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => showdatareport()),
                     );
                   }
-                  if (globalRole?.role == 'A') {
+                  else if (globalRole?.role == 'A') {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => Helpview()),
                     );
                   }
+                  else{showAlert();}
                 }
 
                 if (navItems.indexOf(e) == 1) {
@@ -301,7 +302,9 @@ class Home extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => Helpview()),
                     );
                   }
+                  else{showAlert();}
                 }
+                
               },
             );
           }).toList(),
