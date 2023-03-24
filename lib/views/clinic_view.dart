@@ -1,7 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:LittleBuddy/views/Chatbot2_view.dart';
 import 'package:LittleBuddy/views/cam_view.dart';
+import 'package:LittleBuddy/views/chatpage.dart';
 import 'package:LittleBuddy/views/home.dart';
+import 'package:LittleBuddy/views/petconnect.dart';
 import 'package:LittleBuddy/views/showreportmember.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -14,9 +16,14 @@ import 'mypets_view.dart';
 class Clinic extends StatefulWidget {
   const Clinic({
     Key? key,
-    this.doctorid, required String petid,
+    required this.doctorid,
+    required this.petid,
+    required this.username
   }) : super(key: key);
-  final String? doctorid;
+
+  final String doctorid;
+  final String petid;
+  final String username;
   @override
   State<Clinic> createState() => _ClinicState();
 }
@@ -30,7 +37,7 @@ List navItems = [
   {
     'text': 'Clinic',
     'icon': 'assets/nav_icons/heart_icon.svg',
-    'page': const Clinic(doctorid: '', petid: '',)
+    'page': const petconnect()
   },
   {
     'text': 'Pets',
@@ -70,7 +77,15 @@ class _ClinicState extends State<Clinic> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                          builder: (context) => chatpage(
+                                          doctorid:widget.doctorid, petid: widget.petid, email: widget.username,
+                                          ),
+                                        ),
+                                        
+                                    );},
                 child: Text('Chat คลินิก', style: TextStyle(fontSize: 24)),
               ),
             ),
@@ -78,12 +93,10 @@ class _ClinicState extends State<Clinic> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
+                onPressed: () {Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => bot2()),
-                  );
-                },
+                  );},
                 child: Text('Chatbot', style: TextStyle(fontSize: 24)),
               ),
             ),
@@ -97,7 +110,7 @@ class _ClinicState extends State<Clinic> {
                                           context,
                                           MaterialPageRoute(
                                           builder: (context) => showdatareportmem(
-                                          doctorid:doctorid
+                                          doctorid:doctorid, petid: null,
                                           ),
                                         ),
                                         

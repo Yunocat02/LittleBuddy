@@ -21,11 +21,14 @@ class petconnect extends StatefulWidget {
 
 class _petconnect extends State<petconnect> {
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
+  final auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
 
   late FirebaseAuth _auth;
   final _user = Rxn<User>();
   late Stream<User?> _authStateChanges;
+
+    late String _username = "";
 
   List navItems = [
     {
@@ -53,6 +56,7 @@ class _petconnect extends State<petconnect> {
   @override
   void initState() {
     super.initState();
+    _loadUserInfo();
     initAuth();
   }
 
@@ -143,7 +147,8 @@ class _petconnect extends State<petconnect> {
                                           MaterialPageRoute(
                                           builder: (context) => Clinic(
                                           doctorid:data['doctorid'].toString(),
-                                          petid:index.toString()
+                                          petid:index.toString(),
+                                          username:_username,
                                           ),
                                         ),
                                         
@@ -221,4 +226,26 @@ class _petconnect extends State<petconnect> {
       ),
     );
   }
+  Future<void> _loadUserInfo() async {
+    final userId = auth.currentUser?.uid;
+
+    if (userId != null) {
+      final userDoc =
+          await firestore.collection('userdatabase').doc(userId).get();
+      final userData = userDoc.data() as Map<String, dynamic>?;
+      setState(() {
+        //_appmtime = userData?['appm. time'] as Timestamp;
+
+        _username = userData?['username'] ?? 'N/A';
+
+        //_content = userData?['content'] ?? 'N/A';
+        //_datetime = userData?['datetime'] as Timestamp;
+        //_idpet = userData?['idpet'] ?? 'N/A';
+        //_namepet = userData?['namepet'] ?? 'N/A';
+        //_remedy = userData?['remedy'] ?? 'N/A';
+        //_url = userData?['url'] ?? 'N/A';
+      });
+    }
+  }
 }
+

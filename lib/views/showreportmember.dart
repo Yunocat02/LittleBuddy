@@ -21,7 +21,7 @@ import 'nextpage.dart';
 class showdatareportmem extends StatefulWidget {
   const showdatareportmem({
     Key? key,
-    this.doctorid,this.index,
+    this.doctorid,this.index, required petid,
   }) : super(key: key);
   final String? doctorid;
   final String? index;
