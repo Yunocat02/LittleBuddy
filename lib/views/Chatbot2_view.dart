@@ -1,3 +1,4 @@
+import 'package:LittleBuddy/views/login_view.dart';
 import 'package:bubble/bubble.dart';
 import 'package:dialogflow_flutter/googleAuth.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'home.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../views/map_view.dart';
+import '../views/help_view.dart';
 
 class bot2 extends StatefulWidget {
   @override
@@ -35,9 +37,15 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   final messageInsert = TextEditingController();
   List<Map> messsages = [];
   void response(query) async {
-    if (query == "หาคลินิคใกล้ฉัน") {
+    if (query == "ล็อกอินแล้ว") {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => Mapnaja()));
+    } else if (query == "แอพนี้คืออะไร") {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Helpview()));
+    } else if (query == "ยังไม่ได้ล็อกอิน") {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginView()));
     } else {
       // ส่วนที่เหลือของโค้ดภายในฟังก์ชัน response()
     }
@@ -73,8 +81,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
     }
   }
 
-  @override
-  void launchURL(String url) async {
+  Future<void> _launchUrl(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -84,10 +91,10 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
 
   void showInitialChips() {
     final List<dynamic> initialChips = [
-      {"text": "หาคลินิคใกล้ฉัน"},
+      {"text": "ต้องการหาร้านคลินิกรักษา"},
       {"text": "สัตว์เลี้ยงมีอาการผิดปกติ"},
       {"text": "ข้อมูลของคลินิคที่ลงทะเบียน"},
-      {"text": "แอพนี้คือไรหรอ"}
+      {"text": "แอพนี้คืออะไร"}
     ];
 
     setState(() {
@@ -158,15 +165,6 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
             Container(
               child: ListTile(
                 tileColor: Color.fromARGB(255, 192, 247, 248),
-                // ignore: prefer_const_constructors
-                leading: IconButton(
-                  icon: Icon(
-                    Icons.camera_alt,
-                    color: Color.fromARGB(255, 18, 97, 99),
-                    size: 35,
-                  ),
-                  onPressed: () {},
-                ),
                 title: Container(
                   height: 35,
                   decoration: BoxDecoration(
@@ -247,7 +245,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                         .map(
                           (card) => InkWell(
                             onTap: () {
-                              // Do nothing or remove this onTap function if you don't want any action to be taken.
+                              (card[
+                                  'link']); // Do nothing or remove this onTap function if you don't want any action to be taken.
                             },
                             child: Column(
                               children: [
@@ -277,13 +276,14 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                         children: chips
                             .map(
                               (chip) => ActionChip(
-                                backgroundColor: Color.fromRGBO(4, 173, 55, 1),
+                                backgroundColor: Color.fromRGBO(4, 144, 199, 1),
                                 label: Text(chip['text'],
                                     style: TextStyle(color: Colors.white)),
                                 onPressed: () {
                                   // Check if 'link' is present in the chip payload.
                                   // If it exists, launch the URL; otherwise, send the text as a message.
                                   if (chip.containsKey('link')) {
+                                    // ignore: deprecated_member_use
                                     launch(chip['link']);
                                   } else {
                                     setState(() {
