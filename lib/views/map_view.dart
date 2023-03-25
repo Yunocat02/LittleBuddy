@@ -152,6 +152,7 @@ class _MapScreenState extends State<MapScreen> {
       ShopDescription = confirmeddescription;
       ShopLocation = geoPoints;
     });
+    addMark();
   }
 
 
@@ -182,7 +183,7 @@ class _MapScreenState extends State<MapScreen> {
           position: LatLng(ShopLocation[i].latitude, ShopLocation[i].longitude),
           infoWindow: InfoWindow(
             title: "ร้าน ${ShopNames[i]}",
-            snippet: "ร้านนี้ดีนะ",
+            snippet: "${ShopDescription[i]}",
           ),
         ));
         shopdata.add([ShopLocation[i].latitude,ShopLocation[i].longitude]);
@@ -235,7 +236,7 @@ void testmark() async{
         position: MainLocation,
       );
       for (var marker in _markers) {
-        if (marker.markerId == MarkerId("marker ${index}")) {
+        if (marker.markerId == MarkerId(ShopLocation[index].latitude.toString())) {
           _destination = marker;
           break;
         }
@@ -276,7 +277,7 @@ void testmark() async{
       _getCurrentLocation();
       //getgeoPoints();
       getData();
-      addMark();
+      //addMark();
       //testmark();
       
     } else if (_position != null) {
@@ -411,6 +412,7 @@ void testmark() async{
           //   print("ID ${geoPoint.toString()}");
           //   print("ตำแหน่ง ${geoPoint.latitude} ${geoPoint.longitude}");
           // }
+          
           for (var i=0;i<ShopLocation.length;i++){
             print("ID ${i}");
             print("ตำแหน่ง ${ShopLocation[i].latitude} ${ShopLocation[i].longitude}");
