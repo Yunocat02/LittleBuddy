@@ -124,7 +124,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,
-              color: Color.fromARGB(255, 119, 114, 114),
+              color: Color.fromARGB(255, 255, 255, 255),
             )),
         centerTitle: true,
         leading: IconButton(
@@ -134,10 +134,10 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
           },
           icon: Icon(
             Icons.arrow_back,
-            color: Color.fromARGB(255, 119, 114, 114),
+            color: Color.fromARGB(255, 255, 255, 255),
           ),
         ),
-        backgroundColor: Color.fromARGB(255, 192, 247, 248),
+        backgroundColor: Color.fromARGB(255, 130, 219, 241),
       ),
       body: Container(
         child: Column(
@@ -146,7 +146,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
               padding: EdgeInsets.only(top: 15, bottom: 10),
               child: Text(
                 "Today, ${DateFormat("Hm").format(DateTime.now())}",
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 15),
               ),
             ),
             Flexible(
@@ -164,7 +164,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
             ),
             Container(
               child: ListTile(
-                tileColor: Color.fromARGB(255, 192, 247, 248),
+                tileColor: Color.fromARGB(255, 130, 219, 241),
                 title: Container(
                   height: 35,
                   decoration: BoxDecoration(
@@ -191,7 +191,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                     icon: Icon(
                       Icons.send,
                       size: 30.0,
-                      color: Color.fromARGB(255, 18, 97, 99),
+                      color: Color.fromARGB(255, 255, 255, 255),
                     ),
                     onPressed: () {
                       if (messageInsert.text.isEmpty) {
@@ -260,7 +260,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                                 SizedBox(height: 5),
                                 Text(
                                   card['subtitle'],
-                                  style: TextStyle(fontSize: 12),
+                                  style: TextStyle(fontSize: 9),
                                 ),
                               ],
                             ),
@@ -276,9 +276,11 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                         children: chips
                             .map(
                               (chip) => ActionChip(
-                                backgroundColor: Color.fromRGBO(4, 144, 199, 1),
+                                backgroundColor:
+                                    Color.fromRGBO(255, 179, 208, 1),
                                 label: Text(chip['text'],
-                                    style: TextStyle(color: Colors.white)),
+                                    style: TextStyle(
+                                        color: Color.fromARGB(255, 7, 7, 7))),
                                 onPressed: () {
                                   // Check if 'link' is present in the chip payload.
                                   // If it exists, launch the URL; otherwise, send the text as a message.
@@ -300,8 +302,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                     : Bubble(
                         radius: Radius.circular(15.0),
                         color: data == 0
-                            ? Color.fromRGBO(3, 179, 155, 1)
-                            : Colors.orangeAccent,
+                            ? Color.fromRGBO(156, 247, 235, 1)
+                            : Color.fromARGB(255, 248, 208, 155),
                         elevation: 0.0,
                         child: Padding(
                           padding: EdgeInsets.all(2.0),
@@ -317,8 +319,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                                 child: Text(
                                   message,
                                   style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                      color: Color.fromARGB(255, 12, 12, 12)),
                                 ),
                               ))
                             ],
