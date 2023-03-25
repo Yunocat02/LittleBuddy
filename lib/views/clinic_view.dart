@@ -5,8 +5,12 @@ import 'package:LittleBuddy/views/chatpage.dart';
 import 'package:LittleBuddy/views/home.dart';
 import 'package:LittleBuddy/views/petconnect.dart';
 import 'package:LittleBuddy/views/showreportmember.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../utils/styles.dart';
 import 'datareportviewsmember.dart';
@@ -52,6 +56,10 @@ List navItems = [
 ];
 
 class _ClinicState extends State<Clinic> {
+  final Future<FirebaseApp> firebase = Firebase.initializeApp();
+  final auth = FirebaseAuth.instance;
+  final firestore = FirebaseFirestore.instance;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +84,18 @@ class _ClinicState extends State<Clinic> {
               width: double.infinity,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(),
-                onPressed: () {},
+                onPressed: () async {
+                  final clinicReportDoc = await FirebaseFirestore.instance
+                      .collection('clinicreport')
+                      .doc(widget.doctorid)
+                      .get();
+                  var webboardUrl = clinicReportDoc.get('weburl') as String;
+                  if (!webboardUrl.startsWith("http://") &&
+                      !webboardUrl.startsWith("https://")) {
+                    webboardUrl = "https://" + webboardUrl;
+                  }
+                  launch(webboardUrl);
+                },
                 child: Text('Webboard คลินิก', style: TextStyle(fontSize: 24)),
               ),
             ),
@@ -159,7 +178,8 @@ class _ClinicState extends State<Clinic> {
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: Text("ยืนยันจบการทำการรักษา"),
-                          content: Text("คุณยืนยันว่าได้รับสัตว์เลี้ยงของคุณคืนแล้ว แล้วต้องการจะจบการทำการรักษาใช่หรือไม่?"),
+                          content: Text(
+                              "คุณยืนยันว่าได้รับสัตว์เลี้ยงของคุณคืนแล้ว แล้วต้องการจะจบการทำการรักษาใช่หรือไม่?"),
                           actions: [
                             TextButton(
                               child: Text("ยกเลิก"),
