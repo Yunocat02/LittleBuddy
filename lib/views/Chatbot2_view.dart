@@ -1,3 +1,4 @@
+import 'package:LittleBuddy/views/login_view.dart';
 import 'package:bubble/bubble.dart';
 import 'package:dialogflow_flutter/googleAuth.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'home.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../views/map_view.dart';
+import '../views/help_view.dart';
 
 class bot2 extends StatefulWidget {
   @override
@@ -35,9 +37,15 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   final messageInsert = TextEditingController();
   List<Map> messsages = [];
   void response(query) async {
-    if (query == "หาคลินิคใกล้ฉัน") {
+    if (query == "ล็อกอินแล้ว") {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => Mapnaja()));
+    } else if (query == "แอพนี้คืออะไร") {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Helpview()));
+    } else if (query == "ยังไม่ได้ล็อกอิน") {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginView()));
     } else {
       // ส่วนที่เหลือของโค้ดภายในฟังก์ชัน response()
     }
@@ -73,8 +81,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
     }
   }
 
-  @override
-  void launchURL(String url) async {
+  Future<void> _launchUrl(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -84,10 +91,10 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
 
   void showInitialChips() {
     final List<dynamic> initialChips = [
-      {"text": "หาคลินิคใกล้ฉัน"},
+      {"text": "ต้องการหาร้านคลินิกรักษา"},
       {"text": "สัตว์เลี้ยงมีอาการผิดปกติ"},
       {"text": "ข้อมูลของคลินิคที่ลงทะเบียน"},
-      {"text": "แอพนี้คือไรหรอ"}
+      {"text": "แอพนี้คืออะไร"}
     ];
 
     setState(() {
@@ -117,7 +124,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,
-              color: Color.fromARGB(255, 119, 114, 114),
+              color: Color.fromARGB(255, 255, 255, 255),
             )),
         centerTitle: true,
         leading: IconButton(
@@ -127,10 +134,10 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
           },
           icon: Icon(
             Icons.arrow_back,
-            color: Color.fromARGB(255, 119, 114, 114),
+            color: Color.fromARGB(255, 255, 255, 255),
           ),
         ),
-        backgroundColor: Color.fromARGB(255, 192, 247, 248),
+        backgroundColor: Color.fromARGB(255, 130, 219, 241),
       ),
       body: Container(
         child: Column(
@@ -139,7 +146,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
               padding: EdgeInsets.only(top: 15, bottom: 10),
               child: Text(
                 "Today, ${DateFormat("Hm").format(DateTime.now())}",
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 15),
               ),
             ),
             Flexible(
@@ -157,16 +164,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
             ),
             Container(
               child: ListTile(
-                tileColor: Color.fromARGB(255, 192, 247, 248),
-                // ignore: prefer_const_constructors
-                leading: IconButton(
-                  icon: Icon(
-                    Icons.camera_alt,
-                    color: Color.fromARGB(255, 18, 97, 99),
-                    size: 35,
-                  ),
-                  onPressed: () {},
-                ),
+                tileColor: Color.fromARGB(255, 130, 219, 241),
                 title: Container(
                   height: 35,
                   decoration: BoxDecoration(
@@ -193,7 +191,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                     icon: Icon(
                       Icons.send,
                       size: 30.0,
-                      color: Color.fromARGB(255, 18, 97, 99),
+                      color: Color.fromARGB(255, 255, 255, 255),
                     ),
                     onPressed: () {
                       if (messageInsert.text.isEmpty) {
@@ -247,7 +245,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                         .map(
                           (card) => InkWell(
                             onTap: () {
-                              // Do nothing or remove this onTap function if you don't want any action to be taken.
+                              (card[
+                                  'link']); // Do nothing or remove this onTap function if you don't want any action to be taken.
                             },
                             child: Column(
                               children: [
@@ -261,7 +260,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                                 SizedBox(height: 5),
                                 Text(
                                   card['subtitle'],
-                                  style: TextStyle(fontSize: 12),
+                                  style: TextStyle(fontSize: 9),
                                 ),
                               ],
                             ),
@@ -277,13 +276,16 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                         children: chips
                             .map(
                               (chip) => ActionChip(
-                                backgroundColor: Color.fromRGBO(4, 173, 55, 1),
+                                backgroundColor:
+                                    Color.fromRGBO(255, 179, 208, 1),
                                 label: Text(chip['text'],
-                                    style: TextStyle(color: Colors.white)),
+                                    style: TextStyle(
+                                        color: Color.fromARGB(255, 7, 7, 7))),
                                 onPressed: () {
                                   // Check if 'link' is present in the chip payload.
                                   // If it exists, launch the URL; otherwise, send the text as a message.
                                   if (chip.containsKey('link')) {
+                                    // ignore: deprecated_member_use
                                     launch(chip['link']);
                                   } else {
                                     setState(() {
@@ -300,8 +302,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                     : Bubble(
                         radius: Radius.circular(15.0),
                         color: data == 0
-                            ? Color.fromRGBO(3, 179, 155, 1)
-                            : Colors.orangeAccent,
+                            ? Color.fromRGBO(156, 247, 235, 1)
+                            : Color.fromARGB(255, 248, 208, 155),
                         elevation: 0.0,
                         child: Padding(
                           padding: EdgeInsets.all(2.0),
@@ -317,8 +319,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                                 child: Text(
                                   message,
                                   style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                      color: Color.fromARGB(255, 12, 12, 12)),
                                 ),
                               ))
                             ],
