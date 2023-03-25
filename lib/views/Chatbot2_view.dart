@@ -37,13 +37,17 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   final messageInsert = TextEditingController();
   List<Map> messsages = [];
   void response(query) async {
-    if (query == "ล็อกอินแล้ว") {
+    if (query == "ต้องการหาร้านคลินิกรักษา" && globalRole?.role == 'A' ||
+        query == "ต้องการหาร้านคลินิกรักษา" && globalRole?.role == 'M' ||
+        query == "ต้องการหาร้านคลินิกรักษา" && globalRole?.role == 'D') {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => Mapnaja()));
     } else if (query == "แอพนี้คืออะไร") {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => Helpview()));
-    } else if (query == "ยังไม่ได้ล็อกอิน") {
+    } else if (query == "ต้องการหาร้านคลินิกรักษา" &&
+        globalRole?.role == null) {
+    } else if (query == "ไปล็อกอิน") {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => LoginView()));
     } else {
