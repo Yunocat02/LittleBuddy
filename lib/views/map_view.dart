@@ -137,9 +137,9 @@ class _MapScreenState extends State<MapScreen> {
   late GoogleMapController _googleMapController;
 
   //ตัวแปรเริ่มต้นดึงมาจาก DB
-  List<String>? ShopNames = [];
-  List<String>? ShopDescription = [];
-  List<GeoPoint>? ShopLocation ;
+  List<String> ShopNames = [];
+  List<String> ShopDescription = [];
+  List<GeoPoint> ShopLocation =[] ;
 
   // ดึงข้อมูล จาก firebase
   void getData() async{
@@ -164,29 +164,27 @@ class _MapScreenState extends State<MapScreen> {
   Set<Marker> _markers = {};
   var shopdata = [];
 
-  late LatLng MainLocation;
+  late LatLng MainLocation =LatLng(13.8243766, 100.5160947);
   List<GeoPoint>? _geoPoints;
 
   // สร้าง mark ทั้งหมดบนแผนที่
   void addMark() async {
-    List<GeoPoint> geoPoints = await getConfirmedGeoPoints();
-    List<String> confirmedNames = await getConfirmedNames();
+    //List<GeoPoint> geoPoints = await getConfirmedGeoPoints();
+    //List<String> confirmedNames = await getConfirmedNames();
     setState(() {
       // เพิ่ม Marker ใน _markers
-      _geoPoints = geoPoints;
-      var i = 0;
-      for (GeoPoint geoPoint in geoPoints) {
+      //_geoPoints = geoPoints;
+      //var i = 0;
+      for (var i=0;i<ShopLocation.length;i++) {
         _markers.add(Marker(
-          markerId: MarkerId(confirmedNames[i]),
-          position: LatLng(geoPoint.latitude, geoPoint.longitude),
+          markerId: MarkerId(ShopLocation[i].latitude.toString()),
+          position: LatLng(ShopLocation[i].latitude, ShopLocation[i].longitude),
           infoWindow: InfoWindow(
-            title: "ร้าน ${confirmedNames[i]}",
+            title: "ร้าน ${ShopNames[i]}",
             snippet: "ร้านนี้ดีนะ",
           ),
         ));
-        shopdata.add([geoPoint.latitude,geoPoint.longitude]);
-        
-        i++;
+        shopdata.add([ShopLocation[i].latitude,ShopLocation[i].longitude]);
       }
     });
   }
@@ -276,10 +274,11 @@ void testmark() async{
     if (_position == null || ShopNames == null || ShopDescription == null || ShopLocation == null) {
       _getCurrentLocation();
       //getgeoPoints();
-      addMark();
-      testmark();
       getData();
-    } else {
+      addMark();
+      //testmark();
+      
+    } else if (_position != null) {
       MainLocation = LatLng(_position!.latitude, _position!.longitude);
     }
     return Scaffold(
@@ -363,7 +362,7 @@ void testmark() async{
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child:  ListView.builder(
-                    itemCount: shopdata.length, // จำนวนร้านที่แสดง
+                    itemCount: ShopLocation.length, // จำนวนร้านที่แสดง
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
                         padding: const EdgeInsets.all(5.0),
@@ -377,12 +376,12 @@ void testmark() async{
                           // เนื้อใน
                           child: ListTile(
                                     // ข้อความ หลัก
-                                    title: Text((ShopNames![index] != null) ?
-                                      "ร้าน: " + ShopNames![index]:"loading",
+                                    title: Text(
+                                      "ร้าน: " + ShopNames[index],
                                       style: TextStyle(fontSize: 25),
                                     ),
                                     // ข้อความ รอง
-                                    subtitle: Text((ShopDescription![index] != null) ? ShopDescription![index]:"loading"),
+                                    subtitle: Text(ShopDescription[index]),
                                     // ในส่วนของการเลือกร้าน
                                     onTap: () {
                                       _googleMapController.animateCamera(
@@ -403,11 +402,18 @@ void testmark() async{
         backgroundColor: Theme.of(context).primaryColor,
         onPressed: () {
           // testmark();
-          // print(namemark);
-          for (GeoPoint geoPoint in _geoPoints!) {
-            print("ID ${geoPoint.toString()}");
-            print("ตำแหน่ง ${geoPoint.latitude} ${geoPoint.longitude}");
-      }
+          print("ShopLocation คือ ${ShopLocation}");
+          print("ShopNames คือ ${ShopNames}");
+          print("ShopDescription คือ ${ShopDescription}");
+          print(shopdata);
+          // for (GeoPoint geoPoint in _geoPoints!) {
+          //   print("ID ${geoPoint.toString()}");
+          //   print("ตำแหน่ง ${geoPoint.latitude} ${geoPoint.longitude}");
+          // }
+          for (var i=0;i<ShopLocation.length;i++){
+            print("ID ${i}");
+            print("ตำแหน่ง ${ShopLocation[i].latitude} ${ShopLocation[i].longitude}");
+          }
           _googleMapController.animateCamera(_info != null
               ? CameraUpdate.newLatLngBounds(_info!.bounds, 100.00)
               : CameraUpdate.newCameraPosition(_initialCameraPosition));
@@ -417,27 +423,7 @@ void testmark() async{
       ),
     );
   }
-    // สร้าง Set ของ Marker จาก List ของ GeoPoint
-  Set<Marker> _createMarkers() {
-    Set<Marker> markers = {};
-    List<GeoPoint> geoPoints = [];
 
-    // ดึงข้อมูล GeoPoint ที่มี field status เท่ากับ "confirm" จาก Firebase Cloud Firestore
-    getConfirmedGeoPoints().then((List<GeoPoint> value) {
-      geoPoints = value;
-
-      // สร้าง Marker จาก GeoPoint แต่ละตัว
-      for (GeoPoint geoPoint in geoPoints) {
-        Marker marker = Marker(
-          markerId: MarkerId(geoPoint.toString()),
-          position: LatLng(geoPoint.latitude, geoPoint.longitude),
-        );
-        markers.add(marker);
-      }
-    });
-
-    return markers;
-  }
 
 }
 
