@@ -27,6 +27,7 @@ class _WelcomeScreenState extends State<MainMenuMember> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 130, 219, 241),
         title: Text("Littlebuddy"),
         centerTitle: true,
         actions: [

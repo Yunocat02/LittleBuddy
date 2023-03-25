@@ -82,6 +82,7 @@ class _doctorviewmember extends State<doctorviewmember> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 130, 219, 241),
         title: const Text('ลูกค้าที่รักษากับเราอยู่'),
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -240,24 +241,24 @@ class _doctorviewmember extends State<doctorviewmember> {
               ),
               onTap: () async {
                 if (navItems.indexOf(e) == 3) {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                       context, MaterialPageRoute(builder: (_) => e['page']));
                 }
                 if (navItems.indexOf(e) == 2) {
                   if (globalRole?.role == 'M') {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => Mypets()),
                     );
                   }
                   if (globalRole?.role == 'D') {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => showdatareport()),
                     );
                   }
                   if (globalRole?.role == 'A') {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => Helpview()),
                     );
@@ -265,7 +266,7 @@ class _doctorviewmember extends State<doctorviewmember> {
                 }
 
                 if (navItems.indexOf(e) == 0) {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => Home()),
                     );

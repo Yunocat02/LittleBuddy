@@ -65,6 +65,7 @@ class Home extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Menu'),
+        backgroundColor: Color.fromARGB(255, 130, 219, 241),
         centerTitle: true,
         leading: IconButton(
           onPressed: () async {
@@ -258,25 +259,27 @@ class Home extends StatelessWidget {
               ),
               onTap: () async {
                 if (navItems.indexOf(e) == 3) {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (_) => e['page']));
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => Helpview()),
+                    );
                 }
 
                 if (navItems.indexOf(e) == 2) {
                   if (globalRole?.role == 'M') {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => Mypets()),
                     );
                   }
                   else if (globalRole?.role == 'D') {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => showdatareport()),
                     );
                   }
                   else if (globalRole?.role == 'A') {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => Helpview()),
                     );
@@ -286,18 +289,18 @@ class Home extends StatelessWidget {
 
                 if (navItems.indexOf(e) == 1) {
                   if (globalRole?.role == 'M') {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => petconnect()),
                     );
                   } else if (globalRole?.role == 'D') {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (context) => doctorviewmember()),
                     );
                   } else if (globalRole?.role == 'A') {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => Helpview()),
                     );

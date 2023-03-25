@@ -13,6 +13,7 @@ class NextPage extends StatelessWidget {
     final TextEditingController _longitudeController = TextEditingController();
     return Scaffold(
       appBar: AppBar(title: const Text('Enter Coordinates')),
+      backgroundColor: Color.fromARGB(255, 130, 219, 241),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

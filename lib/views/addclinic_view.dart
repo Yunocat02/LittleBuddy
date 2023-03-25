@@ -152,7 +152,7 @@ class _AddclinicState extends State<Addclinic> {
       _longitudeController.text = _position!.longitude.toString();
     }
     return Scaffold(
-      appBar: AppBar(title: const Text("ลงทะเบียนร้านของคุณ")),
+      appBar: AppBar(title: const Text("ลงทะเบียนร้านของคุณ"),backgroundColor: Color.fromARGB(255, 130, 219, 241),),
       body: Form(
         key: _formKey,
         child: Column(

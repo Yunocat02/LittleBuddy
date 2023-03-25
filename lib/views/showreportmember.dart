@@ -65,6 +65,7 @@ class _showdatareportmem extends State<showdatareportmem> {
     print(widget.doctorid);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 130, 219, 241),
         title: Text('Connected Pets'),
       ),
       body: StreamBuilder<DocumentSnapshot>(

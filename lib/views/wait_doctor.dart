@@ -70,7 +70,7 @@ class _waitdoctorstate extends State<waitdoctor> {
     String uidpet=widget.uidpet;
   String Docter='';
     return Scaffold(
-      appBar: AppBar(title: const Text("ลงทะเบียนกับคลินิก")),
+      appBar: AppBar(title: const Text("ลงทะเบียนกับคลินิก"),backgroundColor: Color.fromARGB(255, 130, 219, 241),),
       body: Form(
         key: _formKey,
         child: Column(

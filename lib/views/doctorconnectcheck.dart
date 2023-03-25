@@ -55,6 +55,7 @@ class _doctorconnect extends State<doctorconnect> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 130, 219, 241),
         title: const Text('ลูกค้าที่ต้องการลงทะเบียนกับร้านเรา'),
         centerTitle: true,
         automaticallyImplyLeading: false,

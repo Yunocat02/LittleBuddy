@@ -77,6 +77,7 @@ class _petconnect extends State<petconnect> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 130, 219, 241),
         title: const Text('สัตว์เลี้ยงที่ลงทะเบียนกับคลินิก'),
         centerTitle: true,
         automaticallyImplyLeading: false,

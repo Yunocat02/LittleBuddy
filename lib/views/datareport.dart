@@ -151,7 +151,7 @@ class _datareportstate extends State<datareport> {
     String Docter = '';
 
     return Scaffold(
-      appBar: AppBar(title: const Text("บันทึกการรักษา")),
+      appBar: AppBar(title: const Text("บันทึกการรักษา"),backgroundColor: Color.fromARGB(255, 130, 219, 241),),
       body: Form(
         key: _formKey,
         child: Column(

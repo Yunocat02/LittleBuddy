@@ -53,6 +53,7 @@ class _HelpviewState extends State<Helpview> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 130, 219, 241),
         title: Text("Help"),
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -155,19 +156,19 @@ class _HelpviewState extends State<Helpview> {
               onTap: () async {
                 if (navItems.indexOf(e) == 2) {
                   if (globalRole?.role == 'M') {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => Mypets()),
                     );
                   }
                   else if (globalRole?.role == 'D') {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => showdatareport()),
                     );
                   }
                   else if (globalRole?.role == 'A') {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => Helpview()),
                     );
@@ -177,18 +178,18 @@ class _HelpviewState extends State<Helpview> {
 
                 if (navItems.indexOf(e) == 1) {
                   if (globalRole?.role == 'M') {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => petconnect()),
                     );
                   } else if (globalRole?.role == 'D') {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (context) => doctorviewmember()),
                     );
                   } else if (globalRole?.role == 'A') {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => Helpview()),
                     );
@@ -196,7 +197,7 @@ class _HelpviewState extends State<Helpview> {
                   else{showAlert();}
                 }
                 if (navItems.indexOf(e) == 0) {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => Home()),
                     );
