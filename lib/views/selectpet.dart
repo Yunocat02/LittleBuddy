@@ -51,6 +51,7 @@ class _selectpets extends State<selectpets> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 130, 219, 241),
         title: const Text('Mypet'),
         centerTitle: true,
         automaticallyImplyLeading: false,

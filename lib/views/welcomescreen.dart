@@ -26,7 +26,7 @@ class _WelcomeScreenState extends State<welcomescreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("ยินดีต้อนรับ")),
+      appBar: AppBar(title: Text("ยินดีต้อนรับ"),backgroundColor: Color.fromARGB(255, 130, 219, 241),),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(

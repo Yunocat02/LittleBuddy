@@ -39,6 +39,7 @@ class _chatpageState extends State<chatpage> {
     final FirebaseFirestore _db = FirebaseFirestore.instance;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 130, 219, 241),
         title: Text(
           'data',
         ),

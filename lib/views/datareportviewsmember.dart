@@ -33,7 +33,7 @@ class _datareportviewsmember extends State<datareportviewsmember> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Profile")),
+      appBar: AppBar(title: Text("Profile"),backgroundColor: Color.fromARGB(255, 130, 219, 241),),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(

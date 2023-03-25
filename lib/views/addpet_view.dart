@@ -54,7 +54,7 @@ class _AddPetState extends State<AddPet> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("เพิ่มสัตว์เลี้ยงของคุณ")),
+      appBar: AppBar(title: const Text("เพิ่มสัตว์เลี้ยงของคุณ"),backgroundColor: Color.fromARGB(255, 130, 219, 241),),
       body: Form(
         key: _formKey,
         child: Column(

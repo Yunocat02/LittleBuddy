@@ -85,6 +85,7 @@ class _showdatareport extends State<showdatareport> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 130, 219, 241),
         title: const Text('ข้อมูลการรักษาสัตว์ที่ลงทะเบียนกับคลินิก'),
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -226,30 +227,30 @@ class _showdatareport extends State<showdatareport> {
               ),
               onTap: () async {
                 if (navItems.indexOf(e) == 3) {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                       context, MaterialPageRoute(builder: (_) => e['page']));
                 }
                 if (navItems.indexOf(e) == 1) {
                   if (globalRole?.role == 'M') {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => petconnect()),
                     );
                   } else if (globalRole?.role == 'D') {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (context) => doctorviewmember()),
                     );
                   } else if (globalRole?.role == 'A') {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => Helpview()),
                     );
                   }
                 }
                 if (navItems.indexOf(e) == 0) {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => Home()),
                     );

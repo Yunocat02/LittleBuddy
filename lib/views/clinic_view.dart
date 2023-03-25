@@ -56,6 +56,7 @@ class _ClinicState extends State<Clinic> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 130, 219, 241),
         title: Text("Menu ในร้าน Clinic"),
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -134,14 +135,6 @@ class _ClinicState extends State<Clinic> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
-                child: Text('เช็ควันนัดหมาย', style: TextStyle(fontSize: 24)),
-              ),
-            ),
-            SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -150,6 +143,19 @@ class _ClinicState extends State<Clinic> {
                 },
                 child: Text('กล้อง', style: TextStyle(fontSize: 24)),
               ),
+            ),
+            SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                  onPressed: () {
+                    
+                  },
+                  child: Text('ยืนยันจบการทำการรักษา',
+                      style: TextStyle(fontSize: 24)),
+                  style: ElevatedButton.styleFrom(
+                    primary: Color.fromARGB(255, 255, 158, 181),
+                  )),
             ),
           ],
         ),

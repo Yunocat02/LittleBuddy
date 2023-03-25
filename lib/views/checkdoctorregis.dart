@@ -54,6 +54,7 @@ class _doctorregis extends State<doctorregis> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 130, 219, 241),
         title: const Text('หมอที่ต้องการลงทะเบียนกับเรา'),
         centerTitle: true,
         automaticallyImplyLeading: false,

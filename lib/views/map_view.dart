@@ -93,6 +93,7 @@ class _MapnajaState extends State<Mapnaja> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 130, 219, 241),
         title: Text("ค้นหา Clinic"),
         centerTitle: true,
         leading: IconButton(

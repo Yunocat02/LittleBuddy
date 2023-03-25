@@ -1,3 +1,4 @@
+import 'package:LittleBuddy/views/petconnect.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -35,7 +36,7 @@ class _Mypets extends State<Mypets> {
     {
       'text': 'Clinic',
       'icon': 'assets/nav_icons/heart_icon.svg',
-      'page': const Clinic(doctorid: '', petid: '', username: '',)
+      'page': const petconnect()
     },
     {
       'text': 'Pets',
@@ -72,6 +73,7 @@ class _Mypets extends State<Mypets> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 130, 219, 241),
         title: const Text('Mypet'),
         centerTitle: true,
         automaticallyImplyLeading: false,

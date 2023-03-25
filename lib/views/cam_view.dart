@@ -12,7 +12,7 @@ class _camState extends State<cam> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("Camera ของทางร้าน")),
+        appBar: AppBar(title: Text("Camera ของทางร้าน"),backgroundColor: Color.fromARGB(255, 130, 219, 241),),
         body: WebView(
           initialUrl:
               'http://yunocat.thddns.net//videostream.cgi?user=admin&pwd=1231232077&resolution=32&rate=0',
