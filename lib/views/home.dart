@@ -75,10 +75,52 @@ class Home extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => AddPet()),
               );
             } else if (globalRole?.role == 'D') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Addclinic()),
-              );
+              // ตรวจสอบว่ามีข้อมูลใน Firestore หรือไม่
+              try {
+                final clinicReportDoc = await FirebaseFirestore.instance
+                    .collection('clinicreport')
+                    .doc(uid)
+                    .get();
+
+                if (!clinicReportDoc.exists) {
+                  // ไม่มีข้อมูลใน Firestore
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Addclinic()),
+                  );
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("แก้ไขข้อมูลร้าน"),
+                        content:
+                            Text("คุณต้องการที่จะแก้ไขข้อมูลร้านใช่หรือไม่?"),
+                        actions: [
+                          TextButton(
+                            child: Text("ยกเลิก"),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
+                            child: Text("ยืนยัน"),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Addclinic()),
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+              } catch (e) {
+                print('Error: $e');
+              }
             } else {
               showAlert();
             }
@@ -260,9 +302,9 @@ class Home extends StatelessWidget {
               onTap: () async {
                 if (navItems.indexOf(e) == 3) {
                   Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => Helpview()),
-                    );
+                    context,
+                    MaterialPageRoute(builder: (context) => Helpview()),
+                  );
                 }
 
                 if (navItems.indexOf(e) == 2) {
@@ -271,20 +313,19 @@ class Home extends StatelessWidget {
                       context,
                       MaterialPageRoute(builder: (context) => Mypets()),
                     );
-                  }
-                  else if (globalRole?.role == 'D') {
+                  } else if (globalRole?.role == 'D') {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => showdatareport()),
                     );
-                  }
-                  else if (globalRole?.role == 'A') {
+                  } else if (globalRole?.role == 'A') {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => Helpview()),
                     );
+                  } else {
+                    showAlert();
                   }
-                  else{showAlert();}
                 }
 
                 if (navItems.indexOf(e) == 1) {
@@ -304,10 +345,10 @@ class Home extends StatelessWidget {
                       context,
                       MaterialPageRoute(builder: (context) => Helpview()),
                     );
+                  } else {
+                    showAlert();
                   }
-                  else{showAlert();}
                 }
-                
               },
             );
           }).toList(),

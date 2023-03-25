@@ -54,127 +54,132 @@ class _AddPetState extends State<AddPet> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("เพิ่มสัตว์เลี้ยงของคุณ"),backgroundColor: Color.fromARGB(255, 130, 219, 241),),
-      body: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                decoration: InputDecoration(
-                    labelText: "ชื่อสัตว์", hintText: "ตัวอย่าง : แจ้"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'โปรดใส่ชื่อสัตว์';
-                  }
-                  return null;
-                },
-                controller: nameController,
-              ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                          labelText: "อายุ (ปี)", hintText: "ตัวอย่าง : 2"),
-                      controller: ageyearController,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'โปรดใส่อายุ (ปี)';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                          labelText: "อายุ (เดือน)", hintText: "ตัวอย่าง : 3"),
-                      controller: agemonthController,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'โปรดอายุ (เดือน)';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                decoration: InputDecoration(
-                    labelText: "ประเภท", hintText: "ตัวอย่าง : สุนัข"),
-                controller: typeController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'โปรดใส่ประเภท';
-                  }
-                  return null;
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                decoration: InputDecoration(
-                    labelText: "พันธุ์", hintText: "ตัวอย่าง : Corki"),
-                controller: speciesController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'โปรดใส่พันธุ์';
-                  }
-                  return null;
-                },
-              ),
-            ),
-            Stack(
-              children: [
-                Positioned(
-                  left: 15,
-                  top: 50,
-                  child: PetBackButton(),
-                ),
-                TextButton(
-                  style: ButtonStyle(
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.blue),
-                  ),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      addPetReport();
-                      showAlert();
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) {
-                        return Mypets();
-                      }));
-                    }
-                  },
-                  child: const Text('submit'),
-                ),
-              ],
-            ),
-          ],
+        appBar: AppBar(
+          title: const Text("เพิ่มสัตว์เลี้ยงของคุณ"),
+          backgroundColor: Color.fromARGB(255, 130, 219, 241),
         ),
-      ),
-    );
+        body: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                        labelText: "ชื่อสัตว์", hintText: "ตัวอย่าง : แจ้"),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'โปรดใส่ชื่อสัตว์';
+                      }
+                      return null;
+                    },
+                    controller: nameController,
+                  ),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                              labelText: "อายุ (ปี)", hintText: "ตัวอย่าง : 2"),
+                          controller: ageyearController,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'โปรดใส่อายุ (ปี)';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                              labelText: "อายุ (เดือน)",
+                              hintText: "ตัวอย่าง : 3"),
+                          controller: agemonthController,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'โปรดอายุ (เดือน)';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                        labelText: "ประเภท", hintText: "ตัวอย่าง : สุนัข"),
+                    controller: typeController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'โปรดใส่ประเภท';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                        labelText: "พันธุ์", hintText: "ตัวอย่าง : Corki"),
+                    controller: speciesController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'โปรดใส่พันธุ์';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Stack(
+                  children: [
+                    Positioned(
+                      left: 15,
+                      top: 50,
+                      child: PetBackButton(),
+                    ),
+                    TextButton(
+                      style: ButtonStyle(
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.blue),
+                      ),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          addPetReport();
+                          showAlert();
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (context) {
+                            return Mypets();
+                          }));
+                        }
+                      },
+                      child: const Text('submit'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }

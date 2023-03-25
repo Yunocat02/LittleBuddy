@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class cam extends StatefulWidget {
-  const cam({Key? key}) : super(key: key);
+  const cam({Key? key, required String doctorid, required String petid}) : super(key: key);
 
   @override
   State<cam> createState() => _camState();
@@ -15,7 +15,7 @@ class _camState extends State<cam> {
         appBar: AppBar(title: Text("Camera ของทางร้าน"),backgroundColor: Color.fromARGB(255, 130, 219, 241),),
         body: WebView(
           initialUrl:
-              'http://yunocat.thddns.net//videostream.cgi?user=admin&pwd=1231232077&resolution=32&rate=0',
+              '',
         ));
   }
 }

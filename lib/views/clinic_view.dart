@@ -138,7 +138,12 @@ class _ClinicState extends State<Clinic> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => cam()),
+                    MaterialPageRoute(
+                      builder: (context) => cam(
+                        doctorid: widget.doctorid,
+                        petid: widget.petid,
+                      ),
+                    ),
                   );
                 },
                 child: Text('กล้อง', style: TextStyle(fontSize: 24)),
@@ -149,7 +154,27 @@ class _ClinicState extends State<Clinic> {
               width: double.infinity,
               child: ElevatedButton(
                   onPressed: () {
-                    
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("ยืนยันจบการทำการรักษา"),
+                          content: Text("คุณยืนยันว่าได้รับสัตว์เลี้ยงของคุณคืนแล้ว แล้วต้องการจะจบการทำการรักษาใช่หรือไม่?"),
+                          actions: [
+                            TextButton(
+                              child: Text("ยกเลิก"),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            TextButton(
+                              child: Text("ยืนยัน"),
+                              onPressed: () {},
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
                   child: Text('ยืนยันจบการทำการรักษา',
                       style: TextStyle(fontSize: 24)),
