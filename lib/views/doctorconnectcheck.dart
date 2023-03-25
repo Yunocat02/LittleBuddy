@@ -179,10 +179,10 @@ class _doctorconnect extends State<doctorconnect> {
                                                   // สร้างตัวแปร ref เพื่อเข้าถึงเอกสารที่ต้องการลบ
                                                   final ref = FirebaseFirestore
                                                       .instance
-                                                      .collection(
-                                                          'clinicreport')
+                                                      .collection('connect')
+                                                      .doc(getuser()?.uid).collection('userconnect')
                                                       .doc(snapshot.data!
-                                                          .docs[index].id);
+                                                          .docs[index].id);;
 
                                                   // ลบไฟล์ที่อยู่ใน URL
                                                   // ลบเอกสารออกจาก Firestore

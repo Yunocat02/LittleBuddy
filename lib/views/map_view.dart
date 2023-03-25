@@ -1,5 +1,7 @@
 import 'package:LittleBuddy/views/directions_repository.dart';
 import 'package:LittleBuddy/views/home.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
@@ -13,6 +15,64 @@ import 'package:geolocator/geolocator.dart';
 
 import 'direction_model.dart';
 
+Future<List<GeoPoint>> getConfirmedGeoPoints() async {
+  List<GeoPoint> geoPoints = [];
+
+  // สร้าง Query โดยเลือก Document ที่มี field status เท่ากับ "confirm"
+  Query query = FirebaseFirestore.instance
+      .collection('clinicreport')
+      .where("status", isEqualTo: "confirm");
+
+  // ดึงข้อมูลจาก Firebase Cloud Firestore
+  QuerySnapshot querySnapshot = await query.get();
+
+  // วน loop เพื่อดึงค่าของ GeoPoint ออกมาจาก DocumentSnapshot
+  for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
+    // อ่านค่าของ GeoPoint จาก DocumentSnapshot
+    GeoPoint geoPoint = documentSnapshot.get('Location');
+    geoPoints.add(geoPoint);
+  }
+
+  return geoPoints;
+}
+
+Future<List<String>> getConfirmedNames() async {
+  List<String> confirmedNames = [];
+
+  // สร้าง Query โดยเลือก Document ที่มี field status เท่ากับ "confirm" และเลือกเฉพาะ field name
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('clinicreport')
+      .where('status', isEqualTo: 'confirm')
+      .get();
+
+  // วน loop เพื่อดึงค่าของ name ออกมาจาก DocumentSnapshot
+  for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+    // อ่านค่าของ name จาก DocumentSnapshot
+    String name = documentSnapshot.get('name');
+    confirmedNames.add(name);
+  }
+
+  return confirmedNames;
+}
+
+Future<List<String>> getConfirmeddescription() async {
+  List<String> confirmeddescription = [];
+
+  // สร้าง Query โดยเลือก Document ที่มี field status เท่ากับ "confirm" และเลือกเฉพาะ field name
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('clinicreport')
+      .where('status', isEqualTo: 'confirm')
+      .get();
+
+  // วน loop เพื่อดึงค่าของ name ออกมาจาก DocumentSnapshot
+  for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+    // อ่านค่าของ name จาก DocumentSnapshot
+    String description = documentSnapshot.get('description');
+    confirmeddescription.add(description);
+  }
+
+  return confirmeddescription;
+}
 class Mapnaja extends StatefulWidget {
   const Mapnaja({super.key});
 
@@ -66,12 +126,33 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  final Future<FirebaseApp> firebase = Firebase.initializeApp();
+  final firestore = FirebaseFirestore.instance;
+
   // ตำแหน่งเริ่มต้น
   static const _initialCameraPosition =
       CameraPosition(target: LatLng(13.8243766, 100.5160947), zoom: 15);
 
   // ตัวแปรไว้ควบคุมหน้า goolemap
   late GoogleMapController _googleMapController;
+
+  //ตัวแปรเริ่มต้นดึงมาจาก DB
+  List<String>? ShopNames = [];
+  List<String>? ShopDescription = [];
+  List<GeoPoint>? ShopLocation ;
+
+  // ดึงข้อมูล จาก firebase
+  void getData() async{
+    List<GeoPoint> geoPoints = await getConfirmedGeoPoints();
+    List<String> confirmedNames = await getConfirmedNames();
+    List<String> confirmeddescription = await getConfirmeddescription();
+    setState(() {
+      ShopNames = confirmedNames;
+      ShopDescription = confirmeddescription;
+      ShopLocation = geoPoints;
+    });
+  }
+
 
   @override
   void dispose() {
@@ -81,30 +162,50 @@ class _MapScreenState extends State<MapScreen> {
 
   // ตัวแปรเก็บ Marker
   Set<Marker> _markers = {};
-  var shopdata = [
-    [13.8232031, 100.506575],
-    [13.8242144, 100.515139],
-    [13.8031571, 100.5395366]
-  ];
+  var shopdata = [];
 
   late LatLng MainLocation;
+  List<GeoPoint>? _geoPoints;
 
   // สร้าง mark ทั้งหมดบนแผนที่
-  void addMark() {
+  void addMark() async {
+    List<GeoPoint> geoPoints = await getConfirmedGeoPoints();
+    List<String> confirmedNames = await getConfirmedNames();
     setState(() {
       // เพิ่ม Marker ใน _markers
-      for (var i = 0; i < shopdata.length; i++) {
+      _geoPoints = geoPoints;
+      var i = 0;
+      for (GeoPoint geoPoint in geoPoints) {
         _markers.add(Marker(
-          markerId: MarkerId("marker ${i}"),
-          position: LatLng(shopdata[i][0], shopdata[i][1]),
+          markerId: MarkerId(confirmedNames[i]),
+          position: LatLng(geoPoint.latitude, geoPoint.longitude),
           infoWindow: InfoWindow(
-            title: "ร้านที่ ${i + 1}",
+            title: "ร้าน ${confirmedNames[i]}",
             snippet: "ร้านนี้ดีนะ",
           ),
         ));
+        shopdata.add([geoPoint.latitude,geoPoint.longitude]);
+        
+        i++;
       }
     });
   }
+List<String>? namemark ;
+void testmark() async{
+  List<String> confirmedNames = await getConfirmedNames();
+  setState(() {
+      namemark = confirmedNames;
+    });
+}
+  // หา mark
+  void getgeoPoints() async{
+    List<GeoPoint> geoPoints = await getConfirmedGeoPoints();
+    setState(() {
+      _geoPoints = geoPoints;
+    });
+  }
+
+
 
   // ตัวแปรเก็บพิกัด user
   Position? _position;
@@ -122,6 +223,7 @@ class _MapScreenState extends State<MapScreen> {
     Position position = await _determinePosition(); // ขออนุญาตหาตำแหน่ง
     setState(() {
       _position = position;
+      
     });
   }
 
@@ -167,17 +269,24 @@ class _MapScreenState extends State<MapScreen> {
     return await Geolocator.getCurrentPosition();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
-    if (_position == null) {
+    if (_position == null || ShopNames == null || ShopDescription == null || ShopLocation == null) {
       _getCurrentLocation();
+      //getgeoPoints();
       addMark();
+      testmark();
+      getData();
     } else {
       MainLocation = LatLng(_position!.latitude, _position!.longitude);
     }
     return Scaffold(
       // หน้าต่างสำเร็จรูป จัดแอพ
-      body: Column(
+      body:
+      
+       Column(
         // แบ่งส่วนเป็น 2 ส่วนด้วย Column
         children: [
           // สร้างกล่องมา ส่วนของ map
@@ -195,21 +304,25 @@ class _MapScreenState extends State<MapScreen> {
                       alignment: Alignment.center,
                       children: [
                         GoogleMap(
-                          initialCameraPosition: CameraPosition(target: MainLocation, zoom: 15),
+                          initialCameraPosition:
+                              CameraPosition(target: MainLocation, zoom: 15),
                           myLocationEnabled: true,
                           myLocationButtonEnabled: true,
                           onMapCreated: (controller) =>
                               _googleMapController = controller,
                           markers: _markers, // markers
-                         polylines: {
-                          if (_info != null)
-                            Polyline(
-                              polylineId: const PolylineId('overview_polyline'),
-                              color: Colors.blue,
-                              width: 5,
-                              points: _info!.polylinePoints.map((e) => LatLng(e.latitude, e.longitude)).toList(),
-                            )
-                         },
+                          polylines: {
+                            if (_info != null)
+                              Polyline(
+                                polylineId:
+                                    const PolylineId('overview_polyline'),
+                                color: Colors.blue,
+                                width: 5,
+                                points: _info!.polylinePoints
+                                    .map((e) => LatLng(e.latitude, e.longitude))
+                                    .toList(),
+                              )
+                          },
                         ),
                         if (_info != null)
                           Positioned(
@@ -248,8 +361,8 @@ class _MapScreenState extends State<MapScreen> {
             height: MediaQuery.of(context).size.height *
                 0.42, // ตั้งค่าความสูงของ Container เป็น 42% ของความสูงของหน้าจอ
             child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListView.builder(
+              padding: const EdgeInsets.all(8.0),
+              child:  ListView.builder(
                     itemCount: shopdata.length, // จำนวนร้านที่แสดง
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
@@ -263,22 +376,21 @@ class _MapScreenState extends State<MapScreen> {
                               ),
                           // เนื้อใน
                           child: ListTile(
-
-                              // ข้อความ หลัก
-                              title: Text(
-                                "ร้านที่ ${index + 1}",
-                                style: TextStyle(fontSize: 25),
-                              ),
-                              // ข้อความ รอง
-                              subtitle: Text("ร้านนี้ดีนะ"),
-                              // ในส่วนของการเลือกร้าน
-                              onTap: () {
-                                _googleMapController.animateCamera(
-                                    CameraUpdate.newCameraPosition(
-                                        _getShopLocation(index)));
-                                _route();
-                                print("คุณเลือกร้านที่ ${index + 1}");
-                              }),
+                                    // ข้อความ หลัก
+                                    title: Text((ShopNames![index] != null) ?
+                                      "ร้าน: " + ShopNames![index]:"loading",
+                                      style: TextStyle(fontSize: 25),
+                                    ),
+                                    // ข้อความ รอง
+                                    subtitle: Text((ShopDescription![index] != null) ? ShopDescription![index]:"loading"),
+                                    // ในส่วนของการเลือกร้าน
+                                    onTap: () {
+                                      _googleMapController.animateCamera(
+                                          CameraUpdate.newCameraPosition(
+                                              _getShopLocation(index)));
+                                      _route();
+                                      print("คุณเลือกร้านที่ ${index + 1}");
+                                    }),
                         ),
                       );
                     })),
@@ -290,6 +402,12 @@ class _MapScreenState extends State<MapScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         onPressed: () {
+          // testmark();
+          // print(namemark);
+          for (GeoPoint geoPoint in _geoPoints!) {
+            print("ID ${geoPoint.toString()}");
+            print("ตำแหน่ง ${geoPoint.latitude} ${geoPoint.longitude}");
+      }
           _googleMapController.animateCamera(_info != null
               ? CameraUpdate.newLatLngBounds(_info!.bounds, 100.00)
               : CameraUpdate.newCameraPosition(_initialCameraPosition));
@@ -299,27 +417,27 @@ class _MapScreenState extends State<MapScreen> {
       ),
     );
   }
+    // สร้าง Set ของ Marker จาก List ของ GeoPoint
+  Set<Marker> _createMarkers() {
+    Set<Marker> markers = {};
+    List<GeoPoint> geoPoints = [];
+
+    // ดึงข้อมูล GeoPoint ที่มี field status เท่ากับ "confirm" จาก Firebase Cloud Firestore
+    getConfirmedGeoPoints().then((List<GeoPoint> value) {
+      geoPoints = value;
+
+      // สร้าง Marker จาก GeoPoint แต่ละตัว
+      for (GeoPoint geoPoint in geoPoints) {
+        Marker marker = Marker(
+          markerId: MarkerId(geoPoint.toString()),
+          position: LatLng(geoPoint.latitude, geoPoint.longitude),
+        );
+        markers.add(marker);
+      }
+    });
+
+    return markers;
+  }
+
 }
 
-// เตรียมข้อมูล list
-List<Widget> getData(int count) {
-  List<Widget> DataMarker = [];
-  for (var i = 0; i < count; i++) {
-    // ตัวแปร txt ไว้เพิ่มเข้าไปใน list
-    var txt = Text(
-      "ร้านที่ ${i + 1}",
-      style: TextStyle(fontSize: 25),
-    );
-    // ตัวแปร txt2 ไว้เพิ่มเข้าไปใน list แบบ listtile
-    var txt2 = ListTile(
-      title: Text(
-        "ร้านที่ ${i + 1}",
-        style: TextStyle(fontSize: 25),
-      ),
-      subtitle: Text("ร้านนี้ดีนะ"),
-    );
-    // เพิ่มเข้าไปใน list
-    DataMarker.add(txt2);
-  }
-  return DataMarker;
-}
