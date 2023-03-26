@@ -40,8 +40,10 @@ class _chatpageState extends State<chatpage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 130, 219, 241),
+        centerTitle: true,
         title: Text(
-          'data',
+          'Chat',
+          
         ),
       ),
       body: SingleChildScrollView(

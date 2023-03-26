@@ -151,13 +151,6 @@ class _MapnajaState extends State<Mapnaja> {
                                   .doc(u_ok)
                                   .collection('userconnect')
                                   .doc(widget.uidpet);
-              final defaultchat = FirebaseFirestore.instance
-                                  .collection('connect')
-                                  .doc(u_ok)
-                                  .collection('userconnect')
-                                  .doc(widget.uidpet)
-                                  .collection('message')
-                                  .doc('firsttext');
             refconnect.set({
               'status':'waiting',
               'datetimesym': widget.date,
@@ -167,14 +160,6 @@ class _MapnajaState extends State<Mapnaja> {
               'userid': widget.useruid,
             });
 
-            DateTime now = DateTime.now();
-            Timestamp timestamp = Timestamp.fromDate(now);
-            defaultchat.set({
-              'email':'Aminbot',
-              'message': 'นี่คือแชทที่คุณติดต่อกับหมอได้',
-              'time': timestamp,
-              'uid': 'dGQWWcCwcyMlnCv12WXjOereXlr2',  // ID admin
-            });
             },
             icon: Icon(Icons.check),
           ),

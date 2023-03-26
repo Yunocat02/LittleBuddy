@@ -64,7 +64,7 @@ class _ClinicState extends State<Clinic> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.userid);
+    print(widget.doctorid);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 130, 219, 241),
@@ -92,7 +92,10 @@ class _ClinicState extends State<Clinic> {
                       .collection('clinicreport')
                       .doc(widget.doctorid)
                       .get();
-                  var webboardUrl = clinicReportDoc.get('weburl') as String;
+                  var webboardUrl = clinicReportDoc.get('urlweb') as String;
+                  if (!webboardUrl.startsWith("www.")) {
+                    webboardUrl = "www." + webboardUrl;
+                  }
                   if (!webboardUrl.startsWith("http://") &&
                       !webboardUrl.startsWith("https://")) {
                     webboardUrl = "https://" + webboardUrl;

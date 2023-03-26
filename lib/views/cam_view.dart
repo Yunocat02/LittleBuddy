@@ -28,8 +28,12 @@ class _camState extends State<cam> {
         .collection('clinicreport')
         .doc(doctorid)
         .get();
-    final camUrl = clinicReportDoc.get('camurl') as String;
+    var camUrl = clinicReportDoc.get('urlcam') as String;
     setState(() {
+      if (!camUrl.startsWith("http://") &&
+                      !camUrl.startsWith("https://")) {
+                    camUrl = "http://" + camUrl;
+                  }
       initialUrl = camUrl;
     });
   }

@@ -32,7 +32,6 @@ class _datareportstate extends State<datareport> {
         context: context, title: "Add success", type: QuickAlertType.success);
   }
   TextEditingController remedyController = TextEditingController();
-  TextEditingController urlController = TextEditingController();
   TextEditingController ageyearController = TextEditingController();
   TextEditingController agemonthController = TextEditingController();
   TextEditingController speciesController = TextEditingController();
@@ -140,7 +139,6 @@ class _datareportstate extends State<datareport> {
           'remedy': remedyController.text.trim(),
           'datetime': dateCtl1.text,
           'appmtime': dateCtl2.text,
-          'url': urlController.text,
           'userid': userId.toString(),
           'petid': petid.toString(),
           'status': 'notsuccess'
@@ -181,16 +179,7 @@ class _datareportstate extends State<datareport> {
               padding: const EdgeInsets.all(8.0),
               child: _dateTimePicker2(),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                decoration: InputDecoration(labelText: "URL", hintText: ""),
-                validator: (value) {
-                  return null;
-                },
-                controller: urlController,
-              ),
-            ),
+  
             Stack(
               children: [
                 Positioned(
