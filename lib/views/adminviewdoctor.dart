@@ -16,7 +16,6 @@ import 'clinic_view.dart';
 import 'datareportviewsmember.dart';
 import 'help_view.dart';
 import 'home.dart';
-import 'nextpage.dart';
 
 class adminviewdoctor extends StatefulWidget {
   const adminviewdoctor({super.key});
@@ -79,6 +78,7 @@ class _adminviewdoctor extends State<adminviewdoctor> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 130, 219, 241),
         title: const Text('หมอที่ลงทะเบียนกับแอปเรา'),
         centerTitle: true,
         automaticallyImplyLeading: false,

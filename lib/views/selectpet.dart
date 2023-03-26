@@ -52,9 +52,15 @@ class _selectpets extends State<selectpets> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 130, 219, 241),
-        title: const Text('Mypet'),
+        title: const Text('กรุณาเลือกสัตว์ที่จะทำการรักษา'),
         centerTitle: true,
         automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: firestore

@@ -5,6 +5,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../utils/styles.dart';
 import 'clinic_view.dart';
@@ -71,6 +73,10 @@ class _Mypets extends State<Mypets> {
 
   @override
   Widget build(BuildContext context) {
+    Future<void> showAlert() async {
+      await QuickAlert.show(
+          context: context, title: "คุณกำลังรักษาสัตว์ตัวนี้อยู่", type: QuickAlertType.error);
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 130, 219, 241),
@@ -140,48 +146,53 @@ class _Mypets extends State<Mypets> {
                                   children: [
                                     IconButton(
                                       icon: Icon(Icons.delete),
-                                      onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Text("ยืนยันการลบ"),
-                                              content: Text(
-                                                  "คุณต้องการลบรายการนี้หรือไม่?"),
-                                              actions: [
-                                                TextButton(
-                                                  child: Text("ยกเลิก"),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                                TextButton(
-                                                  child: Text("ยืนยัน"),
-                                                  onPressed: () {
-                                                    // สร้างตัวแปร ref เพื่อเข้าถึงเอกสารที่ต้องการลบ
-                                                    final ref =
+                                      onPressed: () async {
+                                        if (data['status'] != 'connected') {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text("ยืนยันการลบ"),
+                                                content: Text(
+                                                    "คุณต้องการลบรายการนี้หรือไม่?"),
+                                                actions: [
+                                                  TextButton(
+                                                    child: Text("ยกเลิก"),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                  TextButton(
+                                                    child: Text("ยืนยัน"),
+                                                    onPressed: () {
+                                                      // สร้างตัวแปร ref เพื่อเข้าถึงเอกสารที่ต้องการลบ
+                                                      final ref =
+                                                          subCollectionSnapshot
+                                                              .data!
+                                                              .docs[index]
+                                                              .reference;
+
+                                                      // ลบเอกสารออกจาก Firestore
+                                                      ref.delete();
+
+                                                      // ลบรายการที่แสดงใน ListView
+                                                      setState(() {
                                                         subCollectionSnapshot
-                                                            .data!
-                                                            .docs[index]
-                                                            .reference;
+                                                            .data!.docs
+                                                            .removeAt(index);
+                                                      });
 
-                                                    // ลบเอกสารออกจาก Firestore
-                                                    ref.delete();
-
-                                                    // ลบรายการที่แสดงใน ListView
-                                                    setState(() {
-                                                      subCollectionSnapshot
-                                                          .data!.docs
-                                                          .removeAt(index);
-                                                    });
-
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        }
+                                        else{await showAlert();}
                                       },
                                     ),
                                   ],
