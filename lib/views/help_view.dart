@@ -7,6 +7,8 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../utils/styles.dart';
+import 'adminviewdoctor.dart';
+import 'adminviewmember.dart';
 import 'clinic_view.dart';
 import 'doctorveiwmember.dart';
 import 'home.dart';
@@ -169,7 +171,7 @@ class _HelpviewState extends State<Helpview> {
                   else if (globalRole?.role == 'A') {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => Helpview()),
+                      MaterialPageRoute(builder: (context) => adminviewdoctor()),
                     );
                   }
                   else{showAlert();}
@@ -190,7 +192,7 @@ class _HelpviewState extends State<Helpview> {
                   } else if (globalRole?.role == 'A') {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => Helpview()),
+                      MaterialPageRoute(builder: (context) => adminviewmember()),
                     );
                   }
                   else{showAlert();}
