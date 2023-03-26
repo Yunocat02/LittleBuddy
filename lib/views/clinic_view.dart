@@ -22,12 +22,13 @@ class Clinic extends StatefulWidget {
       {Key? key,
       required this.doctorid,
       required this.petid,
-      required this.username})
+      required this.username, required this.userid})
       : super(key: key);
 
   final String doctorid;
   final String petid;
   final String username;
+  final String? userid;
   @override
   State<Clinic> createState() => _ClinicState();
 }
@@ -62,6 +63,7 @@ class _ClinicState extends State<Clinic> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.userid);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 130, 219, 241),
@@ -189,7 +191,33 @@ class _ClinicState extends State<Clinic> {
                             ),
                             TextButton(
                               child: Text("ยืนยัน"),
-                              onPressed: () {},
+                              onPressed: () {
+                                  final refconnect = FirebaseFirestore.instance
+                                  .collection('connect')
+                                  .doc(widget.doctorid)
+                                  .collection('userconnect')
+                                  .doc(widget.petid);
+                                  refconnect.delete();
+
+                                  final datareportref= FirebaseFirestore.instance
+                                  .collection('connect')
+                                  .doc(widget.doctorid)
+                                  .collection('datareport')
+                                  .doc(widget.petid);
+                                  datareportref.update({
+                                    'status':'success'
+                                  });
+                                  final petreportref= FirebaseFirestore.instance
+                                  .collection('petreport')
+                                  .doc(widget.userid)
+                                  .collection('0001')
+                                  .doc(widget.petid);
+                                  petreportref.update({
+                                    'status':'notconnected',
+                                    'doctorid':''
+                                  });
+                              },
+
                             ),
                           ],
                         );

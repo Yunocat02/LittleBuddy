@@ -97,7 +97,8 @@ class _showdatareport extends State<showdatareport> {
             .collection('datareport')
             .where('uid',
                 isNotEqualTo:
-                    null) // กรอง document ที่มี field uid ไม่เท่ากับ null
+                    null)
+            .where('status',isEqualTo: 'notsuccess') // กรอง document ที่มี field uid ไม่เท่ากับ null
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
