@@ -5,8 +5,12 @@ import 'package:LittleBuddy/views/chatpage.dart';
 import 'package:LittleBuddy/views/home.dart';
 import 'package:LittleBuddy/views/petconnect.dart';
 import 'package:LittleBuddy/views/showreportmember.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../utils/styles.dart';
 import 'datareportviewsmember.dart';
@@ -18,12 +22,13 @@ class Clinic extends StatefulWidget {
       {Key? key,
       required this.doctorid,
       required this.petid,
-      required this.username})
+      required this.username, required this.userid})
       : super(key: key);
 
   final String doctorid;
   final String petid;
   final String username;
+  final String? userid;
   @override
   State<Clinic> createState() => _ClinicState();
 }
@@ -52,8 +57,13 @@ List navItems = [
 ];
 
 class _ClinicState extends State<Clinic> {
+  final Future<FirebaseApp> firebase = Firebase.initializeApp();
+  final auth = FirebaseAuth.instance;
+  final firestore = FirebaseFirestore.instance;
+
   @override
   Widget build(BuildContext context) {
+    print(widget.userid);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 130, 219, 241),
@@ -76,7 +86,18 @@ class _ClinicState extends State<Clinic> {
               width: double.infinity,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(),
-                onPressed: () {},
+                onPressed: () async {
+                  final clinicReportDoc = await FirebaseFirestore.instance
+                      .collection('clinicreport')
+                      .doc(widget.doctorid)
+                      .get();
+                  var webboardUrl = clinicReportDoc.get('weburl') as String;
+                  if (!webboardUrl.startsWith("http://") &&
+                      !webboardUrl.startsWith("https://")) {
+                    webboardUrl = "https://" + webboardUrl;
+                  }
+                  launch(webboardUrl);
+                },
                 child: Text('Webboard คลินิก', style: TextStyle(fontSize: 24)),
               ),
             ),
@@ -159,7 +180,8 @@ class _ClinicState extends State<Clinic> {
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: Text("ยืนยันจบการทำการรักษา"),
-                          content: Text("คุณยืนยันว่าได้รับสัตว์เลี้ยงของคุณคืนแล้ว แล้วต้องการจะจบการทำการรักษาใช่หรือไม่?"),
+                          content: Text(
+                              "คุณยืนยันว่าได้รับสัตว์เลี้ยงของคุณคืนแล้ว แล้วต้องการจะจบการทำการรักษาใช่หรือไม่?"),
                           actions: [
                             TextButton(
                               child: Text("ยกเลิก"),
@@ -169,7 +191,33 @@ class _ClinicState extends State<Clinic> {
                             ),
                             TextButton(
                               child: Text("ยืนยัน"),
-                              onPressed: () {},
+                              onPressed: () {
+                                  final refconnect = FirebaseFirestore.instance
+                                  .collection('connect')
+                                  .doc(widget.doctorid)
+                                  .collection('userconnect')
+                                  .doc(widget.petid);
+                                  refconnect.delete();
+
+                                  final datareportref= FirebaseFirestore.instance
+                                  .collection('connect')
+                                  .doc(widget.doctorid)
+                                  .collection('datareport')
+                                  .doc(widget.petid);
+                                  datareportref.update({
+                                    'status':'success'
+                                  });
+                                  final petreportref= FirebaseFirestore.instance
+                                  .collection('petreport')
+                                  .doc(widget.userid)
+                                  .collection('0001')
+                                  .doc(widget.petid);
+                                  petreportref.update({
+                                    'status':'notconnected',
+                                    'doctorid':''
+                                  });
+                              },
+
                             ),
                           ],
                         );

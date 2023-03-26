@@ -1,3 +1,5 @@
+import 'package:LittleBuddy/views/adminviewdoctor.dart';
+import 'package:LittleBuddy/views/adminviewmember.dart';
 import 'package:LittleBuddy/views/checkdoctorregis.dart';
 import 'package:LittleBuddy/views/datareport.dart';
 import 'package:LittleBuddy/views/datareportviewsmember.dart';
@@ -67,9 +69,10 @@ class Home extends StatelessWidget {
         title: Text('Menu'),
         backgroundColor: Color.fromARGB(255, 130, 219, 241),
         centerTitle: true,
-        leading: IconButton(
+        leading: 
+        IconButton(
           onPressed: () async {
-            if (globalRole?.role == 'A' || globalRole?.role == 'M') {
+            if ( globalRole?.role == 'M') {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => AddPet()),
@@ -121,7 +124,11 @@ class Home extends StatelessWidget {
               } catch (e) {
                 print('Error: $e');
               }
-            } else {
+            } 
+            else if(globalRole?.role == 'A'){
+              return;
+            }
+            else {
               showAlert();
             }
           },
@@ -321,7 +328,7 @@ class Home extends StatelessWidget {
                   } else if (globalRole?.role == 'A') {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => Helpview()),
+                      MaterialPageRoute(builder: (context) => adminviewdoctor()),
                     );
                   } else {
                     showAlert();
@@ -343,7 +350,7 @@ class Home extends StatelessWidget {
                   } else if (globalRole?.role == 'A') {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => Helpview()),
+                      MaterialPageRoute(builder: (context) => adminviewmember()),
                     );
                   } else {
                     showAlert();

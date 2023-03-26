@@ -142,7 +142,8 @@ class _datareportstate extends State<datareport> {
           'appmtime': dateCtl2.text,
           'url': urlController.text,
           'userid': userId.toString(),
-          'petid': petid.toString()
+          'petid': petid.toString(),
+          'status': 'notsuccess'
         };
         await userDocRef.set(data);
       }

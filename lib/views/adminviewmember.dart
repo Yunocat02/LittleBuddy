@@ -1,4 +1,5 @@
-import 'package:LittleBuddy/views/mypets_view.dart';
+import 'package:LittleBuddy/views/adminviewdoctor.dart';
+import 'package:LittleBuddy/views/petconnect.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,25 +13,22 @@ import 'datareportviewsmember.dart';
 import 'help_view.dart';
 import 'home.dart';
 
-class petconnect extends StatefulWidget {
-  const petconnect({super.key});
+class adminviewmember extends StatefulWidget {
+  const adminviewmember({super.key});
 
   @override
-  State<petconnect> createState() => _petconnect();
+  State<adminviewmember> createState() => _adminviewmember();
 }
 
-class _petconnect extends State<petconnect> {
+class _adminviewmember extends State<adminviewmember> {
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
-  final auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
 
   late FirebaseAuth _auth;
   final _user = Rxn<User>();
   late Stream<User?> _authStateChanges;
 
-    late String _username = "";
-
-  List navItems = [
+ List navItems = [
     {
       'text': 'Adopt',
       'icon': 'assets/nav_icons/pill_icon.svg',
@@ -39,12 +37,12 @@ class _petconnect extends State<petconnect> {
     {
       'text': 'Clinic',
       'icon': 'assets/nav_icons/heart_icon.svg',
-      'page': const petconnect()
+      'page': const adminviewmember()
     },
     {
       'text': 'Pets',
       'icon': 'assets/nav_icons/vet_icon.svg',
-      'page': const Mypets()
+      'page': const adminviewdoctor()
     },
     {
       'text': 'Help',
@@ -56,7 +54,6 @@ class _petconnect extends State<petconnect> {
   @override
   void initState() {
     super.initState();
-    _loadUserInfo();
     initAuth();
   }
 
@@ -78,19 +75,21 @@ class _petconnect extends State<petconnect> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 130, 219, 241),
-        title: const Text('สัตว์เลี้ยงที่ลงทะเบียนกับคลินิก'),
+        title: const Text('ลูกค้าที่ลงทะเบียนกับแอพเรา'),
         centerTitle: true,
         automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: firestore
-            .collection('petreport') // ชื่อคอลเล็กชัน
-    .doc(getuser()?.uid) // เอา uid ของผู้ใช้เก็บแบบ doc
-    .collection("0001")
-    .where('status', isEqualTo: 'connected') // id sub field ที่แต่งย่อยมาตอน addpet
-    .snapshots(),
-
-        // ตัวกลางในการ อ่าน/เขียน ข้อมูล
+            .collection('userdatabase') // ชื่อตาราง
+            .where('role',isEqualTo: 'M') // เอา id เก็บแบบ doc // id sub field ที่แต่ย่อยมาตอน addpet
+            .snapshots(), // ตัวกลางในการ อ่าน/เขียน ข้อมูล
         builder: (context, subCollectionSnapshot) {
           if (subCollectionSnapshot.hasData) {
             return Container(
@@ -114,10 +113,6 @@ class _petconnect extends State<petconnect> {
                           child: Container(
                             // กรอบของแต่ละรายการ
                             decoration: BoxDecoration(
-                                // border: Border.all(
-                                //   color: Color.fromARGB(255, 118, 133, 145),
-                                //   width: 1.0,
-                                // ),
                                 borderRadius: BorderRadius.circular(5),
                                 color: Color.fromARGB(255, 192, 247,
                                     248) // เปลี่ยนสีพื้นหลังของ Container แต่ละรายการ
@@ -125,40 +120,20 @@ class _petconnect extends State<petconnect> {
                             // เนื้อใน
                             child: ListTile(
                                 title: Text(
-                                  "ชื่อ: " + data['name'] ?? "N/A",
+                                  "ชื่อ: " + data['username'] ?? "N/A",
                                   style: TextStyle(fontSize: 25),
+                                  
                                 ),
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text("ประเภท: " + data['type'] ?? "N/A"),
-                                    Text("อายุ: " +
-                                            data['age(year)'] +
-                                            " ปี " +
-                                            data['age(month)'] +
-                                            " เดือน " ??
-                                        "N/A"),
-                                    //Text(data['age(month)'] ?? "N/A"),
-                                    Text("พันธ์: " + data['species'] ?? "N/A"),
+                                    Text("uid :"+subCollectionSnapshot.data!.docs[index].id,
+                                  style: TextStyle(fontSize: 15),)
                                   ],
                                 ),
-
+                               
                                 // ในส่วนของการเลือกร้าน
-                                onTap: () {
-                                 
-                                 Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                          builder: (context) => Clinic(
-                                          doctorid:data['doctorid'].toString(),
-                                          petid:subCollectionSnapshot.data!.docs[index].id,
-                                          username:_username,
-                                          userid:getuser()?.uid.toString()
-                                          ),
-                                        ),
-                                        
-                                    );
-                                }),
+                                onTap: () {}),
                           ),
                         );
                       })),
@@ -212,26 +187,4 @@ class _petconnect extends State<petconnect> {
       ),
     );
   }
-  Future<void> _loadUserInfo() async {
-    final userId = auth.currentUser?.uid;
-
-    if (userId != null) {
-      final userDoc =
-          await firestore.collection('userdatabase').doc(userId).get();
-      final userData = userDoc.data() as Map<String, dynamic>?;
-      setState(() {
-        //_appmtime = userData?['appm. time'] as Timestamp;
-
-        _username = userData?['username'] ?? 'N/A';
-
-        //_content = userData?['content'] ?? 'N/A';
-        //_datetime = userData?['datetime'] as Timestamp;
-        //_idpet = userData?['idpet'] ?? 'N/A';
-        //_namepet = userData?['namepet'] ?? 'N/A';
-        //_remedy = userData?['remedy'] ?? 'N/A';
-        //_url = userData?['url'] ?? 'N/A';
-      });
-    }
-  }
 }
-
