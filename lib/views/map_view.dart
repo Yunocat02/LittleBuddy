@@ -112,11 +112,11 @@ class Mapnaja extends StatefulWidget {
 
 class _MapnajaState extends State<Mapnaja> {
   // กล่องแจ้งเตือน
-  void showAlert() {
-    QuickAlert.show(
+  Future<void> showAlert()  async {
+    await QuickAlert.show(
         context: context,
         title: "ทำการลงทะเบียนกับ ${uName_ok} เรียบร้อย",
-        type: QuickAlertType.confirm);
+        type: QuickAlertType.success);
     
   }
 
@@ -143,8 +143,8 @@ class _MapnajaState extends State<Mapnaja> {
         ),
         actions: [
           IconButton(
-            onPressed: () {
-              showAlert();
+            onPressed: () async {
+              await showAlert();
 
               final refconnect = FirebaseFirestore.instance
                                   .collection('connect')

@@ -201,6 +201,23 @@ class _doctorconnect extends State<doctorconnect> {
                                   IconButton(
                                     icon: const Icon(Icons.add),
                                     onPressed: () {
+                                      final defaultchat = FirebaseFirestore.instance
+                                  .collection('connect')
+                                  .doc(getuser()?.uid)
+                                  .collection('userconnect')
+                                  .doc(snapshot.data!.docs[index].id)
+                                  .collection('message')
+                                  .doc('firsttext');
+                                      DateTime now = DateTime.now();
+                                    Timestamp timestamp = Timestamp.fromDate(now);
+                                    defaultchat.set({
+                                      'email':'Aminbot',
+                                      'message': 'นี่คือแชทที่คุณติดต่อกับหมอได้',
+                                      'time': timestamp,
+                                      'uid': 'dGQWWcCwcyMlnCv12WXjOereXlr2',  // ID admin
+                                    });
+
+
                                       final ref = FirebaseFirestore.instance
                                           .collection('connect')
                                           .doc(getuser()?.uid)
