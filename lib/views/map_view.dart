@@ -73,6 +73,27 @@ Future<List<String>> getConfirmeddescription() async {
 
   return confirmeddescription;
 }
+
+Future<List<String>> getConfirmedDocumentIDs() async {
+  List<String> confirmedDocumentIDs = [];
+
+  // สร้าง Query โดยเลือก Document ที่มี field status เท่ากับ "confirm"
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('clinicreport')
+      .where('status', isEqualTo: 'confirm')
+      .get();
+
+  // วน loop เพื่อดึง document ID ออกมาจาก QueryDocumentSnapshot
+  for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+    // อ่านค่าของ document ID จาก QueryDocumentSnapshot
+    String documentID = documentSnapshot.id;
+    confirmedDocumentIDs.add(documentID);
+  }
+
+  return confirmedDocumentIDs;
+}
+// เก็บ id ร้านที่ user เลือก
+  late String u_ok = "";
 class Mapnaja extends StatefulWidget {
   const Mapnaja({super.key});
 
@@ -85,7 +106,7 @@ class _MapnajaState extends State<Mapnaja> {
   void showAlert() {
     QuickAlert.show(
         context: context,
-        title: "ไปหน้าต่อไป แต่ยังบ่ทำ😅",
+        title: "ไปหน้าต่อไป ID หมอ คือ ${u_ok}",
         type: QuickAlertType.error);
   }
 
@@ -140,17 +161,20 @@ class _MapScreenState extends State<MapScreen> {
   //ตัวแปรเริ่มต้นดึงมาจาก DB
   List<String> ShopNames = [];
   List<String> ShopDescription = [];
-  List<GeoPoint> ShopLocation =[] ;
+  List<GeoPoint> ShopLocation =[];
+  List<String> ShopID = [];
 
   // ดึงข้อมูล จาก firebase
   void getData() async{
     List<GeoPoint> geoPoints = await getConfirmedGeoPoints();
-    List<String> confirmedNames = await getConfirmedNames();
-    List<String> confirmeddescription = await getConfirmeddescription();
+    List<String> confirmeNames = await getConfirmedNames();
+    List<String> confirmeDescription = await getConfirmeddescription();
+    List<String> confirmeShopIDs = await getConfirmedDocumentIDs();
     setState(() {
-      ShopNames = confirmedNames;
-      ShopDescription = confirmeddescription;
+      ShopNames = confirmeNames;
+      ShopDescription = confirmeDescription;
       ShopLocation = geoPoints;
+      ShopID = confirmeShopIDs;
     });
     addMark();
   }
@@ -186,7 +210,9 @@ class _MapScreenState extends State<MapScreen> {
             snippet: "${ShopDescription[i]}",
           ),
         ));
-        shopdata.add([ShopLocation[i].latitude,ShopLocation[i].longitude]);
+        if (shopdata.length < ShopLocation.length) {
+          shopdata.add([ShopLocation[i].latitude,ShopLocation[i].longitude]);
+        }
       }
     });
   }
@@ -205,7 +231,7 @@ void testmark() async{
     });
   }
 
-
+  
 
   // ตัวแปรเก็บพิกัด user
   Position? _position;
@@ -391,6 +417,7 @@ void testmark() async{
                                               _getShopLocation(index)));
                                       _route();
                                       print("คุณเลือกร้านที่ ${index + 1}");
+                                      u_ok = ShopID[index].toString();
                                     }),
                         ),
                       );
@@ -407,11 +434,9 @@ void testmark() async{
           print("ShopLocation คือ ${ShopLocation}");
           print("ShopNames คือ ${ShopNames}");
           print("ShopDescription คือ ${ShopDescription}");
-          print(shopdata);
-          // for (GeoPoint geoPoint in _geoPoints!) {
-          //   print("ID ${geoPoint.toString()}");
-          //   print("ตำแหน่ง ${geoPoint.latitude} ${geoPoint.longitude}");
-          // }
+          print("ShopID คือ ${ShopID}"); 
+          print("คุณเลือก ${u_ok}");
+          //print(shopdata); ShopID
           
           for (var i=0;i<ShopLocation.length;i++){
             print("ID ${i}");
