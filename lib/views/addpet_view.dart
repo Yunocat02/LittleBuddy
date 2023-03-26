@@ -45,6 +45,7 @@ class _AddPetState extends State<AddPet> {
         'age(month)': agemonthController.text,
         'type': typeController.text,
         'species': speciesController.text,
+        'status':'notconnected'
       };
 
       petReportCollectionRef.add(data);

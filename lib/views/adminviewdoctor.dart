@@ -85,7 +85,8 @@ class _adminviewdoctor extends State<adminviewdoctor> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => Home()));
           },
         ),
       ),

@@ -94,8 +94,17 @@ Future<List<String>> getConfirmedDocumentIDs() async {
 }
 // เก็บ id ร้านที่ user เลือก
   late String u_ok = "";
+// เก็บ name ร้านที่ user เลือก
+  late String uName_ok = "";
 class Mapnaja extends StatefulWidget {
-  const Mapnaja({super.key});
+  // ตัวแปรที่รับมา
+  final String uidpet;
+  final String useruid;
+  final String symptom;
+  final String date;
+  final String medic;
+
+  const Mapnaja({super.key, required this.uidpet, required this.useruid, required this.symptom, required  this.date, required  this.medic});
 
   @override
   State<Mapnaja> createState() => _MapnajaState();
@@ -106,12 +115,18 @@ class _MapnajaState extends State<Mapnaja> {
   void showAlert() {
     QuickAlert.show(
         context: context,
-        title: "ไปหน้าต่อไป ID หมอ คือ ${u_ok}",
-        type: QuickAlertType.error);
+        title: "ทำการลงทะเบียนกับ ${uName_ok} เรียบร้อย",
+        type: QuickAlertType.confirm);
+    
   }
 
   @override
   Widget build(BuildContext context) {
+    print("uidpet = ${widget.uidpet}");
+    print("useruid = ${widget.useruid}");
+    print("symptom = ${widget.symptom}");
+    print("date = ${widget.date}");
+    print("medic = ${widget.medic}");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 130, 219, 241),
@@ -130,6 +145,36 @@ class _MapnajaState extends State<Mapnaja> {
           IconButton(
             onPressed: () {
               showAlert();
+
+              final refconnect = FirebaseFirestore.instance
+                                  .collection('connect')
+                                  .doc(u_ok)
+                                  .collection('userconnect')
+                                  .doc(widget.uidpet);
+              final defaultchat = FirebaseFirestore.instance
+                                  .collection('connect')
+                                  .doc(u_ok)
+                                  .collection('userconnect')
+                                  .doc(widget.uidpet)
+                                  .collection('message')
+                                  .doc('firsttext');
+            refconnect.set({
+              'status':'waiting',
+              'datetimesym': widget.date,
+              'medic': widget.medic,
+              'petid': widget.uidpet,
+              'symptom': widget.symptom,
+              'userid': widget.useruid,
+            });
+
+            DateTime now = DateTime.now();
+            Timestamp timestamp = Timestamp.fromDate(now);
+            defaultchat.set({
+              'email':'Aminbot',
+              'message': 'นี่คือแชทที่คุณติดต่อกับหมอได้',
+              'time': timestamp,
+              'uid': 'dGQWWcCwcyMlnCv12WXjOereXlr2',  // ID admin
+            });
             },
             icon: Icon(Icons.check),
           ),
@@ -418,6 +463,7 @@ void testmark() async{
                                       _route();
                                       print("คุณเลือกร้านที่ ${index + 1}");
                                       u_ok = ShopID[index].toString();
+                                      uName_ok = ShopNames[index].toString();
                                     }),
                         ),
                       );

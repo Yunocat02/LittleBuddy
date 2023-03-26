@@ -12,8 +12,11 @@ class waitdoctor extends StatefulWidget {
   final String uidpet;
   final String useruid;
 
+  
+
   const waitdoctor({
     Key? key, required this.uidpet, required this.useruid, }) : super(key: key);
+    
 
   @override
   State<waitdoctor> createState() => _waitdoctorstate();
@@ -67,6 +70,8 @@ class _waitdoctorstate extends State<waitdoctor> {
 }
   
   Widget build(BuildContext context) { 
+print("uidpet = ${widget.uidpet}");
+  print("useruid = ${widget.useruid}");
     String uidpet=widget.uidpet;
   String Docter='';
     return Scaffold(
@@ -91,18 +96,7 @@ class _waitdoctorstate extends State<waitdoctor> {
             ),          
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-  controller: datetimeController,
-  decoration: InputDecoration(
-    labelText: 'Date and Time',
-    hintText: 'Ex. Insert your date and time',
-  ),
-  onTap: () async {
-    // call the _dateTimePicker() function here
-    _dateTimePicker();
-  },
-   
-)
+              child: _dateTimePicker()
               
             ),Padding(
               padding: const EdgeInsets.all(8.0),
@@ -133,7 +127,22 @@ class _waitdoctorstate extends State<waitdoctor> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       // Add your onPressed logic here
-                      
+                     
+                    
+                                  Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                          builder: (context) => Mapnaja(
+                                          uidpet:widget.uidpet,
+                                          useruid: widget.useruid,
+                                          symptom:symptomController.text,
+                                          date: dateCtl.text,
+                                          medic: medicController.text,
+
+                                          ),
+                                        ),
+                                        
+                                    );
                     }
                   },
                   child: const Text('submit'),

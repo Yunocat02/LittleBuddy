@@ -1,4 +1,5 @@
 import 'package:LittleBuddy/views/login_view.dart';
+import 'package:LittleBuddy/views/selectpet.dart';
 import 'package:bubble/bubble.dart';
 import 'package:dialogflow_flutter/googleAuth.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
         query == "ต้องการหาร้านคลินิกรักษา" && globalRole?.role == 'M' ||
         query == "ต้องการหาร้านคลินิกรักษา" && globalRole?.role == 'D') {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Mapnaja()));
+          context, MaterialPageRoute(builder: (context) => selectpets()));
     } else if (query == "แอพนี้คืออะไร") {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => Helpview()));

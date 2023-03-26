@@ -61,7 +61,7 @@ class _selectpets extends State<selectpets> {
             .collection('petreport') // ชื่อตาราง
             .doc(getuser()?.uid) // เอา id เก็บแบบ doc
             .collection("0001")
-            .where('') // id sub field ที่แต่ย่อยมาตอน addpet
+            .where('status',isNotEqualTo: 'connected') // id sub field ที่แต่ย่อยมาตอน addpet
             .snapshots(), // ตัวกลางในการ อ่าน/เขียน ข้อมูล
         builder: (context, subCollectionSnapshot) {
           if (subCollectionSnapshot.hasData) {
@@ -122,7 +122,7 @@ class _selectpets extends State<selectpets> {
                                           context,
                                           MaterialPageRoute(
                                           builder: (context) => waitdoctor(
-                                          uidpet:index.toString(),
+                                          uidpet:subCollectionSnapshot.data!.docs[index].id,
                                           useruid: useruid
                                           ),
                                         ),

@@ -81,7 +81,8 @@ class _adminviewmember extends State<adminviewmember> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => Home()));
           },
         ),
       ),

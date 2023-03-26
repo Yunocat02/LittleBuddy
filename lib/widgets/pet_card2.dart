@@ -1,5 +1,6 @@
 import 'package:LittleBuddy/views/clinicmail_view.dart';
 import 'package:LittleBuddy/views/doctorconnectcheck.dart';
+import 'package:LittleBuddy/views/selectpet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
@@ -49,7 +50,7 @@ class _PetCard2State extends State<PetCard2> {
         onTap: () async {
           if (globalRole?.role == 'M') {
             Navigator.push(
-                context, MaterialPageRoute(builder: (_) => const Mapnaja()));
+                context, MaterialPageRoute(builder: (_) => const selectpets()));
           } else if (globalRole?.role == 'D') {
             Navigator.push(
                 context, MaterialPageRoute(builder: (_) => const doctorconnect()));
@@ -93,7 +94,7 @@ class _PetCard2State extends State<PetCard2> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Mapnaja()),
+                                  builder: (context) => selectpets()),
                             );
                           } else if (globalRole?.role == 'D') {
                             Navigator.push(

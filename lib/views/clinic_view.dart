@@ -22,7 +22,8 @@ class Clinic extends StatefulWidget {
       {Key? key,
       required this.doctorid,
       required this.petid,
-      required this.username, required this.userid})
+      required this.username,
+      required this.userid})
       : super(key: key);
 
   final String doctorid;
@@ -149,7 +150,7 @@ class _ClinicState extends State<Clinic> {
                   );
                 },
                 child:
-                    Text('ลายละเอียดการรักษา', style: TextStyle(fontSize: 24)),
+                    Text('รายละเอียดการรักษา', style: TextStyle(fontSize: 24)),
               ),
             ),
             SizedBox(height: 16),
@@ -192,32 +193,35 @@ class _ClinicState extends State<Clinic> {
                             TextButton(
                               child: Text("ยืนยัน"),
                               onPressed: () {
-                                  final refconnect = FirebaseFirestore.instance
-                                  .collection('connect')
-                                  .doc(widget.doctorid)
-                                  .collection('userconnect')
-                                  .doc(widget.petid);
-                                  refconnect.delete();
+                                final refconnect = FirebaseFirestore.instance
+                                    .collection('connect')
+                                    .doc(widget.doctorid)
+                                    .collection('userconnect')
+                                    .doc(widget.petid);
+                                refconnect.delete();
 
-                                  final datareportref= FirebaseFirestore.instance
-                                  .collection('connect')
-                                  .doc(widget.doctorid)
-                                  .collection('datareport')
-                                  .doc(widget.petid);
-                                  datareportref.update({
-                                    'status':'success'
-                                  });
-                                  final petreportref= FirebaseFirestore.instance
-                                  .collection('petreport')
-                                  .doc(widget.userid)
-                                  .collection('0001')
-                                  .doc(widget.petid);
-                                  petreportref.update({
-                                    'status':'notconnected',
-                                    'doctorid':''
-                                  });
+                                final datareportref = FirebaseFirestore.instance
+                                    .collection('connect')
+                                    .doc(widget.doctorid)
+                                    .collection('datareport')
+                                    .doc(widget.petid);
+                                datareportref.update({'status': 'success'});
+                                final petreportref = FirebaseFirestore.instance
+                                    .collection('petreport')
+                                    .doc(widget.userid)
+                                    .collection('0001')
+                                    .doc(widget.petid);
+                                petreportref.update(
+                                    {'status': 'notconnected', 'doctorid': ''});
+                                // พาไปหน้าหลัก
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Home(
+                                    ),
+                                  ),
+                                );
                               },
-
                             ),
                           ],
                         );
