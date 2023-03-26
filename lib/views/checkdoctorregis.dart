@@ -14,7 +14,6 @@ import 'clinic_view.dart';
 import 'datareportviewsmember.dart';
 import 'help_view.dart';
 import 'home.dart';
-import 'nextpage.dart';
 
 class doctorregis extends StatefulWidget {
   const doctorregis({super.key});
@@ -175,13 +174,6 @@ class _doctorregis extends State<doctorregis> {
                                       ref.update({
                                         'status': 'confirm',
                                       });
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              NextPage(ref: ref),
-                                        ),
-                                      );
                                     },
                                   ),
                                   IconButton(

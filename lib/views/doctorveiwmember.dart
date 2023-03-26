@@ -20,7 +20,6 @@ import 'help_view.dart';
 import 'home.dart';
 import 'login_view.dart';
 import 'mypets_view.dart';
-import 'nextpage.dart';
 late String _username = "";
 class doctorviewmember extends StatefulWidget {
   const doctorviewmember({Key? key});

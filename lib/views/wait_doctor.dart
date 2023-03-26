@@ -40,7 +40,7 @@ class _waitdoctorstate extends State<waitdoctor> {
   return TextFormField(
     controller: dateCtl,
     decoration: InputDecoration(
-      labelText: 'Date and Time',
+      labelText: 'กรอกเวลาที่เริ่มสังเกตุอาการ',
       hintText: 'Ex. Insert your date and time',
     ),
     onTap: () async {

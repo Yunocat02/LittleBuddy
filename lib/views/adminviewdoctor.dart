@@ -16,7 +16,6 @@ import 'clinic_view.dart';
 import 'datareportviewsmember.dart';
 import 'help_view.dart';
 import 'home.dart';
-import 'nextpage.dart';
 
 class adminviewdoctor extends StatefulWidget {
   const adminviewdoctor({super.key});
