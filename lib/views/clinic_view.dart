@@ -93,14 +93,33 @@ class _ClinicState extends State<Clinic> {
                       .doc(widget.doctorid)
                       .get();
                   var webboardUrl = clinicReportDoc.get('urlweb') as String;
-                  if (!webboardUrl.startsWith("www.")) {
-                    webboardUrl = "www." + webboardUrl;
+                  if (webboardUrl == "") {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        title: Text("ไม่พบ Webboard"),
+                        content: Text("ร้านไม่ได้เพิ่ม Webboard มาในระบบ"),
+                        actions: [
+                          TextButton(
+                            child: Text("OK"),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      ),
+                    );
                   }
-                  if (!webboardUrl.startsWith("http://") &&
+                  else if (!webboardUrl.startsWith("www.")) {
+                    webboardUrl = "www." + webboardUrl;
+                    if (!webboardUrl.startsWith("http://") &&
                       !webboardUrl.startsWith("https://")) {
                     webboardUrl = "https://" + webboardUrl;
                   }
                   launch(webboardUrl);
+                  }
+                  
+                  ;
                 },
                 child: Text('Webboard คลินิก', style: TextStyle(fontSize: 24)),
               ),
@@ -220,8 +239,7 @@ class _ClinicState extends State<Clinic> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => Home(
-                                    ),
+                                    builder: (context) => Home(),
                                   ),
                                 );
                               },

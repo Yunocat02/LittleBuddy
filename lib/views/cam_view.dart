@@ -15,6 +15,7 @@ class cam extends StatefulWidget {
 class _camState extends State<cam> {
   late String initialUrl;
   late String doctorid;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -30,11 +31,29 @@ class _camState extends State<cam> {
         .get();
     var camUrl = clinicReportDoc.get('urlcam') as String;
     setState(() {
-      if (!camUrl.startsWith("http://") &&
-                      !camUrl.startsWith("https://")) {
-                    camUrl = "http://" + camUrl;
-                  }
-      initialUrl = camUrl;
+      if (camUrl == "") {
+  isLoading = false;
+  initialUrl = "";
+  showDialog(
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+      title: Text("ไม่พบกล้อง"),
+      content: Text("ร้านไม่ได้เพิ่มกล้องมาในระบบ"),
+      actions: [
+        TextButton(
+          child: Text("OK"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    ),
+  );
+} else if (!camUrl.startsWith("http://") && !camUrl.startsWith("https://")) {
+  camUrl = "http://" + camUrl;
+}
+initialUrl = camUrl;
+isLoading = false;
     });
   }
 
@@ -45,9 +64,10 @@ class _camState extends State<cam> {
         title: Text("Camera ของทางร้าน"),
         backgroundColor: Color.fromARGB(255, 130, 219, 241),
       ),
-      body: initialUrl == null
+      body: isLoading
           ? Center(child: CircularProgressIndicator())
           : WebView(initialUrl: initialUrl),
     );
   }
 }
+
