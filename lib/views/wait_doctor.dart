@@ -103,12 +103,6 @@ print("uidpet = ${widget.uidpet}");
               child: TextFormField(
                 decoration: InputDecoration(
                     labelText: "ยาที่แพ้", hintText: "ตัวอย่าง : พาราเซตตามอล"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'โปรดกรอกยาที่แพ้';
-                  }
-                  return null;
-                },
                 controller: medicController,
               ),
             ),
