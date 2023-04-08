@@ -7,7 +7,7 @@ import 'package:dialogflow_flutter/dialogflowFlutter.dart';
 import 'home.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../views/map_view.dart';
+
 import '../views/help_view.dart';
 
 class bot2 extends StatefulWidget {

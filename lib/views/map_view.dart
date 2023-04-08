@@ -3,12 +3,9 @@ import 'package:LittleBuddy/views/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:google_directions_api/google_directions_api.dart';
 
 // GPS
 import 'package:geolocator/geolocator.dart';
@@ -54,7 +51,24 @@ Future<List<String>> getConfirmedNames() async {
 
   return confirmedNames;
 }
+Future<List<String>> getConfirmedphone() async {
+  List<String> getConfirmedphone = [];
 
+  // สร้าง Query โดยเลือก Document ที่มี field status เท่ากับ "confirm" และเลือกเฉพาะ field name
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('clinicreport')
+      .where('status', isEqualTo: 'confirm')
+      .get();
+
+  // วน loop เพื่อดึงค่าของ name ออกมาจาก DocumentSnapshot
+  for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+    // อ่านค่าของ name จาก DocumentSnapshot
+    String phone = documentSnapshot.get('phone');
+    getConfirmedphone.add(phone);
+  }
+
+  return getConfirmedphone;
+}
 Future<List<String>> getConfirmeddescription() async {
   List<String> confirmeddescription = [];
 
@@ -69,6 +83,7 @@ Future<List<String>> getConfirmeddescription() async {
     // อ่านค่าของ name จาก DocumentSnapshot
     String description = documentSnapshot.get('description');
     confirmeddescription.add(description);
+    
   }
 
   return confirmeddescription;
@@ -193,6 +208,7 @@ class _MapScreenState extends State<MapScreen> {
   List<String> ShopDescription = [];
   List<GeoPoint> ShopLocation =[];
   List<String> ShopID = [];
+  List<String> phone = [];
 
   // ดึงข้อมูล จาก firebase
   void getData() async{
@@ -200,11 +216,13 @@ class _MapScreenState extends State<MapScreen> {
     List<String> confirmeNames = await getConfirmedNames();
     List<String> confirmeDescription = await getConfirmeddescription();
     List<String> confirmeShopIDs = await getConfirmedDocumentIDs();
+   List<String> confirmephone = await getConfirmedphone();
     setState(() {
       ShopNames = confirmeNames;
       ShopDescription = confirmeDescription;
       ShopLocation = geoPoints;
       ShopID = confirmeShopIDs;
+      phone = confirmephone;
     });
     addMark();
   }
@@ -439,7 +457,7 @@ void testmark() async{
                                       style: TextStyle(fontSize: 25),
                                     ),
                                     // ข้อความ รอง
-                                    subtitle: Text(ShopDescription[index]),
+                                    subtitle: Text(ShopDescription[index]+' ,เบอร์โทรร้าน: '+phone[index]),
                                     // ในส่วนของการเลือกร้าน
                                     onTap: () {
                                       _googleMapController.animateCamera(

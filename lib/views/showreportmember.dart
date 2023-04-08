@@ -1,21 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:LittleBuddy/views/datareport.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
-import '../utils/styles.dart';
-import 'PDF_view.dart';
-import 'clinic_view.dart';
-import 'datareportviewsmember.dart';
-import 'help_view.dart';
-import 'home.dart';
+
+
 
 
 class showdatareportmem extends StatefulWidget {
@@ -125,25 +116,41 @@ class _showdatareportmem extends State<showdatareportmem> {
                                     children: [
                                       Text("ชื่อสัตว์เลี้ยง: $petName"),
                                       Text("ชื่อเจ้าของ: $userName"),
+                                      
                                     ],
                                   );
                                 }
                                 return const SizedBox();
                               },
                             );
+                            
                           }
                           return const SizedBox();
                         },
                       ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text("วันนัดรับสัตว์เลี้ยง: " + data['appmtime'] ??
-                              "N/A"),
-                          Text("วันที่มารักษา: " + data['datetime'] ?? "N/A"),
-                          Text("วิธีการรักษา: " + data['remedy'] ?? "N/A"),
-                        ],
-                      ),
+                      subtitle: FutureBuilder<DocumentSnapshot>(
+  future: firestore
+      .collection('clinicreport')
+      .doc(widget.doctorid)
+      .get(),
+  builder: (context, clinicSnapshot) {
+    if (clinicSnapshot.hasData) {
+      final clinicDataMap = clinicSnapshot.data!.data() as Map<String, dynamic>;
+      final clinicPhone = clinicDataMap['phone'];
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          
+          Text("วันนัดรับสัตว์เลี้ยง: " + data['appmtime'] ?? "N/A"),
+          Text("วันที่มารักษา: " + data['datetime'] ?? "N/A"),
+          Text("วิธีการรักษา: " + data['remedy'] ?? "N/A"),
+          Text("เบอร์โทรติดต่อคลินิก: $clinicPhone"),
+        ],
+      );
+    }
+    return const SizedBox();
+  },
+),
                     ),
                   ],
                 ),

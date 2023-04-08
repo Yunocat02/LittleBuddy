@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+
 import 'package:path/path.dart' as path;
 import 'dart:io';
 import '../widgets/back_button.dart';
@@ -32,6 +33,7 @@ class _AddclinicState extends State<Addclinic> {
   TextEditingController urlcamController = TextEditingController();
   TextEditingController _latitudeController = TextEditingController();
   TextEditingController _longitudeController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
   File? _pdf;
   String? _pdfUrl;
   bool isSubmit = false;
@@ -77,6 +79,7 @@ class _AddclinicState extends State<Addclinic> {
             '${timeopenController.text.trim()}-${timecloseController.text.trim()}',
         'petTypes': typeController.text.trim().split(','),
         'description': descriptionController.text.trim(),
+        'phone':phoneController.text.trim(),
         'urlweb': urlwebController.text.trim(),
         'urlcam': urlcamController.text.trim(),
         'pdfUrl': _pdfUrl!,
@@ -331,6 +334,21 @@ class _AddclinicState extends State<Addclinic> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'โปรดใส่พันธุ์';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                        labelText: "เบอร์โทรร้าน",
+                        hintText: "ตัวอย่าง :02-xxxx-xxxx"),
+                    controller: phoneController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'โปรดใส่เบอร์โทรร้าน';
                       }
                       return null;
                     },

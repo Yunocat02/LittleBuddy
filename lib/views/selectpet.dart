@@ -3,14 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 
-import '../utils/styles.dart';
-import 'clinic_view.dart';
-import 'datareportviewsmember.dart';
-import 'help_view.dart';
-import 'home.dart';
+import 'package:get/get.dart';
 
 class selectpets extends StatefulWidget {
   const selectpets({super.key});

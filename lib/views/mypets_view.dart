@@ -9,8 +9,6 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../utils/styles.dart';
-import 'clinic_view.dart';
-import 'datareportviewsmember.dart';
 import 'help_view.dart';
 import 'home.dart';
 

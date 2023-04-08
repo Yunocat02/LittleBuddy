@@ -13,7 +13,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../utils/styles.dart';
-import 'datareportviewsmember.dart';
+
 import 'help_view.dart';
 import 'mypets_view.dart';
 
@@ -110,8 +110,10 @@ class _ClinicState extends State<Clinic> {
                       ),
                     );
                   }
-                  else if (!webboardUrl.startsWith("www.")) {
+                  else {
+                    if(!webboardUrl.startsWith("www.")) {
                     webboardUrl = "www." + webboardUrl;
+                    }
                     if (!webboardUrl.startsWith("http://") &&
                       !webboardUrl.startsWith("https://")) {
                     webboardUrl = "https://" + webboardUrl;

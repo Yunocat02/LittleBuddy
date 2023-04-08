@@ -1,21 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-
-import '../utils/styles.dart';
-import 'PDF_view.dart';
-import 'clinic_view.dart';
-import 'datareportviewsmember.dart';
-import 'help_view.dart';
-import 'home.dart';
-
 class doctorconnect extends StatefulWidget {
   const doctorconnect({Key? key});
 
@@ -210,7 +197,7 @@ class _doctorconnect extends State<doctorconnect> {
                                       DateTime now = DateTime.now();
                                     Timestamp timestamp = Timestamp.fromDate(now);
                                     defaultchat.set({
-                                      'email':'Aminbot',
+                                      'email':'Adminbot',
                                       'message': 'นี่คือแชทที่คุณติดต่อกับหมอได้',
                                       'time': timestamp,
                                       'uid': 'dGQWWcCwcyMlnCv12WXjOereXlr2',  // ID admin

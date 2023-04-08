@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class clinicmail extends StatefulWidget {
   const clinicmail({Key? key}) : super(key: key);

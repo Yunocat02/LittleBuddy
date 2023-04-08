@@ -5,11 +5,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-
 import '../utils/styles.dart';
 import 'adminviewdoctor.dart';
 import 'adminviewmember.dart';
-import 'clinic_view.dart';
 import 'doctorveiwmember.dart';
 import 'home.dart';
 import 'login_view.dart';

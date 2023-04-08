@@ -3,17 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-
-import '../utils/styles.dart';
 import 'PDF_view.dart';
-import 'clinic_view.dart';
-import 'datareportviewsmember.dart';
-import 'help_view.dart';
-import 'home.dart';
+
+
+
 
 class doctorregis extends StatefulWidget {
   const doctorregis({super.key});
