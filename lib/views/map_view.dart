@@ -174,7 +174,10 @@ class _MapnajaState extends State<Mapnaja> {
               'symptom': widget.symptom,
               'userid': widget.useruid,
             });
-
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => Home()),
+            );
             },
             icon: Icon(Icons.check),
           ),

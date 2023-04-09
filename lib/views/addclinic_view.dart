@@ -1,3 +1,4 @@
+import 'package:LittleBuddy/views/home.dart';
 import 'package:LittleBuddy/views/mypets_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
@@ -312,6 +313,9 @@ class _AddclinicState extends State<Addclinic> {
                         labelText: "รับสัตว์ประเภท",
                         hintText: "ตัวอย่าง : สุนัข,แมว"),
                     controller: typeController,
+                        inputFormatters: [
+      FilteringTextInputFormatter.deny(RegExp(r"\d")), // กำหนดให้รับเฉพาะ A-Z, a-z, ก-๙, เ, แ
+    ],
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'โปรดใส่ประเภทสัตว์';
@@ -331,6 +335,9 @@ class _AddclinicState extends State<Addclinic> {
 
                     controller: descriptionController,
                     maxLines: 3, // กำหนดให้สามารถใส่ข้อความได้สูงสุด 3 บรรทัด
+                        inputFormatters: [
+      FilteringTextInputFormatter.deny(RegExp(r"\d")), // กำหนดให้รับเฉพาะ A-Z, a-z, ก-๙, เ, แ
+    ],
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'โปรดใส่พันธุ์';
@@ -460,7 +467,7 @@ class _AddclinicState extends State<Addclinic> {
                           //showAlert();
                           Navigator.pushReplacement(context,
                               MaterialPageRoute(builder: (context) {
-                            return Mypets();
+                            return Home();
                           }));
                         }
                       },

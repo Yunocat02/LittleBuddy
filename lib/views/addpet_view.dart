@@ -130,6 +130,9 @@ class _AddPetState extends State<AddPet> {
                     decoration: InputDecoration(
                         labelText: "ประเภท", hintText: "ตัวอย่าง : สุนัข"),
                     controller: typeController,
+                    inputFormatters: [
+      FilteringTextInputFormatter.deny(RegExp(r"\d")), // กำหนดให้รับเฉพาะ A-Z, a-z, ก-๙, เ, แ
+    ],
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'โปรดใส่ประเภท';
@@ -144,6 +147,9 @@ class _AddPetState extends State<AddPet> {
                     decoration: InputDecoration(
                         labelText: "พันธุ์", hintText: "ตัวอย่าง : Corki"),
                     controller: speciesController,
+                    inputFormatters: [
+      FilteringTextInputFormatter.deny(RegExp(r"\d")), // กำหนดให้รับเฉพาะ A-Z, a-z, ก-๙, เ, แ
+    ],
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'โปรดใส่พันธุ์';

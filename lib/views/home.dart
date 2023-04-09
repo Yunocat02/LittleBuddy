@@ -128,8 +128,10 @@ class Home extends StatelessWidget {
             }
           },
           icon: globalRole?.role == 'M' || globalRole?.role == null
-              ? Icon(Icons.pets) // กรณี role เป็น M
-              : Icon(Icons.add),
+  ? Icon(Icons.pets) // กรณี role เป็น M หรือไม่มีค่า role
+  : globalRole?.role == 'A'
+    ? SizedBox() // กรณี role เป็น A
+    : Icon(Icons.add),
         ),
         actions: [
           IconButton(
