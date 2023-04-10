@@ -117,10 +117,14 @@ class _doctorconnect extends State<doctorconnect> {
                                           final petDataMap = petSnapshot.data!
                                               .data() as Map<String, dynamic>;
                                           final petName = petDataMap['name'];
+                                          final pettype = petDataMap['type'];
+                                          final petspecies = petDataMap['species'];
                                           return Column(
                                             children: [
                                               Text("ชื่อเจ้าของ: $userName"),
                                               Text("ชื่อสัตว์เลี้ยง: $petName"),
+                                              Text("ประเภท: $pettype"),
+                                              Text("สายพันธุ์: $petspecies"),
                                             ],
                                           );
                                         }
