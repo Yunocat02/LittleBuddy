@@ -2,8 +2,10 @@ import 'package:LittleBuddy/views/direction_model.dart';
 import 'package:dio/dio.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import 'env.dart';
+
+const String googleAPIKey = 'yourgoogleapikey';
+
 
 class DirectionsRepositoey{
   static const String _baseUrl = 'https://maps.googleapis.com/maps/api/directions/json?';
